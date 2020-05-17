@@ -1,0 +1,32 @@
+version: "3.4"
+
+services:
+  denunciar:
+    build: .
+    container_name: denunciar
+    env_file:
+      - .env
+    environment:
+      - WAIT_HOSTS=denunciar-db:5432
+    ports:
+      - "5858:9229"
+      - "8080:8080"
+    volumes:
+      - ./src:/usr/local/src:ro
+    networks:
+      - denunciar
+    depends_on:
+      - denunciar-db
+
+  denunciar-db:
+    image: postgres:12-alpine
+    container_name: denunciar-db
+    env_file:
+      - .env
+    ports:
+      - "35432:5432"
+    networks:
+      - denunciar
+
+networks:
+  denunciar:

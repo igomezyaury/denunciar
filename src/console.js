@@ -2,7 +2,7 @@
 const repl = require('repl');
 const fs = require('fs');
 const models = require('./app/models');
-const pjson = require('./package.json');
+const pjson = require('../package.json');
 
 const convertFunctionToAsync = f => async (...args) => {
   const result = await f(...args);

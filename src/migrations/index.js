@@ -1,5 +1,5 @@
 const Umzug = require('umzug');
-const config = require('./../config/');
+const config = require('../config');
 const { sequelize } = require('../app/models');
 const logger = require('../app/logger');
 
