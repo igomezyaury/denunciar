@@ -1,17 +1,17 @@
 const Umzug = require('umzug');
 const config = require('../config');
-const { sequelize } = require('../app/models');
+const { sequelizeInstance } = require('../app/models');
 const logger = require('../app/logger');
 
 exports.check = () => {
   const umzug = new Umzug({
     logging: logger.info,
     storage: 'sequelize',
-    storageOptions: { sequelize },
+    storageOptions: { sequelize: sequelizeInstance },
     migrations: {
       params: [
-        sequelize.getQueryInterface(),
-        sequelize.constructor,
+        sequelizeInstance.getQueryInterface(),
+        sequelizeInstance.constructor,
         () => {
           throw new Error('Migration tried to use old style "done" callback.upgrade');
         }
