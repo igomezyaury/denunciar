@@ -12,7 +12,7 @@
     "test-inspect": "NODE_ENV=testing node --inspect --debug-brk jest",
     "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "eslint-check": "eslint --print-config .eslintrc.js --ignore-pattern ./.eslintrc.js | eslint-config-prettier-check",
-    "lint": "eslint \"**/*.js\" --ignore-pattern ./.eslintrc.js",
+    "lint": "eslint \\\"**/*.js\\\" --ignore-pattern ./.eslintrc.js",
     "lint-diff": "git diff --diff-filter=ACM --name-only --cached --relative | grep \\\\.js$ | xargs eslint",
     "lint-fix": "npm run lint -- --fix",
     "outdated": "npm outdated --depth 0",
@@ -21,7 +21,7 @@
     "prestart-dev": "npm run lint",
     "migrations": "npx sequelize --options-path=src/.sequelizerc db:migrate; npx sequelize --options-path=src/.sequelizerc db:seed:all --seeders-path=src/seeders/",
     "migrations-test": "NODE_ENV=testing sequelize db:migrate",
-    "start": "docker-compose -f docker-compose.yml up -d --build",
+    "start": "docker-compose -f ../docker-compose.yml up -d --build",
     "seed": "sequelize db:seed:all",
     "create-seed": "sequelize seed:generate --name",
     "start:dev": "npm run migrations; nodemon --inspect=0.0.0.0 src/server.js"

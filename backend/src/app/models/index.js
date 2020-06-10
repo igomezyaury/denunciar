@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { Sequelize } = require('sequelize');
-const dbConfig = require('../../config/index').common.database;
+const dbConfig = require('../../config').common.database;
 
 const connectionString = `${dbConfig.dialect}://${dbConfig.username}:${dbConfig.password}@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`;
 const basename = path.basename(__filename);
