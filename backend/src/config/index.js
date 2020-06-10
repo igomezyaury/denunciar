@@ -17,18 +17,6 @@ const config = {
       bodySizeLimit: process.env.API_BODY_SIZE_LIMIT || 1024 * 1024 * 10,
       parameterLimit: process.env.API_PARAMETER_LIMIT || 10000,
       port: process.env.PORT
-    },
-    rollbar: {
-      accessToken: process.env.ROLLBAR_ACCESS_TOKEN,
-      environment: process.env.ROLLBAR_ENV
-    },
-    session: {
-      header_name: 'authorization',
-      secret: process.env.NODE_API_SESSION_SECRET,
-      documentationToken: process.env.DOCUMENTATION_TOKEN
-    },
-    headers: {
-      documentationTokenHeader: process.env.DOCUMENTATION_TOKEN_HEADER || 'X-documentation-token'
     }
   }
 };
