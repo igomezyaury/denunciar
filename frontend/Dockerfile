@@ -1,26 +1,16 @@
 # Stage 1: Builder
 FROM node:12.16.3-alpine as builder
 
-RUN mkdir /base
-WORKDIR /base
+WORKDIR /usr/local/
 
-COPY package*.json /base/
+COPY package*.json /usr/local/
 
 RUN npm install
 
-COPY . /base
+RUN npm install -g @angular/cli
 
-RUN npm run build
+COPY . /usr/local/
 
-# Stage 2: Nginx
-FROM nginx:alpine
+EXPOSE 4200 49153
 
-# Remove default nginx website
-RUN rm -rf /usr/share/nginx/html/*
-
-COPY --from=builder /base/nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy dist files from builder stage
-COPY --from=builder /base/dist/frontend/ /usr/share/nginx/html
-
-EXPOSE 4200
+CMD npm run build && npm run start
