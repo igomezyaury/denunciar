@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const DerivationType = sequelize.define(
     'DerivationType',
     {
-      id: { type: INTEGER, allowNull: false, primaryKey: true },
+      id: { type: INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
       name: { type: STRING, allowNull: false },
       active: { type: BOOLEAN, allowNull: false },
       createdAt: { type: DATE, allowNull: false },

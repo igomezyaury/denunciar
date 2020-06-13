@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Call = sequelize.define(
     'Call',
     {
-      id: { type: INTEGER, allowNull: false, primaryKey: true },
+      id: { type: INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
       issueAddress: { type: STRING, allowNull: false },
       createdAt: { type: DATE, allowNull: false },
       updatedAt: { type: DATE, allowNull: false },

@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Assistance = sequelize.define(
     'Assistance',
     {
-      id: { type: INTEGER, allowNull: false, primaryKey: true },
+      id: { type: INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
       phoneNumber: { type: STRING, allowNull: false },
       firstCall: { type: BOOLEAN, allowNull: false },
       femicideRisk: { type: BOOLEAN, allowNull: false },

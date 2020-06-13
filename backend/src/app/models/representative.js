@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Representative = sequelize.define(
     'Representative',
     {
-      id: { type: INTEGER, allowNull: false, primaryKey: true },
+      id: { type: INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
       firstName: { type: STRING, allowNull: false },
       lastName: { type: STRING, allowNull: false },
       createdAt: { type: DATE, allowNull: false },
