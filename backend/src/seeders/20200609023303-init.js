@@ -88,12 +88,12 @@ module.exports = {
                        ('origen 3', true, now(), now(), null)
                 on conflict do nothing;
             
-                insert into identification_types (id, name, active, created_at, updated_at, deleted_at)
-                values ('dni', 'documento nacional de identidad', true, now(), now(), null),
-                       ('ci', 'cedula civil', true, now(), now(), null),
-                       ('le', 'libreta de enrolamiento', true, now(), now(), null),
-                       ('lc', 'libreta cívica', false, now(), now(), null),
-                       ('atr', 'a todo ritmo', true, now(), now(), now())
+                insert into identification_types (name, active, created_at, updated_at, deleted_at)
+                values ('documento nacional de identidad', true, now(), now(), null),
+                       ('cedula civil', true, now(), now(), null),
+                       ('libreta de enrolamiento', true, now(), now(), null),
+                       ('libreta cívica', false, now(), now(), null),
+                       ('a todo ritmo', true, now(), now(), now())
                 on conflict do nothing;
             
                 if (select count(1) from victims) > 0

@@ -388,9 +388,10 @@ module.exports = {
                                                 'identification_types',
                                                 {
                                                   id: {
+                                                    autoIncrement: true,
                                                     primaryKey: true,
                                                     allowNull: false,
-                                                    type: STRING
+                                                    type: INTEGER
                                                   },
                                                   name: {
                                                     type: STRING,
@@ -464,7 +465,7 @@ module.exports = {
                                                       allowNull: true
                                                     },
                                                     identification_type_id: {
-                                                      type: STRING,
+                                                      type: INTEGER,
                                                       references: {
                                                         model: 'identification_types',
                                                         key: 'id'
@@ -645,7 +646,7 @@ module.exports = {
                                                                   allowNull: true
                                                                 },
                                                                 identification_type_id: {
-                                                                  type: STRING,
+                                                                  type: INTEGER,
                                                                   references: {
                                                                     model: 'identification_types',
                                                                     key: 'id'
