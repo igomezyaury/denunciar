@@ -4,7 +4,10 @@ const {
   ALREADY_EXIST,
   INTERNAL_SERVER_ERROR,
   DATABASE_ERROR,
-  NOT_FOUND
+  NOT_FOUND,
+  INVALID_CREDENTIALS,
+  INVALID_TOKEN,
+  UNAUTHORIZED
 } = require('./internal_codes');
 
 const buildError = (message, internalCode) => ({
@@ -19,3 +22,7 @@ exports.internalServerError = message =>
   buildError(`There was an unexpected error, reason: ${message}`, INTERNAL_SERVER_ERROR);
 exports.databaseError = message => buildError(message, DATABASE_ERROR);
 exports.notFound = message => buildError(message, NOT_FOUND);
+exports.invalidCredentials = () => buildError('The credentials are not correct', INVALID_CREDENTIALS);
+exports.invalidToken = message => buildError(message, INVALID_TOKEN);
+exports.unauthorized = () =>
+  buildError('The provided user is not authorized to access the resource', UNAUTHORIZED);
