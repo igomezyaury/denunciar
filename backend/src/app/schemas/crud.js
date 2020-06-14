@@ -1,12 +1,36 @@
 const pagination = require('./pagination');
+const authorization = require('./authorizations');
 const { addCommonProperties, ID, OPTIONAL_ACTIVE, NAME, ACTIVE } = require('./common');
 
-exports.getManySchema = model => ({ ...pagination(model) });
+exports.getManySchema = model => ({
+  ...authorization,
+  ...pagination(model)
+});
 
-exports.getOneSchema = addCommonProperties({}, [ID]);
+exports.getOneSchema = addCommonProperties(
+  {
+    ...authorization
+  },
+  [ID]
+);
 
-exports.createOneSchema = addCommonProperties({}, [OPTIONAL_ACTIVE, NAME]);
+exports.createOneSchema = addCommonProperties(
+  {
+    ...authorization
+  },
+  [OPTIONAL_ACTIVE, NAME]
+);
 
-exports.updateOneSchema = addCommonProperties({}, [ACTIVE, ID, NAME]);
+exports.updateOneSchema = addCommonProperties(
+  {
+    ...authorization
+  },
+  [ACTIVE, ID, NAME]
+);
 
-exports.deleteOneSchema = addCommonProperties({}, [ID]);
+exports.deleteOneSchema = addCommonProperties(
+  {
+    ...authorization
+  },
+  [ID]
+);
