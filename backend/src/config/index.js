@@ -17,6 +17,14 @@ const config = {
       bodySizeLimit: process.env.API_BODY_SIZE_LIMIT || 1024 * 1024 * 10,
       parameterLimit: process.env.API_PARAMETER_LIMIT || 10000,
       port: process.env.PORT
+    },
+    session: {
+      secret: process.env.SECRET,
+      hashingSalts: process.env.HASHING_SALTS,
+      expirationUnitAccessToken: process.env.EXPIRATION_UNIT_ACCESS_TOKEN || 'minutes',
+      expirationUnitRefreshToken: process.env.EXPIRATION_UNIT_REFRESH_TOKEN || 'hours',
+      expirationValueAccessToken: process.env.EXPIRATION_VALUE_ACCESS_TOKEN || 15,
+      expirationValueRefreshToken: process.env.EXPIRATION_VALUE_REFRESH_TOKEN || 24
     }
   }
 };
