@@ -2,7 +2,8 @@ const { inspect } = require('util');
 const logger = require('../logger');
 const { User } = require('../models');
 const { deleteUndefined } = require('../utils/objects');
-const { databaseError } = require('../errors/builders');
+const { databaseError, alreadyExist, internalServerError, notFound } = require('../errors/builders');
+const { hashPassword } = require('./sessions');
 
 exports.getUsers = params => {
   logger.info(`Attempting to get users with params: ${inspect(params)}`);
@@ -17,4 +18,69 @@ exports.getUsers = params => {
     logger.error(inspect(err));
     throw databaseError(`Error getting users, reason: ${err.message}`);
   });
+};
+
+exports.createUser = attrs => {
+  logger.info(`Attempting to create user with attributes: ${inspect(attrs)}`);
+  return hashPassword(attrs.password)
+    .then(hash =>
+      User.findCreateFind({ where: { email: attrs.email }, defaults: { ...attrs, password: hash } })
+        .catch(err => {
+          logger.error(inspect(err));
+          throw databaseError(`Error creating a user, reason: ${err.message}`);
+        })
+        .then(([instance, created]) => {
+          if (!created) throw alreadyExist('User already exist');
+          return instance;
+        })
+    )
+    .catch(err => {
+      logger.error(inspect(err));
+      throw internalServerError(err.message);
+    });
+};
+
+exports.getUserBy = filters => {
+  logger.info(`Attempting to get user with filters: ${inspect(filters)}`);
+  return User.findOne({ where: filters }).catch(err => {
+    logger.error(inspect(err));
+    throw databaseError(`Error getting a user, reason: ${err.message}`);
+  });
+};
+
+exports.getUserById = ({ id }) => {
+  logger.info(`Attempting to get user with id: ${inspect(id)}`);
+  return User.findByPk(id).catch(err => {
+    logger.error(inspect(err));
+    throw databaseError(`Error getting a user, reason: ${err.message}`);
+  });
+};
+
+const updateUser = (attributes, user) =>
+  user.update(attributes).catch(err => {
+    logger.error(inspect(err));
+    throw databaseError(`There was an error updating the user: ${err.message}`);
+  });
+
+exports.updateUser = attributes => {
+  logger.info(`Attempting to update user with attributes: ${inspect(attributes)}`);
+  return this.getUserById(attributes).then(user => {
+    if (!user) throw notFound('The user was not found');
+    return updateUser(attributes, user);
+  });
+};
+
+exports.deleteUser = filters => {
+  logger.info(`Attempting to delete user with filters: ${inspect(filters)}`);
+  return this.getUserById(filters)
+    .then(user => {
+      if (!user) {
+        throw notFound('The user was not found');
+      }
+      return user.destroy();
+    })
+    .catch(err => {
+      logger.error(inspect(err));
+      throw databaseError(`There was an error deleting the user: ${err.message}`);
+    });
 };
