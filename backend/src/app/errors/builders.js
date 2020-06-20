@@ -7,7 +7,8 @@ const {
   NOT_FOUND,
   INVALID_CREDENTIALS,
   INVALID_TOKEN,
-  UNAUTHORIZED
+  UNAUTHORIZED,
+  BLOCKED_USER
 } = require('./internal_codes');
 
 const buildError = (message, internalCode) => ({
@@ -26,3 +27,5 @@ exports.invalidCredentials = () => buildError('The credentials are not correct',
 exports.invalidToken = message => buildError(message, INVALID_TOKEN);
 exports.unauthorized = () =>
   buildError('The provided user is not authorized to access the resource', UNAUTHORIZED);
+exports.blockedUser = () =>
+  buildError('The provided user has been blocked because of many login attempts', BLOCKED_USER);

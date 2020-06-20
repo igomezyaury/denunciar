@@ -1,6 +1,7 @@
 const { getUserBy } = require('../services/users');
-const { notFound, invalidCredentials } = require('../errors/builders');
+const { notFound, invalidCredentials, blockedUser } = require('../errors/builders');
 const { generateTokens, verifyAndCreateToken, comparePassword } = require('../services/sessions');
+const { updateUser } = require('../services/users');
 const { login, refresh } = require('../serializers/sessions');
 const { createTokenBlacklist } = require('../services/tokens_black_list');
 
@@ -8,8 +9,16 @@ exports.login = (req, res, next) =>
   getUserBy({ email: req.body.email })
     .then(user => {
       if (!user) throw notFound('User not found');
+      if (!user.active) throw blockedUser();
       return comparePassword(req.body.password, user.password).then(match => {
-        if (!match) throw invalidCredentials();
+        if (!match) {
+          const attempts = ++user.failedLoginAttempts;
+          const active = attempts < 3 && user.active;
+          // eslint-disable-next-line no-unused-vars
+          return updateUser({ id: user.id, failedLoginAttempts: attempts, active }).then(() => {
+            throw invalidCredentials();
+          });
+        }
         return generateTokens({ user, req }).then(([accessToken, refreshToken]) =>
           res.status(200).send(login({ accessToken, refreshToken }))
         );
