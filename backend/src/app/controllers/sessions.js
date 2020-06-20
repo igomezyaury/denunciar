@@ -14,7 +14,6 @@ exports.login = (req, res, next) =>
         if (!match) {
           const attempts = ++user.failedLoginAttempts;
           const active = attempts < 3 && user.active;
-          // eslint-disable-next-line no-unused-vars
           return updateUser({ id: user.id, failedLoginAttempts: attempts < 3 ? attempts : 0, active }).then(
             () => {
               throw invalidCredentials();
