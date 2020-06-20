@@ -15,9 +15,11 @@ exports.login = (req, res, next) =>
           const attempts = ++user.failedLoginAttempts;
           const active = attempts < 3 && user.active;
           // eslint-disable-next-line no-unused-vars
-          return updateUser({ id: user.id, failedLoginAttempts: attempts, active }).then(() => {
-            throw invalidCredentials();
-          });
+          return updateUser({ id: user.id, failedLoginAttempts: attempts < 3 ? attempts : 0, active }).then(
+            () => {
+              throw invalidCredentials();
+            }
+          );
         }
         return generateTokens({ user, req }).then(([accessToken, refreshToken]) =>
           res.status(200).send(login({ accessToken, refreshToken }))
