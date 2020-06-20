@@ -1,10 +1,18 @@
-const { getUsers, createUser, getUserById, updateUser, deleteUser } = require('../services/users');
+const {
+  getUsers,
+  createUser,
+  getUserById,
+  updateUser,
+  deleteUser,
+  changePassword
+} = require('../services/users');
 const {
   getUsersMapper,
   createUserMapper,
   getUserMapper,
   updateUserMapper,
-  deleteUserMapper
+  deleteUserMapper,
+  changePasswordMapper
 } = require('../mappers/users');
 const { paginateResponse } = require('../serializers/paginations');
 const { getUserSerializer } = require('../serializers/users');
@@ -35,5 +43,10 @@ exports.updateUser = (req, res, next) => {
 
 exports.deleteUser = (req, res, next) =>
   deleteUser(deleteUserMapper(req))
+    .then(() => res.status(204).end())
+    .catch(next);
+
+exports.changePassword = (req, res, next) =>
+  changePassword(changePasswordMapper(req))
     .then(() => res.status(204).end())
     .catch(next);

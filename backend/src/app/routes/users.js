@@ -1,13 +1,21 @@
 const { Router: createRouter } = require('express');
 const { checkTokenAndSetUser, checkPermissions } = require('../middlewares/authorization');
-const { createUser, getUsers, getUser, updateUser, deleteUser } = require('../controllers/users');
+const {
+  createUser,
+  getUsers,
+  getUser,
+  updateUser,
+  deleteUser,
+  changePassword
+} = require('../controllers/users');
 const { validateSchemaAndFail } = require('../middlewares/params_validator');
 const {
   getUsersSchema,
   createUserSchema,
   getUserSchema,
   updateUserSchema,
-  deleteUserSchema
+  deleteUserSchema,
+  changePasswordSchema
 } = require('../schemas/users');
 
 const userRouter = createRouter();
@@ -48,5 +56,11 @@ exports.init = app => {
     checkPermissions,
     validateSchemaAndFail(deleteUserSchema),
     deleteUser
+  );
+  userRouter.patch(
+    '/:id/password',
+    checkTokenAndSetUser,
+    validateSchemaAndFail(changePasswordSchema),
+    changePassword
   );
 };

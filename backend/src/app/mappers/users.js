@@ -43,3 +43,13 @@ exports.updateUserMapper = req =>
   );
 
 exports.deleteUserMapper = req => addCommonProperties({}, req, [ID]);
+
+exports.changePasswordMapper = req =>
+  addCommonProperties(
+    {
+      oldPassword: req.body.old_password,
+      newPassword: req.body.new_password
+    },
+    req,
+    [ID]
+  );

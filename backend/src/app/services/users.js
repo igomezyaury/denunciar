@@ -2,8 +2,9 @@ const { inspect } = require('util');
 const logger = require('../logger');
 const { User } = require('../models');
 const { deleteUndefined } = require('../utils/objects');
-const { databaseError, alreadyExist, internalServerError, notFound } = require('../errors/builders');
-const { hashPassword } = require('./sessions');
+const { omit } = require('../utils/lodash');
+const { databaseError, alreadyExist, internalServerError, notFound, invalidCredentials } = require('../errors/builders');
+const { hashPassword, comparePassword } = require('./sessions');
 
 exports.getUsers = params => {
   logger.info(`Attempting to get users with params: ${inspect(params)}`);
@@ -21,7 +22,7 @@ exports.getUsers = params => {
 };
 
 exports.createUser = attrs => {
-  logger.info(`Attempting to create user with attributes: ${inspect(attrs)}`);
+  logger.info(`Attempting to create user with attributes: ${inspect(omit(attrs, ['password']))}`);
   return hashPassword(attrs.password)
     .then(hash =>
       User.findCreateFind({ where: { email: attrs.email }, defaults: { ...attrs, password: hash } })
@@ -82,5 +83,25 @@ exports.deleteUser = filters => {
     .catch(err => {
       logger.error(inspect(err));
       throw databaseError(`There was an error deleting the user: ${err.message}`);
+    });
+};
+
+exports.changePassword = attrs => {
+  logger.info(
+    `Attempting to change password with attributes: ${inspect(omit(attrs, ['oldPassword', 'newPassword']))}`
+  );
+  return this.getUserById(attrs)
+    .then(user => {
+      if (!user) {
+        throw notFound('The user was not found');
+      }
+      return comparePassword(attrs.oldPassword, user.password).then(match => {
+        if (!match) throw invalidCredentials();
+        return hashPassword(attrs.newPassword).then(hash => updateUser({ password: hash }, user));
+      });
+    })
+    .catch(err => {
+      logger.error(inspect(err));
+      throw databaseError(`There was an error changing password: ${err.message}`);
     });
 };
