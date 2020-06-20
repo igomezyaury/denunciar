@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Aggressor = sequelize.define(
     'Aggressor',
     {
-      id: { type: INTEGER, allowNull: false, primaryKey: true },
+      id: { type: INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
       firstName: { type: STRING, allowNull: true },
       lastName: { type: STRING, allowNull: true },
       occupation: { type: STRING, allowNull: true },

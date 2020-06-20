@@ -6,308 +6,419 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     const { STRING, DATE, BOOLEAN, INTEGER } = Sequelize;
     return queryInterface
-      .createTable('cities', {
-        id: {
-          autoIncrement: true,
-          primaryKey: true,
-          allowNull: false,
-          type: INTEGER
+      .createTable(
+        'cities',
+        {
+          id: {
+            autoIncrement: true,
+            primaryKey: true,
+            allowNull: false,
+            type: INTEGER
+          },
+          name: {
+            type: STRING,
+            allowNull: false
+          },
+          active: {
+            type: BOOLEAN,
+            allowNull: false
+          },
+          created_at: {
+            type: DATE,
+            allowNull: false
+          },
+          updated_at: {
+            type: DATE,
+            allowNull: false
+          },
+          deleted_at: DATE
         },
-        name: {
-          type: STRING,
-          allowNull: false
-        },
-        active: {
-          type: BOOLEAN,
-          allowNull: false
-        },
-        created_at: {
-          type: DATE,
-          allowNull: false
-        },
-        updated_at: {
-          type: DATE,
-          allowNull: false
-        },
-        deleted_at: DATE
-      })
+        {
+          uniqueKeys: {
+            actions_unique: {
+              fields: ['name']
+            }
+          }
+        }
+      )
       .then(() =>
         queryInterface
-          .createTable('complaint_reasons', {
-            id: {
-              autoIncrement: true,
-              primaryKey: true,
-              allowNull: false,
-              type: INTEGER
+          .createTable(
+            'complaint_reasons',
+            {
+              id: {
+                autoIncrement: true,
+                primaryKey: true,
+                allowNull: false,
+                type: INTEGER
+              },
+              name: {
+                type: STRING,
+                allowNull: false
+              },
+              active: {
+                type: BOOLEAN,
+                allowNull: false
+              },
+              created_at: {
+                type: DATE,
+                allowNull: false
+              },
+              updated_at: {
+                type: DATE,
+                allowNull: false
+              },
+              deleted_at: DATE
             },
-            name: {
-              type: STRING,
-              allowNull: false
-            },
-            active: {
-              type: BOOLEAN,
-              allowNull: false
-            },
-            created_at: {
-              type: DATE,
-              allowNull: false
-            },
-            updated_at: {
-              type: DATE,
-              allowNull: false
-            },
-            deleted_at: DATE
-          })
+            {
+              uniqueKeys: {
+                actions_unique: {
+                  fields: ['name']
+                }
+              }
+            }
+          )
           .then(() =>
             queryInterface
-              .createTable('users', {
-                id: {
-                  autoIncrement: true,
-                  primaryKey: true,
-                  allowNull: false,
-                  type: INTEGER
+              .createTable(
+                'users',
+                {
+                  id: {
+                    autoIncrement: true,
+                    primaryKey: true,
+                    allowNull: false,
+                    type: INTEGER
+                  },
+                  email: {
+                    type: STRING,
+                    allowNull: false
+                  },
+                  password: {
+                    type: STRING,
+                    allowNull: false
+                  },
+                  rol: {
+                    type: STRING,
+                    allowNull: false
+                  },
+                  active: {
+                    type: BOOLEAN,
+                    allowNull: false
+                  },
+                  created_at: {
+                    type: DATE,
+                    allowNull: false
+                  },
+                  updated_at: {
+                    type: DATE,
+                    allowNull: false
+                  },
+                  deleted_at: DATE
                 },
-                email: {
-                  type: STRING,
-                  allowNull: false
-                },
-                password: {
-                  type: STRING,
-                  allowNull: false
-                },
-                rol: {
-                  type: STRING,
-                  allowNull: false
-                },
-                active: {
-                  type: BOOLEAN,
-                  allowNull: false
-                },
-                created_at: {
-                  type: DATE,
-                  allowNull: false
-                },
-                updated_at: {
-                  type: DATE,
-                  allowNull: false
-                },
-                deleted_at: DATE
-              })
+                {
+                  uniqueKeys: {
+                    actions_unique: {
+                      fields: ['email']
+                    }
+                  }
+                }
+              )
               .then(() =>
                 queryInterface
-                  .createTable('derivation_types', {
-                    id: {
-                      autoIncrement: true,
-                      primaryKey: true,
-                      allowNull: false,
-                      type: INTEGER
+                  .createTable(
+                    'derivation_types',
+                    {
+                      id: {
+                        autoIncrement: true,
+                        primaryKey: true,
+                        allowNull: false,
+                        type: INTEGER
+                      },
+                      name: {
+                        type: STRING,
+                        allowNull: false
+                      },
+                      active: {
+                        type: BOOLEAN,
+                        allowNull: false
+                      },
+                      created_at: {
+                        type: DATE,
+                        allowNull: false
+                      },
+                      updated_at: {
+                        type: DATE,
+                        allowNull: false
+                      },
+                      deleted_at: DATE
                     },
-                    name: {
-                      type: STRING,
-                      allowNull: false
-                    },
-                    active: {
-                      type: BOOLEAN,
-                      allowNull: false
-                    },
-                    created_at: {
-                      type: DATE,
-                      allowNull: false
-                    },
-                    updated_at: {
-                      type: DATE,
-                      allowNull: false
-                    },
-                    deleted_at: DATE
-                  })
+                    {
+                      uniqueKeys: {
+                        actions_unique: {
+                          fields: ['name']
+                        }
+                      }
+                    }
+                  )
                   .then(() =>
                     queryInterface
-                      .createTable('disabilities', {
-                        id: {
-                          autoIncrement: true,
-                          primaryKey: true,
-                          allowNull: false,
-                          type: INTEGER
+                      .createTable(
+                        'disabilities',
+                        {
+                          id: {
+                            autoIncrement: true,
+                            primaryKey: true,
+                            allowNull: false,
+                            type: INTEGER
+                          },
+                          name: {
+                            type: STRING,
+                            allowNull: false
+                          },
+                          active: {
+                            type: BOOLEAN,
+                            allowNull: false
+                          },
+                          created_at: {
+                            type: DATE,
+                            allowNull: false
+                          },
+                          updated_at: {
+                            type: DATE,
+                            allowNull: false
+                          },
+                          deleted_at: DATE
                         },
-                        name: {
-                          type: STRING,
-                          allowNull: false
-                        },
-                        active: {
-                          type: BOOLEAN,
-                          allowNull: false
-                        },
-                        created_at: {
-                          type: DATE,
-                          allowNull: false
-                        },
-                        updated_at: {
-                          type: DATE,
-                          allowNull: false
-                        },
-                        deleted_at: DATE
-                      })
+                        {
+                          uniqueKeys: {
+                            actions_unique: {
+                              fields: ['name']
+                            }
+                          }
+                        }
+                      )
                       .then(() =>
                         queryInterface
-                          .createTable('violence_types', {
-                            id: {
-                              autoIncrement: true,
-                              primaryKey: true,
-                              allowNull: false,
-                              type: INTEGER
+                          .createTable(
+                            'violence_types',
+                            {
+                              id: {
+                                autoIncrement: true,
+                                primaryKey: true,
+                                allowNull: false,
+                                type: INTEGER
+                              },
+                              name: {
+                                type: STRING,
+                                allowNull: false
+                              },
+                              active: {
+                                type: BOOLEAN,
+                                allowNull: false
+                              },
+                              created_at: {
+                                type: DATE,
+                                allowNull: false
+                              },
+                              updated_at: {
+                                type: DATE,
+                                allowNull: false
+                              },
+                              deleted_at: DATE
                             },
-                            name: {
-                              type: STRING,
-                              allowNull: false
-                            },
-                            active: {
-                              type: BOOLEAN,
-                              allowNull: false
-                            },
-                            created_at: {
-                              type: DATE,
-                              allowNull: false
-                            },
-                            updated_at: {
-                              type: DATE,
-                              allowNull: false
-                            },
-                            deleted_at: DATE
-                          })
+                            {
+                              uniqueKeys: {
+                                actions_unique: {
+                                  fields: ['name']
+                                }
+                              }
+                            }
+                          )
                           .then(() =>
                             queryInterface
-                              .createTable('vulnerable_populations', {
-                                id: {
-                                  autoIncrement: true,
-                                  primaryKey: true,
-                                  allowNull: false,
-                                  type: INTEGER
+                              .createTable(
+                                'vulnerable_populations',
+                                {
+                                  id: {
+                                    autoIncrement: true,
+                                    primaryKey: true,
+                                    allowNull: false,
+                                    type: INTEGER
+                                  },
+                                  name: {
+                                    type: STRING,
+                                    allowNull: false
+                                  },
+                                  active: {
+                                    type: BOOLEAN,
+                                    allowNull: false
+                                  },
+                                  created_at: {
+                                    type: DATE,
+                                    allowNull: false
+                                  },
+                                  updated_at: {
+                                    type: DATE,
+                                    allowNull: false
+                                  },
+                                  deleted_at: DATE
                                 },
-                                name: {
-                                  type: STRING,
-                                  allowNull: false
-                                },
-                                active: {
-                                  type: BOOLEAN,
-                                  allowNull: false
-                                },
-                                created_at: {
-                                  type: DATE,
-                                  allowNull: false
-                                },
-                                updated_at: {
-                                  type: DATE,
-                                  allowNull: false
-                                },
-                                deleted_at: DATE
-                              })
+                                {
+                                  uniqueKeys: {
+                                    actions_unique: {
+                                      fields: ['name']
+                                    }
+                                  }
+                                }
+                              )
                               .then(() =>
                                 queryInterface
-                                  .createTable('representative_types', {
-                                    id: {
-                                      autoIncrement: true,
-                                      primaryKey: true,
-                                      allowNull: false,
-                                      type: INTEGER
+                                  .createTable(
+                                    'representative_types',
+                                    {
+                                      id: {
+                                        autoIncrement: true,
+                                        primaryKey: true,
+                                        allowNull: false,
+                                        type: INTEGER
+                                      },
+                                      name: {
+                                        type: STRING,
+                                        allowNull: false
+                                      },
+                                      active: {
+                                        type: BOOLEAN,
+                                        allowNull: false
+                                      },
+                                      created_at: {
+                                        type: DATE,
+                                        allowNull: false
+                                      },
+                                      updated_at: {
+                                        type: DATE,
+                                        allowNull: false
+                                      },
+                                      deleted_at: DATE
                                     },
-                                    name: {
-                                      type: STRING,
-                                      allowNull: false
-                                    },
-                                    active: {
-                                      type: BOOLEAN,
-                                      allowNull: false
-                                    },
-                                    created_at: {
-                                      type: DATE,
-                                      allowNull: false
-                                    },
-                                    updated_at: {
-                                      type: DATE,
-                                      allowNull: false
-                                    },
-                                    deleted_at: DATE
-                                  })
+                                    {
+                                      uniqueKeys: {
+                                        actions_unique: {
+                                          fields: ['name']
+                                        }
+                                      }
+                                    }
+                                  )
                                   .then(() =>
                                     queryInterface
-                                      .createTable('relationship_types', {
-                                        id: {
-                                          autoIncrement: true,
-                                          primaryKey: true,
-                                          allowNull: false,
-                                          type: INTEGER
+                                      .createTable(
+                                        'relationship_types',
+                                        {
+                                          id: {
+                                            autoIncrement: true,
+                                            primaryKey: true,
+                                            allowNull: false,
+                                            type: INTEGER
+                                          },
+                                          name: {
+                                            type: STRING,
+                                            allowNull: false
+                                          },
+                                          active: {
+                                            type: BOOLEAN,
+                                            allowNull: false
+                                          },
+                                          created_at: {
+                                            type: DATE,
+                                            allowNull: false
+                                          },
+                                          updated_at: {
+                                            type: DATE,
+                                            allowNull: false
+                                          },
+                                          deleted_at: DATE
                                         },
-                                        name: {
-                                          type: STRING,
-                                          allowNull: false
-                                        },
-                                        active: {
-                                          type: BOOLEAN,
-                                          allowNull: false
-                                        },
-                                        created_at: {
-                                          type: DATE,
-                                          allowNull: false
-                                        },
-                                        updated_at: {
-                                          type: DATE,
-                                          allowNull: false
-                                        },
-                                        deleted_at: DATE
-                                      })
+                                        {
+                                          uniqueKeys: {
+                                            actions_unique: {
+                                              fields: ['name']
+                                            }
+                                          }
+                                        }
+                                      )
                                       .then(() =>
                                         queryInterface
-                                          .createTable('origin_types', {
-                                            id: {
-                                              autoIncrement: true,
-                                              primaryKey: true,
-                                              allowNull: false,
-                                              type: INTEGER
+                                          .createTable(
+                                            'origin_types',
+                                            {
+                                              id: {
+                                                autoIncrement: true,
+                                                primaryKey: true,
+                                                allowNull: false,
+                                                type: INTEGER
+                                              },
+                                              name: {
+                                                type: STRING,
+                                                allowNull: false
+                                              },
+                                              active: {
+                                                type: BOOLEAN,
+                                                allowNull: false
+                                              },
+                                              created_at: {
+                                                type: DATE,
+                                                allowNull: false
+                                              },
+                                              updated_at: {
+                                                type: DATE,
+                                                allowNull: false
+                                              },
+                                              deleted_at: DATE
                                             },
-                                            name: {
-                                              type: STRING,
-                                              allowNull: false
-                                            },
-                                            active: {
-                                              type: BOOLEAN,
-                                              allowNull: false
-                                            },
-                                            created_at: {
-                                              type: DATE,
-                                              allowNull: false
-                                            },
-                                            updated_at: {
-                                              type: DATE,
-                                              allowNull: false
-                                            },
-                                            deleted_at: DATE
-                                          })
+                                            {
+                                              uniqueKeys: {
+                                                actions_unique: {
+                                                  fields: ['name']
+                                                }
+                                              }
+                                            }
+                                          )
                                           .then(() =>
                                             queryInterface
-                                              .createTable('identification_types', {
-                                                id: {
-                                                  primaryKey: true,
-                                                  allowNull: false,
-                                                  type: STRING
+                                              .createTable(
+                                                'identification_types',
+                                                {
+                                                  id: {
+                                                    autoIncrement: true,
+                                                    primaryKey: true,
+                                                    allowNull: false,
+                                                    type: INTEGER
+                                                  },
+                                                  name: {
+                                                    type: STRING,
+                                                    allowNull: false
+                                                  },
+                                                  active: {
+                                                    type: BOOLEAN,
+                                                    allowNull: false
+                                                  },
+                                                  created_at: {
+                                                    type: DATE,
+                                                    allowNull: false
+                                                  },
+                                                  updated_at: {
+                                                    type: DATE,
+                                                    allowNull: false
+                                                  },
+                                                  deleted_at: DATE
                                                 },
-                                                name: {
-                                                  type: STRING,
-                                                  allowNull: false
-                                                },
-                                                active: {
-                                                  type: BOOLEAN,
-                                                  allowNull: false
-                                                },
-                                                created_at: {
-                                                  type: DATE,
-                                                  allowNull: false
-                                                },
-                                                updated_at: {
-                                                  type: DATE,
-                                                  allowNull: false
-                                                },
-                                                deleted_at: DATE
-                                              })
+                                                {
+                                                  uniqueKeys: {
+                                                    actions_unique: {
+                                                      fields: ['name']
+                                                    }
+                                                  }
+                                                }
+                                              )
                                               .then(() =>
                                                 queryInterface
                                                   .createTable('victims', {
@@ -354,7 +465,7 @@ module.exports = {
                                                       allowNull: true
                                                     },
                                                     identification_type_id: {
-                                                      type: STRING,
+                                                      type: INTEGER,
                                                       references: {
                                                         model: 'identification_types',
                                                         key: 'id'
@@ -535,7 +646,7 @@ module.exports = {
                                                                   allowNull: true
                                                                 },
                                                                 identification_type_id: {
-                                                                  type: STRING,
+                                                                  type: INTEGER,
                                                                   references: {
                                                                     model: 'identification_types',
                                                                     key: 'id'

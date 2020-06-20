@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
   const Victim = sequelize.define(
     'Victim',
     {
-      id: { type: INTEGER, allowNull: false, primaryKey: true },
+      id: { type: INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
       name: { type: STRING, allowNull: false },
       identificationCode: { type: STRING, allowNull: false },
       firstName: { type: STRING, allowNull: false },

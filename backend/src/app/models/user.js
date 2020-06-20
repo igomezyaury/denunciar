@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
     {
-      id: { type: INTEGER, allowNull: false, primaryKey: true },
+      id: { type: INTEGER, allowNull: false, primaryKey: true, autoIncrement: true },
       email: { type: STRING, allowNull: false, unique: true },
       password: { type: STRING, allowNull: false },
       rol: { type: STRING, allowNull: false, defaultValue: NORMAL },
