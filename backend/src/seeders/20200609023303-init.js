@@ -25,11 +25,19 @@ module.exports = {
                        ('juzgado civil', true, now(), now(), now())
                 on conflict do nothing;
             
-                insert into users (email, password, rol, active, created_at, updated_at, deleted_at)
-                values ('user@admin.com', 'admin', 'admin', true, now(), now(), null),
-                       ('user@normal.com', 'normal', 'normal', true, now(), now(), null),
-                       ('user@inactive.com', 'inactive', 'normal', false, now(), now(), null),
-                       ('user@deleted.com', 'deleted', 'normal', true, now(), now(), now())
+                insert into identification_types (name, active, created_at, updated_at, deleted_at)
+                values ('documento nacional de identidad', true, now(), now(), null),
+                       ('cedula civil', true, now(), now(), null),
+                       ('libreta de enrolamiento', true, now(), now(), null),
+                       ('libreta cívica', false, now(), now(), null),
+                       ('a todo ritmo', true, now(), now(), now())
+                on conflict do nothing;
+            
+                insert into users (email, password, rol, active, created_at, updated_at, deleted_at, username, first_name, last_name, identification_code, birth_date, failed_login_attempts, identification_type_id)
+                values ('user@admin.com', '$2a$10$kA0g2RaPgtRVciMkbfhwqOTSJ2iMPtuCbu3RkQ5/bMyVSVTi20LI6', 'admin', true, now(), now(), null, 'useradmin', 'user', 'admin', '12345678', now(), 0, 1),
+                       ('user@normal.com', '$2a$10$kA0g2RaPgtRVciMkbfhwqOTSJ2iMPtuCbu3RkQ5/bMyVSVTi20LI6', 'normal', true, now(), now(), null, 'usernormal', 'user', 'normal', '23456789', now(), 1, 2),
+                       ('user@inactive.com', '$2a$10$kA0g2RaPgtRVciMkbfhwqOTSJ2iMPtuCbu3RkQ5/bMyVSVTi20LI6', 'normal', false, now(), now(), null, 'useradmin', 'user', 'admin', '34567890', now(), 3, 3),
+                       ('user@deleted.com', '$2a$10$kA0g2RaPgtRVciMkbfhwqOTSJ2iMPtuCbu3RkQ5/bMyVSVTi20LI6', 'normal', true, now(), now(), now(), 'useradmin', 'user', 'admin', '87654321', now(), 2, 1)
                 on conflict do nothing;
             
                 insert into complaint_reasons (name, active, created_at, updated_at, deleted_at)
@@ -86,14 +94,6 @@ module.exports = {
                        ('origen 1', true, now(), now(), null),
                        ('origen 2', true, now(), now(), null),
                        ('origen 3', true, now(), now(), null)
-                on conflict do nothing;
-            
-                insert into identification_types (name, active, created_at, updated_at, deleted_at)
-                values ('documento nacional de identidad', true, now(), now(), null),
-                       ('cedula civil', true, now(), now(), null),
-                       ('libreta de enrolamiento', true, now(), now(), null),
-                       ('libreta cívica', false, now(), now(), null),
-                       ('a todo ritmo', true, now(), now(), now())
                 on conflict do nothing;
             
                 if (select count(1) from victims) > 0

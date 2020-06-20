@@ -13,9 +13,10 @@ module.exports = (sequelize, DataTypes) => {
     { timestamps: true, underscored: true, paranoid: true, tableName: 'identification_types' }
   );
   IdentificationType.associate = models => {
-    const { Victim, Aggressor } = models;
+    const { Victim, Aggressor, User } = models;
     IdentificationType.hasMany(Victim, { as: 'victims', foreignKey: 'identificationTypeId' });
     IdentificationType.hasMany(Aggressor, { as: 'aggressors', foreignKey: 'identificationTypeId' });
+    IdentificationType.hasMany(User, { as: 'users', foreignKey: 'identificationTypeId' });
   };
   return IdentificationType;
 };
