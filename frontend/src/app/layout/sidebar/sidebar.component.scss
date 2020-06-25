@@ -1,0 +1,30 @@
+#sidebar {
+    width: 200px;
+    height: 100%;
+    background-color: #ba55d3;
+    font-size: 1.2rem;
+    align-items: flex-start;
+    position: fixed;
+    transition: width 100ms ease;
+}
+
+#sidebar ul {
+    padding-right: 15px;
+    padding-top: 50px;
+    text-align: left;
+}
+
+#sidebar .nav-link {
+    color: white;
+    padding-top: 15px;
+}
+
+#sidebar .nav-link:hover {
+    background-color: violet;
+    border-radius: 5px;
+    width: 170px;
+}
+
+#sidebar .navbar-brand {
+    color: white;
+}
