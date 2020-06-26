@@ -10,6 +10,8 @@ const {
   birthDateInBody,
   emailInBody,
   passwordInBody,
+  oldPasswordInBody,
+  newPasswordInBody,
   rolInBody
 } = require('../errors/schema_messages');
 const { addCommonProperties, OPTIONAL_ACTIVE, ID, ACTIVE } = require('./common');
@@ -72,6 +74,15 @@ exports.updateUserSchema = addCommonProperties(
 exports.deleteUserSchema = addCommonProperties(
   {
     ...authorization
+  },
+  [ID]
+);
+
+exports.changePasswordSchema = addCommonProperties(
+  {
+    ...authorization,
+    old_password: { in: ['body'], isString: true, errorMessage: oldPasswordInBody },
+    new_password: { in: ['body'], isString: true, errorMessage: newPasswordInBody }
   },
   [ID]
 );

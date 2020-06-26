@@ -21,6 +21,8 @@ exports.identificationCodeInBody = `${stringMessage('identification_code')} ${co
 exports.birthDateInBody = `${dateMessage('birth_date')} ${containedMessage('body')}`;
 exports.emailInBody = `${stringMessage('email')} ${containedMessage('body')}`;
 exports.passwordInBody = `${stringMessage('password')} ${containedMessage('body')}`;
+exports.oldPasswordInBody = `${stringMessage('old_password')} ${containedMessage('body')}`;
+exports.newPasswordInBody = `${stringMessage('new_password')} ${containedMessage('body')}`;
 exports.identificationTypeIdInBody = `${integerMessage('identification_type_id')} ${containedMessage(
   'body'
 )}`;
