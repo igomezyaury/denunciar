@@ -96,20 +96,20 @@ module.exports = {
                        ('origen 3', true, now(), now(), null)
                 on conflict do nothing;
             
-                insert into victims (identification_code, first_name, last_name, phone_number, address, birth_date, age, sex,
-                                     sex_clarification, identification_type_id, city_id, created_at, updated_at, deleted_at)
-                values ('12345678', 'valeria', 'giardino', '1234567890', 'calle falsa 1234', now(), 32, 'female', null, 1, 2,
-                        now(),
-                        now(), null),
-                       ('87654321', 'mariana', 'martinez', '0987654321', 'calle fake ddd', now(), 23, 'female', 'nsnc', 2, 3,
-                        now(),
-                        now(), null),
-                       ('43215678', 'marcos', 'robledo', '5432167890', 'fulanitodetal 22', now(), 43, 'male', 'transgénero', 3,
-                        4,
-                        now(), now(), null);
-            
-                if (select count(1) from victims) > 0
+                if (select count(1) from victims) = 0
                 then
+            
+                  insert into victims (identification_code, first_name, last_name, phone_number, address, birth_date, age, sex,
+                                       sex_clarification, identification_type_id, city_id, created_at, updated_at, deleted_at)
+                  values ('12345678', 'valeria', 'giardino', '1234567890', 'calle falsa 1234', now(), 32, 'female', null, 1, 2,
+                          now(),
+                          now(), null),
+                         ('87654321', 'mariana', 'martinez', '0987654321', 'calle fake ddd', now(), 23, 'female', 'nsnc', 2, 3,
+                          now(),
+                          now(), null),
+                         ('43215678', 'marcos', 'robledo', '5432167890', 'fulanitodetal 22', now(), 43, 'male', 'transgénero', 3,
+                          4,
+                          now(), now(), null);
             
                   insert into assistances (phone_number, first_call, femicide_risk, cod_b, summary, derivation_observation,
                                            assistance_type, victim_id, user_id, derivation_type_id, created_at, updated_at,

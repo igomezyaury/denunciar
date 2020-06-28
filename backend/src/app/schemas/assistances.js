@@ -25,8 +25,8 @@ const {
   femicideRiskInBody,
   codBInBody
 } = require('../errors/schema_messages');
-const { addCommonProperties } = require('./common');
-const { Assistance, ID } = require('../models');
+const { addCommonProperties, ID } = require('./common');
+const { Assistance } = require('../models');
 
 exports.getAssistancesSchema = {
   ...authorization,
@@ -74,7 +74,7 @@ exports.createAssistanceSchema = addCommonProperties(
       in: ['body'],
       isString: true,
       trim: true,
-      isOptional: true
+      optional: true
     },
     'victim.identification_type_id': {
       in: ['body'],
@@ -89,15 +89,15 @@ exports.createAssistanceSchema = addCommonProperties(
       }
     },
     'call.issue_address': { in: ['body'], isString: true, trim: true, errorMessage: callIssueAddressInBody },
-    'call.aggressor.first_name': { in: ['body'], isString: true, trim: true, isOptional: true },
-    'call.aggressor.last_name': { in: ['body'], isString: true, trim: true, isOptional: true },
-    'call.aggressor.occupation': { in: ['body'], isString: true, trim: true, isOptional: true },
-    'call.aggressor.identification_code': { in: ['body'], isString: true, trim: true, isOptional: true },
-    'call.aggressor.identification_type_id': { in: ['body'], isNumeric: true, isOptional: true },
-    'call.aggressor.city_id': { in: ['body'], isNumeric: true, isOptional: true },
-    'call.representative.first_name': { in: ['body'], isString: true, trim: true, isOptional: true },
-    'call.representative.last_name': { in: ['body'], isString: true, trim: true, isOptional: true },
-    'call.vulnerable_population_id': { in: ['body'], isNumeric: true, isOptional: true },
+    'call.aggressor.first_name': { in: ['body'], isString: true, trim: true, optional: true },
+    'call.aggressor.last_name': { in: ['body'], isString: true, trim: true, optional: true },
+    'call.aggressor.occupation': { in: ['body'], isString: true, trim: true, optional: true },
+    'call.aggressor.identification_code': { in: ['body'], isString: true, trim: true, optional: true },
+    'call.aggressor.identification_type_id': { in: ['body'], isNumeric: true, optional: true },
+    'call.aggressor.city_id': { in: ['body'], isNumeric: true, optional: true },
+    'call.representative.first_name': { in: ['body'], isString: true, trim: true, optional: true },
+    'call.representative.last_name': { in: ['body'], isString: true, trim: true, optional: true },
+    'call.vulnerable_population_id': { in: ['body'], isNumeric: true, optional: true },
     'call.complaint_reason_id': { in: ['body'], isNumeric: true, errorMessage: callComplaintReasonIdInBody },
     'call.violence_types': {
       in: ['body'],
@@ -121,6 +121,13 @@ exports.getAssistanceSchema = addCommonProperties(
 exports.deleteAssistanceSchema = addCommonProperties(
   {
     ...authorization
+  },
+  [ID]
+);
+
+exports.updateAssistanceSchema = addCommonProperties(
+  {
+    ...this.createAssistanceSchema
   },
   [ID]
 );

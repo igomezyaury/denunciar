@@ -59,3 +59,6 @@ exports.createAssistanceMapper = req =>
 exports.getAssistanceMapper = req => addCommonProperties({}, req, [ID]);
 
 exports.deleteAssistanceMapper = req => addCommonProperties({}, req, [ID]);
+
+exports.updateAssistanceMapper = req =>
+  addCommonProperties({ ...this.createAssistanceMapper(req) }, req, [ID]);

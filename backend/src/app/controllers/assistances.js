@@ -2,13 +2,15 @@ const {
   getAssistances,
   createAssistance,
   getAssistanceById,
-  deleteAssistance
+  deleteAssistance,
+  updateAssistance
 } = require('../services/assistances');
 const {
   getAssistancesMapper,
   createAssistanceMapper,
   getAssistanceMapper,
-  deleteAssistanceMapper
+  deleteAssistanceMapper,
+  updateAssistanceMapper
 } = require('../mappers/assistances');
 const { getAssistanceSerializer, getAssistancesSerializer } = require('../serializers/assistances');
 
@@ -35,3 +37,10 @@ exports.deleteAssistance = (req, res, next) =>
   deleteAssistance(deleteAssistanceMapper(req))
     .then(() => res.status(204).end())
     .catch(next);
+
+exports.updateAssistance = (req, res, next) => {
+  const newAttributes = updateAssistanceMapper(req);
+  return updateAssistance(newAttributes)
+    .then(() => res.status(204).end())
+    .catch(next);
+};
