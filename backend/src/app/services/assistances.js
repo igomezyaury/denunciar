@@ -11,6 +11,7 @@ const {
   sequelizeInstance
 } = require('../models');
 const { deleteUndefined } = require('../utils/objects');
+const { omit } = require('../utils/lodash');
 const { databaseError, internalServerError, notFound } = require('../errors/builders');
 
 const includeForAssistance = [
@@ -96,10 +97,11 @@ exports.createAssistance = attrs => {
     });
 };
 
-exports.getAssistanceById = ({ id }) => {
+exports.getAssistanceById = ({ id }, options = {}) => {
   logger.info(`Attempting to get assistance with id: ${inspect(id)}`);
   return Assistance.findByPk(id, {
-    include: includeForAssistance
+    include: includeForAssistance,
+    ...options
   }).catch(err => {
     logger.error(inspect(err));
     throw databaseError(`Error getting a assistance, reason: ${err.message}`);
@@ -119,4 +121,44 @@ exports.deleteAssistance = filters => {
       logger.error(inspect(err));
       throw databaseError(`There was an error deleting the assistance: ${err.message}`);
     });
+};
+
+const updateEntity = (attributes, entity, options = {}) => {
+  logger.info(`Attempting to update entity: ${inspect(entity.toString())} with attributes: ${inspect(attributes)}`);
+  return entity.update(attributes, options).catch(err => {
+    logger.error(inspect(err));
+    logger.error(inspect('blah'));
+    logger.error(inspect(err.sql));
+    logger.error(inspect('blah'));
+    throw databaseError(`There was an error updating the entity: ${err.message}`);
+  });
+};
+
+exports.updateAssistance = attributes => {
+  logger.info(`Attempting to update assistance with attributes: ${inspect(attributes)}`);
+  return sequelizeInstance.transaction(transaction =>
+    this.getAssistanceById(attributes, { transaction }).then(assistance => {
+      if (!assistance) throw notFound('The assistance was not found');
+      const callAttrs = omit(attributes.call, ['representative', 'aggressor', 'violenceTypes']);
+      const assistanceAttrs = omit(attributes, ['call', 'victim', 'userId']);
+      const victimAttrs = omit(attributes.victim, ['disabilities']);
+      const aggressorAttrs = attributes.call.aggressor;
+      const representativeAttrs = attributes.call.representative;
+      const { victim, call } = assistance.dataValues;
+      const { aggressor, representative } = call;
+      console.log(call);
+      console.log('bar');
+      const promises = [
+        updateEntity(assistanceAttrs, assistance, { transaction }),
+        updateEntity(aggressorAttrs, aggressor, { transaction }),
+        updateEntity(representativeAttrs, representative, { transaction }),
+        updateEntity(callAttrs, call, { transaction }),
+        updateEntity(victimAttrs, victim, { transaction }),
+        victim.setDisabilities(attributes.victim.disabilities, { transaction }),
+        call.setViolenceTypes(attributes.call.violenceTypes, { transaction })
+      ];
+      console.log('foo');
+      return Promise.all(promises);
+    })
+  );
 };

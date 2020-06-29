@@ -4,14 +4,16 @@ const {
   createAssistance,
   getAssistances,
   getAssistance,
-  deleteAssistance
+  deleteAssistance,
+  updateAssistance
 } = require('../controllers/assistances');
 const { validateSchemaAndFail } = require('../middlewares/params_validator');
 const {
   getAssistancesSchema,
   createAssistanceSchema,
   getAssistanceSchema,
-  deleteAssistanceSchema
+  deleteAssistanceSchema,
+  updateAssistanceSchema
 } = require('../schemas/assistances');
 
 const assistancesRouter = createRouter();
@@ -41,5 +43,11 @@ exports.init = app => {
     checkTokenAndSetUser,
     validateSchemaAndFail(deleteAssistanceSchema),
     deleteAssistance
+  );
+  assistancesRouter.put(
+    '/:id',
+    checkTokenAndSetUser,
+    validateSchemaAndFail(updateAssistanceSchema),
+    updateAssistance
   );
 };
