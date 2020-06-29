@@ -96,18 +96,18 @@ module.exports = {
                        ('origen 3', true, now(), now(), null)
                 on conflict do nothing;
             
-                if (select count(1) from victims) > 0
+                if (select count(1) from victims) = 0
                 then
             
                   insert into victims (identification_code, first_name, last_name, phone_number, address, birth_date, age, sex,
                                        sex_clarification, identification_type_id, city_id, created_at, updated_at, deleted_at)
-                  values ('12345678', 'valeria', 'giardino', '1234567890', 'calle falsa 1234', now(), 32, 'female', null, 'dni', 2,
+                  values ('12345678', 'valeria', 'giardino', '1234567890', 'calle falsa 1234', now(), 32, 'female', null, 1, 2,
                           now(),
                           now(), null),
-                         ('87654321', 'mariana', 'martinez', '0987654321', 'calle fake ddd', now(), 23, 'female', 'nsnc', 'lc', 3,
+                         ('87654321', 'mariana', 'martinez', '0987654321', 'calle fake ddd', now(), 23, 'female', 'nsnc', 2, 3,
                           now(),
                           now(), null),
-                         ('43215678', 'marcos', 'robledo', '5432167890', 'fulanitodetal 22', now(), 43, 'male', 'transgénero', 'le',
+                         ('43215678', 'marcos', 'robledo', '5432167890', 'fulanitodetal 22', now(), 43, 'male', 'transgénero', 3,
                           4,
                           now(), now(), null);
             
@@ -139,8 +139,8 @@ module.exports = {
             
                   insert into aggressors (first_name, last_name, occupation, identification_code, address, identification_type_id,
                                           city_id, call_id, created_at, updated_at, deleted_at)
-                  values ('roberto', 'mangeri', 'kiosquero', '12345678', 'yrigoyen 123', 'dni', 2, 1, now(), now(), null),
-                         ('dario', 'jorgelin', 'electricista', '87654321', 'colon 333', 'le', 3, 2, now(), now(), null);
+                  values ('roberto', 'mangeri', 'kiosquero', '12345678', 'yrigoyen 123', 1, 2, 1, now(), now(), null),
+                         ('dario', 'jorgelin', 'electricista', '87654321', 'colon 333', 2, 3, 2, now(), now(), null);
             
                   insert into representatives (first_name, last_name, representative_type_id, relationship_type_id, call_id,
                                                created_at,

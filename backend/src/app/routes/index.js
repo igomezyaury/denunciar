@@ -1,6 +1,7 @@
 const { healthCheck } = require('../controllers/health_check');
 const usersRoute = require('./users');
 const sessionsRoute = require('./sessions');
+const assistancesRoute = require('./assistances');
 const crudRouter = require('./crud');
 const {
   City,
@@ -31,6 +32,6 @@ const crudRoutes = [
 exports.init = app => {
   app.get('/health', healthCheck);
   crudRoutes.forEach(crudRoute => crudRouter.init(app, crudRoute));
-  const routes = [usersRoute, sessionsRoute];
+  const routes = [usersRoute, sessionsRoute, assistancesRoute];
   routes.forEach(route => route.init(app));
 };
