@@ -1,0 +1,41 @@
+.navbar {
+    background-color: #8C008C;
+}
+
+.nav-link {
+    color: #e4edf1;
+}
+
+.fa-user {
+    font-size: 20px;
+}
+
+.sidebar{
+    background-color: #8C008C;
+    height: 100%;
+    position: fixed;
+    -webkit-transition: width 3s;
+    transition: width 3s;
+    width: 250px;
+}
+
+.sidebar a {
+    color: white;
+    font-size: 20px;
+}
+
+.sidebar a:hover {
+    border-radius: 5px;
+    background-color: rgb(175, 59, 175);
+    margin: 10px;
+}
+
+.sidebar .navbar-brand {
+    font-weight: bold;
+    font-size: x-large;
+    pointer-events: none;
+}
+
+.sidebar i{
+    font-size: 25px;
+}
