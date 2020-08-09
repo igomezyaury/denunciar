@@ -1,6 +1,6 @@
 const pagination = require('./pagination');
 const { isArray, isInteger } = require('../utils/lodash');
-const { ASSISTANCE_TYPES } = require('../utils/constants');
+const { ASSISTANCE_TYPES, ASSISTANCE_CODES } = require('../utils/constants');
 const authorization = require('./authorizations');
 const {
   phoneNumberInBody,
@@ -23,7 +23,7 @@ const {
   derivationTypeIdInBody,
   firstCallInBody,
   femicideRiskInBody,
-  codBInBody
+  codeInBody
 } = require('../errors/schema_messages');
 const { addCommonProperties, ID } = require('./common');
 const { Assistance } = require('../models');
@@ -38,9 +38,16 @@ exports.createAssistanceSchema = addCommonProperties(
     ...authorization,
     phone_number: { in: ['body'], isString: true, trim: true, errorMessage: phoneNumberInBody },
     first_call: { in: ['body'], isBoolean: true, toBoolean: true, errorMessage: firstCallInBody },
-    femicide_risk: { in: ['body'], isBoolean: true, toBoolean: true, errorMessage: femicideRiskInBody },
-    cod_b: { in: ['body'], isBoolean: true, toBoolean: true, errorMessage: codBInBody },
-    summary: { in: ['body'], isString: true, optional: true, trim: true },
+    femicide_risk: {in: ['body'], isBoolean: true, toBoolean: true, errorMessage: femicideRiskInBody},
+    code: {
+      in: ['body'],
+      isString: true,
+      errorMessage: codeInBody,
+      custom: {
+        options: value => value && Object.values(ASSISTANCE_CODES).includes(value.toLowerCase())
+      }
+    },
+    summary: {in: ['body'], isString: true, optional: true, trim: true},
     derivation_observation: { in: ['body'], isString: true, optional: true, trim: true },
     assistance_type: {
       in: ['body'],

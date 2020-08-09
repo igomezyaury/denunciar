@@ -12,3 +12,9 @@ exports.ASSISTANCE_TYPES = {
   COUNSELING: 'counseling',
   EMERGENCY: 'emergency'
 };
+
+exports.ASSISTANCE_CODES = {
+  A: 'a',
+  B: 'b',
+  C: 'c'
+};
