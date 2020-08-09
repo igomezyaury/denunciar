@@ -10,7 +10,7 @@ exports.createAssistanceMapper = req =>
       phoneNumber: req.body.phone_number,
       firstCall: req.body.first_call,
       femicideRisk: req.body.femicide_risk,
-      codB: req.body.cod_b,
+      code: req.body.code,
       summary: req.body.summary,
       derivationObservation: req.body.derivation_observation,
       assistanceType: req.body.assistance_type,
