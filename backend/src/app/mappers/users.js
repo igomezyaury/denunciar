@@ -1,6 +1,6 @@
-const { pagination, addCommonProperties, OPTIONAL_ACTIVE, ACTIVE, ID } = require('./common');
+const {pagination, addCommonProperties, OPTIONAL_ACTIVE, ACTIVE, ID} = require('./common');
 const {
-  USER_ROLES: { NORMAL }
+  USER_ROLES: {NORMAL}
 } = require('../utils/constants');
 
 exports.getUsersMapper = req => ({
@@ -36,6 +36,7 @@ exports.updateUserMapper = req =>
       identificationTypeId: req.body.identification_type_id,
       birthDate: req.body.birth_date,
       email: req.body.email,
+      password: req.body.password,
       rol: req.body.rol
     },
     req,
