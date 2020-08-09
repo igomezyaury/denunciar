@@ -21,7 +21,7 @@ exports.login = (req, res, next) =>
           );
         }
         return generateTokens({ user, req }).then(([accessToken, refreshToken]) =>
-          res.status(200).send(login({ accessToken, refreshToken }))
+          res.status(200).send(login({ accessToken, refreshToken, user: { firstName: user.firstName, lastName: user.lastName, rol: user.rol } }))
         );
       });
     })
