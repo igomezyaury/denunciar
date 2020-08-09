@@ -511,8 +511,8 @@ module.exports = {
                                                           type: BOOLEAN,
                                                           allowNull: false
                                                         },
-                                                        cod_b: {
-                                                          type: BOOLEAN,
+                                                        code: {
+                                                          type: STRING,
                                                           allowNull: false
                                                         },
                                                         summary: {

@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       phoneNumber: { type: STRING, allowNull: false },
       firstCall: { type: BOOLEAN, allowNull: false },
       femicideRisk: { type: BOOLEAN, allowNull: false },
-      codB: { type: BOOLEAN, allowNull: false },
+      code: { type: STRING, allowNull: false },
       summary: { type: STRING, allowNull: false },
       derivationObservation: { type: STRING, allowNull: false },
       assistanceType: { type: STRING, allowNull: false },

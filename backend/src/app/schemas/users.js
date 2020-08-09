@@ -37,7 +37,7 @@ exports.createUserSchema = addCommonProperties(
       in: ['body'],
       isString: true,
       optional: true,
-      custom: { options: value => value === undefined || (value && Object.keys(USER_ROLES).includes(value)) },
+      custom: { options: value => value === undefined || (value && Object.values(USER_ROLES).includes(value)) },
       errorMessage: rolInBody
     }
   },
@@ -61,10 +61,11 @@ exports.updateUserSchema = addCommonProperties(
     identification_type_id: { in: ['body'], isNumeric: true, errorMessage: identificationTypeIdInBody },
     birth_date: { in: ['body'], isISO8601: true, toDate: true, errorMessage: birthDateInBody },
     email: { in: ['body'], isString: true, trim: true, isEmail: true, errorMessage: emailInBody },
+    password: { in: ['body'], isString: true, optional: true, errorMessage: passwordInBody },
     rol: {
       in: ['body'],
       isString: true,
-      custom: { options: value => value && Object.keys(USER_ROLES).includes(value) },
+      custom: { options: value => value && Object.values(USER_ROLES).includes(value) },
       errorMessage: rolInBody
     }
   },

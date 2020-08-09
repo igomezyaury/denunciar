@@ -58,4 +58,4 @@ exports.callViolenceTypesInBody = `${arrayMessage('call.violence_types_ids')} ${
 exports.derivationTypeIdInBody = `${integerMessage('derivation_type_id')} ${containedMessage('body')}`;
 exports.firstCallInBody = `${booleanMessage('first_call')} ${containedMessage('body')}`;
 exports.femicideRiskInBody = `${booleanMessage('femicide_risk')} ${containedMessage('body')}`;
-exports.codBInBody = `${booleanMessage('cod_b')} ${containedMessage('body')}`;
+exports.codeInBody = `${booleanMessage('code')} ${containedMessage('body')}`;

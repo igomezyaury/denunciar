@@ -111,12 +111,12 @@ module.exports = {
                           4,
                           now(), now(), null);
             
-                  insert into assistances (phone_number, first_call, femicide_risk, cod_b, summary, derivation_observation,
+                  insert into assistances (phone_number, first_call, femicide_risk, code, summary, derivation_observation,
                                            assistance_type, victim_id, user_id, derivation_type_id, created_at, updated_at,
                                            deleted_at)
-                  values ('1234567890', true, false, false, 'blah blah blahhhh', 'ble bleh', 'emergency', 1, 2, 2, now(), now(),
+                  values ('1234567890', true, false, 'A', 'blah blah blahhhh', 'ble bleh', 'emergency', 1, 2, 2, now(), now(),
                           null),
-                         ('0987654321', false, true, true, 'resumen de las cosas', 'lo derivamos porque si', 'counseling', 2, 2, 3,
+                         ('0987654321', false, true, 'C', 'resumen de las cosas', 'lo derivamos porque si', 'counseling', 2, 2, 3,
                           now(),
                           now(), null);
             
