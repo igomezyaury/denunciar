@@ -4,14 +4,12 @@ import { HeaderComponent } from './header/header.component';
 import { LayoutComponent } from './layout/layout.component';
 import { AppRoutingModule } from '../app-routing.module';
 import { RouterModule } from '@angular/router';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { SidebarModule } from 'ng-sidebar';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     LayoutComponent,
-    SidebarComponent,
   ],
   exports: [HeaderComponent],
   imports: [CommonModule, AppRoutingModule, RouterModule, SidebarModule.forRoot()],
