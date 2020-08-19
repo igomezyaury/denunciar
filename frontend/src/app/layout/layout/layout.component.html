@@ -1,2 +1,30 @@
 <app-header></app-header>
-<router-outlet></router-outlet>
+<!-- TODO: move sidebar to separate component -->
+<ng-sidebar-container>
+    <ng-sidebar mode="push" [opened]="headerComponent.sidebarOpened">
+        <div class="dropdown-divider mx-2 mt-3"></div>
+        <h3 class="sidebar-title ml-3">Menú principal</h3>
+        <div class="dropdown-divider mx-2"></div>
+        <ul class="list-unstyled">
+            <li><a *ngIf="user.rol === 'admin'" class="nav-link mt-4" routerLink="/users/create">
+                <i class="fa fa-user-plus mr-2"></i>
+                Alta de usuario
+            </a></li>
+            <li><a *ngIf="user.rol === 'admin'" class="nav-link  mt-3" routerLink="/users/edit" href="#">
+                <i class="fa fa-edit mr-2"></i>
+                Modificación de usuario
+            </a></li>
+            <li><a class="nav-link  mt-3" href="#">
+                <i class="fa fa-phone mr-2"></i>
+                Llamadas
+            </a></li>
+            <li><a class="nav-link  mt-3" href="#">
+                <i class="fa fa-print mr-2"></i>
+                Reportes
+            </a></li>
+        </ul>
+    </ng-sidebar>
+    <div ng-sidebar-content>
+        <router-outlet></router-outlet>
+    </div>
+</ng-sidebar-container>

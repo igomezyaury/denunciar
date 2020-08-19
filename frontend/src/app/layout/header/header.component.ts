@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -6,10 +6,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  public user;
 
-  constructor() { }
+  public sidebarOpened: boolean = false;
+
+  constructor() {
+    this.user = JSON.parse(localStorage.getItem('user'));
+   }
 
   ngOnInit(): void {
   }
 
+  toggleSidebar(){
+    this.sidebarOpened = !this.sidebarOpened;
+  }
 }
