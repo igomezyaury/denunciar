@@ -1,5 +1,6 @@
 .navbar {
-    background-color: #8C008C;
+    // background-color: #8C008C;
+    background: linear-gradient(173deg, rgba(140,0,128,1) 0%, rgba(227,37,211,1) 100%);
 }
 
 .nav-link {
@@ -10,32 +11,12 @@
     font-size: 20px;
 }
 
-.sidebar{
-    background-color: #8C008C;
-    height: 100%;
-    position: fixed;
-    -webkit-transition: width 3s;
-    transition: width 3s;
-    width: 250px;
+.fa-bars {
+    font-size: 30px;
+    color: #e4edf1;
 }
 
-.sidebar a {
+.fa-bars:hover{
     color: white;
-    font-size: 20px;
-}
-
-.sidebar a:hover {
-    border-radius: 5px;
-    background-color: rgb(175, 59, 175);
-    margin: 10px;
-}
-
-.sidebar .navbar-brand {
-    font-weight: bold;
-    font-size: x-large;
-    pointer-events: none;
-}
-
-.sidebar i{
-    font-size: 25px;
+    cursor: pointer;
 }

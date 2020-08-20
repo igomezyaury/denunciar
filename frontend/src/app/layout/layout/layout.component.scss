@@ -1,0 +1,32 @@
+ng-sidebar-container {
+    height: 100vh;
+}
+
+//ng-deep needed to target ng-sidebar's inner classes
+::ng-deep .ng-sidebar {
+    // background-color: #8C008C;
+    background: linear-gradient(86deg, rgba(140,0,128,1) 0%, rgba(227,37,211,1) 100%);
+    width: 250px;
+}
+
+::ng-deep .ng-sidebar--opened {
+    box-shadow: 0 0 2.5em #8C008C;
+}
+
+.sidebar-title {
+    color: #e4edf1;
+    font-weight: bold;
+    font-size: x-large;
+}
+
+ng-sidebar ul li a{
+    color: #e4edf1;
+    font-size: 20px;
+}
+
+ng-sidebar ul li a:hover{
+    border-radius: 5px;
+    background-color: rgb(175, 59, 175);
+    margin: 10px;
+    color: white;
+}

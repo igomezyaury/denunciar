@@ -7,6 +7,9 @@ import { environment } from 'src/environments/environment';
 @Injectable()
 export class AuthenticationService {
   
+    /**
+     * @todo: store user in variable rather than using it directly from localStorage  
+     * */ 
     // private currentUserSubject: BehaviorSubject<User>;
     // public currentUser: Observable<User>;
     private token: string;
@@ -27,12 +30,14 @@ export class AuthenticationService {
         })
         .pipe(map((res: any) => {
             localStorage.setItem('token', res.access_token);
+            localStorage.setItem('user', JSON.stringify(res.user));
             this.token = res.access_token;
         }));
     }
 
     logout() {
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
         this.token = null;
     }
 
