@@ -8,13 +8,18 @@ const {
   Disability,
   Representative,
   ViolenceType,
-  sequelizeInstance
+  sequelizeInstance,
+  DerivationType
 } = require('../models');
 const { deleteUndefined } = require('../utils/objects');
 const { omit } = require('../utils/lodash');
 const { databaseError, internalServerError, notFound } = require('../errors/builders');
 
 const includeForAssistance = [
+  {
+    model: DerivationType,
+    as: 'derivationTypes'
+  },
   {
     model: Call,
     as: 'call',
@@ -73,8 +78,9 @@ exports.createAssistance = attrs => {
     .transaction(transaction =>
       createVictim(attrs.victim, transaction).then(victim => {
         attrs.victimId = victim.id;
-        return Assistance.create(attrs, { transaction }).then(({ id: assistanceId }) => {
-          attrs.call.assistanceId = assistanceId;
+        return Assistance.create(attrs, {transaction}).then(assistance => {
+          assistance.setDerivationTypes(attrs.derivationTypes, {transaction});
+          attrs.call.assistanceId = assistance.id;
           return createCall(attrs.call, transaction).then(call => {
             attrs.call.aggressor.callId = call.id;
             attrs.call.representative.callId = call.id;
@@ -140,14 +146,12 @@ exports.updateAssistance = attributes => {
     this.getAssistanceById(attributes, { transaction }).then(assistance => {
       if (!assistance) throw notFound('The assistance was not found');
       const callAttrs = omit(attributes.call, ['representative', 'aggressor', 'violenceTypes']);
-      const assistanceAttrs = omit(attributes, ['call', 'victim', 'userId']);
+      const assistanceAttrs = omit(attributes, ['call', 'victim', 'userId', 'derivationTypes']);
       const victimAttrs = omit(attributes.victim, ['disabilities']);
       const aggressorAttrs = attributes.call.aggressor;
       const representativeAttrs = attributes.call.representative;
-      const { victim, call } = assistance.dataValues;
-      const { aggressor, representative } = call;
-      console.log(call);
-      console.log('bar');
+      const {victim, call} = assistance.dataValues;
+      const {aggressor, representative} = call;
       const promises = [
         updateEntity(assistanceAttrs, assistance, { transaction }),
         updateEntity(aggressorAttrs, aggressor, { transaction }),
@@ -155,9 +159,9 @@ exports.updateAssistance = attributes => {
         updateEntity(callAttrs, call, { transaction }),
         updateEntity(victimAttrs, victim, { transaction }),
         victim.setDisabilities(attributes.victim.disabilities, { transaction }),
-        call.setViolenceTypes(attributes.call.violenceTypes, { transaction })
+        call.setViolenceTypes(attributes.call.violenceTypes, { transaction }),
+        assistance.setDerivationTypes(attributes.derivationTypes, {transaction})
       ];
-      console.log('foo');
       return Promise.all(promises);
     })
   );
