@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       summary: { type: STRING, allowNull: false },
       derivationObservation: { type: STRING, allowNull: false },
       assistanceType: { type: STRING, allowNull: false },
+      datetime: { type: DATE, allowNull: false },
       createdAt: { type: DATE, allowNull: false },
       updatedAt: { type: DATE, allowNull: false },
       deletedAt: DATE

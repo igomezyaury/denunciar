@@ -178,12 +178,12 @@ module.exports = {
                           now(), now(), null);
             
                   insert into assistances (phone_number, first_call, femicide_risk, code, summary, derivation_observation,
-                                           assistance_type, victim_id, user_id, created_at, updated_at,
+                                           assistance_type, victim_id, user_id, datetime, created_at, updated_at,
                                            deleted_at)
-                  values ('1234567890', true, false, 'A', 'blah blah blahhhh', 'ble bleh', 'emergency', 1, 2, now(), now(),
+                  values ('1234567890', true, false, 'A', 'blah blah blahhhh', 'ble bleh', 'emergency', 1, 2, now(), now(), now(),
                           null),
                          ('0987654321', false, true, 'C', 'resumen de las cosas', 'lo derivamos porque si', 'counseling', 2, 2,
-                          now(),
+                          now(), now(),
                           now(), null);
             
                   insert into derivation_types_by_assistance (derivation_type_id, assistance_id, created_at, updated_at, deleted_at)

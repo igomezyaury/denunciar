@@ -23,7 +23,8 @@ const {
   derivationTypesIdsInBody,
   firstCallInBody,
   femicideRiskInBody,
-  codeInBody
+  codeInBody,
+  datetimeInBody
 } = require('../errors/schema_messages');
 const { addCommonProperties, ID } = require('./common');
 const { Assistance } = require('../models');
@@ -37,6 +38,7 @@ exports.createAssistanceSchema = addCommonProperties(
   {
     ...authorization,
     phone_number: { in: ['body'], isString: true, trim: true, errorMessage: phoneNumberInBody },
+    datetime: { in: ['body'], isISO8601: true, toDate: true, errorMessage: datetimeInBody },
     first_call: { in: ['body'], isBoolean: true, toBoolean: true, errorMessage: firstCallInBody },
     femicide_risk: {in: ['body'], isBoolean: true, toBoolean: true, errorMessage: femicideRiskInBody},
     code: {
