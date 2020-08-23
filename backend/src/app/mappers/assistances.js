@@ -14,7 +14,7 @@ exports.createAssistanceMapper = req =>
       summary: req.body.summary,
       derivationObservation: req.body.derivation_observation,
       assistanceType: req.body.assistance_type,
-      derivationTypeId: req.body.derivation_type_id,
+      derivationTypes: req.body.derivation_types,
       userId: req.user.id,
       victim: {
         firstName: req.body.victim.first_name,
