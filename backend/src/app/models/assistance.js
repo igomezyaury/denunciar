@@ -20,9 +20,13 @@ module.exports = (sequelize, DataTypes) => {
   Assistance.associate = models => {
     const { Call, Victim, DerivationType, User } = models;
     Assistance.belongsTo(User, { as: 'user', foreignKey: 'userId' });
-    Assistance.belongsTo(DerivationType, { as: 'derivationType', foreignKey: 'derivationTypeId' });
     Assistance.belongsTo(Victim, { as: 'victim', foreignKey: 'victimId' });
     Assistance.hasOne(Call, { as: 'call', foreignKey: 'assistanceId' });
+    Assistance.belongsToMany(DerivationType, {
+      as: 'derivationTypes',
+      through: 'derivation_types_by_assistance',
+      foreignKey: 'assistanceId'
+    });
   };
   return Assistance;
 };

@@ -14,7 +14,11 @@ module.exports = (sequelize, DataTypes) => {
   );
   DerivationType.associate = models => {
     const { Assistance } = models;
-    DerivationType.hasMany(Assistance, { as: 'assistances', foreignKey: 'derivationTypeId' });
+    DerivationType.belongsToMany(Assistance, {
+      as: 'assistances',
+      through: 'derivation_types_by_assistance',
+      foreignKey: 'derivationTypeId'
+    });
   };
   return DerivationType;
 };
