@@ -138,6 +138,10 @@ module.exports = {
                         type: STRING,
                         allowNull: false
                       },
+                      codes: {
+                        type: STRING,
+                        allowNull: false
+                      },
                       active: {
                         type: BOOLEAN,
                         allowNull: false
