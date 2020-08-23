@@ -138,6 +138,10 @@ module.exports = {
                         type: STRING,
                         allowNull: false
                       },
+                      codes: {
+                        type: STRING,
+                        allowNull: false
+                      },
                       active: {
                         type: BOOLEAN,
                         allowNull: false
@@ -543,14 +547,6 @@ module.exports = {
                                                           },
                                                           allowNull: false
                                                         },
-                                                        derivation_type_id: {
-                                                          type: INTEGER,
-                                                          references: {
-                                                            model: 'derivation_types',
-                                                            key: 'id'
-                                                          },
-                                                          allowNull: false
-                                                        },
                                                         created_at: {
                                                           type: DATE,
                                                           allowNull: false
@@ -750,43 +746,26 @@ module.exports = {
                                                                         deleted_at: DATE
                                                                       })
                                                                       .then(() =>
-                                                                        queryInterface.createTable(
-                                                                          'representatives',
-                                                                          {
+                                                                        queryInterface
+                                                                          .createTable('derivation_types_by_assistance', {
                                                                             id: {
                                                                               autoIncrement: true,
                                                                               primaryKey: true,
                                                                               allowNull: false,
                                                                               type: INTEGER
                                                                             },
-                                                                            first_name: {
-                                                                              type: STRING,
-                                                                              allowNull: false
-                                                                            },
-                                                                            last_name: {
-                                                                              type: STRING,
-                                                                              allowNull: false
-                                                                            },
-                                                                            representative_type_id: {
+                                                                            derivation_type_id: {
                                                                               type: INTEGER,
                                                                               references: {
-                                                                                model: 'representative_types',
+                                                                                model: 'derivation_types',
                                                                                 key: 'id'
                                                                               },
                                                                               allowNull: false
                                                                             },
-                                                                            relationship_type_id: {
+                                                                            assistance_id: {
                                                                               type: INTEGER,
                                                                               references: {
-                                                                                model: 'relationship_types',
-                                                                                key: 'id'
-                                                                              },
-                                                                              allowNull: false
-                                                                            },
-                                                                            call_id: {
-                                                                              type: INTEGER,
-                                                                              references: {
-                                                                                model: 'calls',
+                                                                                model: 'assistances',
                                                                                 key: 'id'
                                                                               },
                                                                               allowNull: false
@@ -800,8 +779,61 @@ module.exports = {
                                                                               allowNull: false
                                                                             },
                                                                             deleted_at: DATE
-                                                                          }
-                                                                        )
+                                                                          })
+                                                                          .then(() =>
+                                                                            queryInterface.createTable(
+                                                                              'representatives',
+                                                                              {
+                                                                                id: {
+                                                                                  autoIncrement: true,
+                                                                                  primaryKey: true,
+                                                                                  allowNull: false,
+                                                                                  type: INTEGER
+                                                                                },
+                                                                                first_name: {
+                                                                                  type: STRING,
+                                                                                  allowNull: false
+                                                                                },
+                                                                                last_name: {
+                                                                                  type: STRING,
+                                                                                  allowNull: false
+                                                                                },
+                                                                                representative_type_id: {
+                                                                                  type: INTEGER,
+                                                                                  references: {
+                                                                                    model: 'representative_types',
+                                                                                    key: 'id'
+                                                                                  },
+                                                                                  allowNull: false
+                                                                                },
+                                                                                relationship_type_id: {
+                                                                                  type: INTEGER,
+                                                                                  references: {
+                                                                                    model: 'relationship_types',
+                                                                                    key: 'id'
+                                                                                  },
+                                                                                  allowNull: false
+                                                                                },
+                                                                                call_id: {
+                                                                                  type: INTEGER,
+                                                                                  references: {
+                                                                                    model: 'calls',
+                                                                                    key: 'id'
+                                                                                  },
+                                                                                  allowNull: false
+                                                                                },
+                                                                                created_at: {
+                                                                                  type: DATE,
+                                                                                  allowNull: false
+                                                                                },
+                                                                                updated_at: {
+                                                                                  type: DATE,
+                                                                                  allowNull: false
+                                                                                },
+                                                                                deleted_at: DATE
+                                                                              }
+                                                                            )
+                                                                          )
                                                                       )
                                                                   )
                                                               )
@@ -824,20 +856,22 @@ module.exports = {
     dropTable('representatives').then(() =>
       dropTable('aggressors').then(() =>
         dropTable('violence_types_by_call').then(() =>
-          dropTable('disabilities_by_victim').then(() =>
-            dropTable('victims').then(() =>
-              dropTable('calls').then(() =>
-                dropTable('assistances').then(() =>
-                  dropTable('identification_types').then(() =>
-                    dropTable('origin_types').then(() =>
-                      dropTable('relationship_types').then(() =>
-                        dropTable('representative_types').then(() =>
-                          dropTable('vulnerable_populations').then(() =>
-                            dropTable('violence_types').then(() =>
-                              dropTable('cities').then(() =>
-                                dropTable('complaint_reasons').then(() =>
-                                  dropTable('users').then(() =>
-                                    dropTable('derivation_types').then(() => dropTable('disabilities'))
+          dropTable('violence_types_by_assistance').then(() =>
+            dropTable('disabilities_by_victim').then(() =>
+              dropTable('victims').then(() =>
+                dropTable('calls').then(() =>
+                  dropTable('assistances').then(() =>
+                    dropTable('identification_types').then(() =>
+                      dropTable('origin_types').then(() =>
+                        dropTable('relationship_types').then(() =>
+                          dropTable('representative_types').then(() =>
+                            dropTable('vulnerable_populations').then(() =>
+                              dropTable('violence_types').then(() =>
+                                dropTable('cities').then(() =>
+                                  dropTable('complaint_reasons').then(() =>
+                                    dropTable('users').then(() =>
+                                      dropTable('derivation_types').then(() => dropTable('disabilities'))
+                                    )
                                   )
                                 )
                               )

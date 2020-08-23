@@ -20,7 +20,7 @@ const {
   callComplaintReasonIdInBody,
   callOriginTypeIdInBody,
   callViolenceTypesIdsInBody,
-  derivationTypeIdInBody,
+  derivationTypesIdsInBody,
   firstCallInBody,
   femicideRiskInBody,
   codeInBody
@@ -58,7 +58,13 @@ exports.createAssistanceSchema = addCommonProperties(
         options: value => value && Object.keys(ASSISTANCE_TYPES).includes(value.toUpperCase())
       }
     },
-    derivation_type_id: { in: ['body'], isNumeric: true, errorMessage: derivationTypeIdInBody },
+    derivation_types: {
+      in: ['body'],
+      custom: {
+        options: value => value && value.length && isArray(value) && value.every(isInteger)
+      },
+      errorMessage: derivationTypesIdsInBody
+    },
     'victim.first_name': { in: ['body'], isString: true, trim: true, errorMessage: victimFirstNameInBody },
     'victim.last_name': { in: ['body'], isString: true, trim: true, errorMessage: victimLastNameInBody },
     'victim.identification_code': {
