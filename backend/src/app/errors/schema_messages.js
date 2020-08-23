@@ -55,7 +55,7 @@ exports.callComplaintReasonIdInBody = `${integerMessage('call.complaint_reason_i
 )}`;
 exports.callOriginTypeIdInBody = `${integerMessage('call.origin_type_id')} ${containedMessage('body')}`;
 exports.callViolenceTypesInBody = `${arrayMessage('call.violence_types_ids')} ${containedMessage('body')}`;
-exports.derivationTypeIdInBody = `${integerMessage('derivation_type_id')} ${containedMessage('body')}`;
+exports.derivationTypesIdsInBody = `${arrayMessage('derivation_types')} ${containedMessage('body')}`;
 exports.firstCallInBody = `${booleanMessage('first_call')} ${containedMessage('body')}`;
 exports.femicideRiskInBody = `${booleanMessage('femicide_risk')} ${containedMessage('body')}`;
 exports.codeInBody = `${booleanMessage('code')} ${containedMessage('body')}`;
