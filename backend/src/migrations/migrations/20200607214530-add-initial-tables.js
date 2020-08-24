@@ -547,6 +547,10 @@ module.exports = {
                                                           },
                                                           allowNull: false
                                                         },
+                                                        datetime: {
+                                                          type: DATE,
+                                                          allowNull: false
+                                                        },
                                                         created_at: {
                                                           type: DATE,
                                                           allowNull: false

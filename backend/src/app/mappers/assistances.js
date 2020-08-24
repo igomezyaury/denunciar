@@ -9,6 +9,7 @@ exports.createAssistanceMapper = req =>
     {
       phoneNumber: req.body.phone_number,
       firstCall: req.body.first_call,
+      datetime: req.body.datetime,
       femicideRisk: req.body.femicide_risk,
       code: req.body.code,
       summary: req.body.summary,

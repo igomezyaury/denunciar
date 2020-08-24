@@ -59,3 +59,4 @@ exports.derivationTypesIdsInBody = `${arrayMessage('derivation_types')} ${contai
 exports.firstCallInBody = `${booleanMessage('first_call')} ${containedMessage('body')}`;
 exports.femicideRiskInBody = `${booleanMessage('femicide_risk')} ${containedMessage('body')}`;
 exports.codeInBody = `${booleanMessage('code')} ${containedMessage('body')}`;
+exports.datetimeInBody = `${dateMessage('datetime')} ${containedMessage('body')}`;
