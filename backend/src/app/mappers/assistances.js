@@ -63,3 +63,8 @@ exports.deleteAssistanceMapper = req => addCommonProperties({}, req, [ID]);
 
 exports.updateAssistanceMapper = req =>
   addCommonProperties({ ...this.createAssistanceMapper(req) }, req, [ID]);
+
+exports.dateAssistanceMapper = req => ({
+  fromDate: req.query.from_date,
+  toDate: req.query.to_date
+});

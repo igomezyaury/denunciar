@@ -3,16 +3,22 @@ const {
   createAssistance,
   getAssistanceById,
   deleteAssistance,
-  updateAssistance
+  updateAssistance,
+  countByDerivationType,
+  countByViolenceType,
+  countByOriginType
 } = require('../services/assistances');
 const {
   getAssistancesMapper,
   createAssistanceMapper,
   getAssistanceMapper,
   deleteAssistanceMapper,
-  updateAssistanceMapper
+  updateAssistanceMapper,
+  dateAssistanceMapper
 } = require('../mappers/assistances');
 const { getAssistanceSerializer, getAssistancesSerializer } = require('../serializers/assistances');
+const { objectToSnakeCase } = require('../utils/objects');
+const { omit } = require('../utils/lodash');
 
 exports.getAssistances = (req, res, next) => {
   const filters = getAssistancesMapper(req);
@@ -42,5 +48,27 @@ exports.updateAssistance = (req, res, next) => {
   const newAttributes = updateAssistanceMapper(req);
   return updateAssistance(newAttributes)
     .then(() => res.status(204).end())
+    .catch(next);
+};
+
+function getObjectToSnakeCase(stats) {
+  return stats.map(element => objectToSnakeCase(omit(element.dataValues, ['deletedAt'])));
+}
+
+exports.countByDerivationType = (req, res, next) => {
+  countByDerivationType(dateAssistanceMapper(req))
+    .then(stats => res.status(200).send(getObjectToSnakeCase(stats)))
+    .catch(next);
+};
+
+exports.countByViolenceType = (req, res, next) => {
+  countByViolenceType(dateAssistanceMapper(req))
+    .then(stats => res.status(200).send(getObjectToSnakeCase(stats)))
+    .catch(next);
+};
+
+exports.countByOriginType = (req, res, next) => {
+  countByOriginType(dateAssistanceMapper(req))
+    .then(stats => res.status(200).send(getObjectToSnakeCase(stats)))
     .catch(next);
 };
