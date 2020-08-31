@@ -60,3 +60,5 @@ exports.firstCallInBody = `${booleanMessage('first_call')} ${containedMessage('b
 exports.femicideRiskInBody = `${booleanMessage('femicide_risk')} ${containedMessage('body')}`;
 exports.codeInBody = `${booleanMessage('code')} ${containedMessage('body')}`;
 exports.datetimeInBody = `${dateMessage('datetime')} ${containedMessage('body')}`;
+exports.fromDateAssistanceInQuery = `${dateMessage('from_date')} ${containedMessage('query')}`;
+exports.toDateAssistanceInQuery = `${dateMessage('to_date')} ${containedMessage('query')}`;

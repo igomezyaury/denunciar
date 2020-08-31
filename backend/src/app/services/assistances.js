@@ -9,7 +9,9 @@ const {
   Representative,
   ViolenceType,
   sequelizeInstance,
-  DerivationType
+  DerivationType,
+  sequelizePackage,
+  OriginType
 } = require('../models');
 const { deleteUndefined } = require('../utils/objects');
 const { omit } = require('../utils/lodash');
@@ -165,4 +167,121 @@ exports.updateAssistance = attributes => {
       return Promise.all(promises);
     })
   );
+};
+
+exports.countByDerivationType = params => {
+  logger.info(`Attempting to count assistances by derivation type with params: ${inspect(params)}`);
+
+  return DerivationType.findAll({
+    where: {
+      ...((params.fromDate || params.toDate) && {
+        '$assistances.datetime$': {
+          ...(params.fromDate && { [sequelizePackage.Op.gte]: params.fromDate }),
+          ...(params.toDate && { [sequelizePackage.Op.lte]: params.toDate })
+        }
+      })
+    },
+    include: [
+      {
+        model: Assistance,
+        as: 'assistances'
+      }
+    ],
+    attributes: {
+      include: [
+        'DerivationType.id',
+        [sequelizePackage.fn('COUNT', sequelizePackage.col('assistances.id')), 'AssistanceCount']
+      ]
+    },
+    group: ['DerivationType.id'],
+    having: sequelizePackage.where(
+      sequelizePackage.fn('COUNT', sequelizePackage.col('assistances.id')),
+      '>',
+      0
+    ),
+    includeIgnoreAttributes: false,
+    distinct: true
+  });
+};
+
+exports.countByViolenceType = params => {
+  logger.info(`Attempting to count assistances by violence type with params: ${inspect(params)}`);
+
+  return ViolenceType.findAll({
+    where: {
+      ...((params.fromDate || params.toDate) && {
+        '$calls->assistance.datetime$': {
+          ...(params.fromDate && { [sequelizePackage.Op.gte]: params.fromDate }),
+          ...(params.toDate && { [sequelizePackage.Op.lte]: params.toDate })
+        }
+      })
+    },
+    include: [
+      {
+        model: Call,
+        as: 'calls',
+        include: [
+          {
+            model: Assistance,
+            as: 'assistance'
+          }
+        ]
+      }
+    ],
+    attributes: {
+      include: [
+        'ViolenceType.id',
+        [sequelizePackage.fn('COUNT', sequelizePackage.col('calls->assistance.id')), 'AssistanceCount']
+      ]
+    },
+    group: ['ViolenceType.id'],
+    having: sequelizePackage.where(
+      sequelizePackage.fn('COUNT', sequelizePackage.col('calls->assistance.id')),
+      '>',
+      0
+    ),
+    includeIgnoreAttributes: false,
+    distinct: true
+  });
+};
+
+exports.countByOriginType = params => {
+  logger.info(`Attempting to count assistances by origin type with params: ${inspect(params)}`);
+
+  return OriginType.findAll({
+    where: {
+      ...((params.fromDate || params.toDate) && {
+        '$calls->assistance.datetime$': {
+          ...(params.fromDate && { [sequelizePackage.Op.gte]: params.fromDate }),
+          ...(params.toDate && { [sequelizePackage.Op.lte]: params.toDate })
+        }
+      })
+    },
+    include: [
+      {
+        model: Call,
+        as: 'calls',
+        include: [
+          {
+            model: Assistance,
+            as: 'assistance'
+          }
+        ]
+      }
+    ],
+    attributes: {
+      include: [
+        'OriginType.id',
+        [sequelizePackage.fn('COUNT', sequelizePackage.col('calls->assistance.id')), 'AssistanceCount']
+      ]
+    },
+    group: ['OriginType.id'],
+    having: sequelizePackage.where(
+      sequelizePackage.fn('COUNT', sequelizePackage.col('calls->assistance.id')),
+      '>',
+      0
+    ),
+    includeIgnoreAttributes: false,
+    distinct: true
+  });
 };

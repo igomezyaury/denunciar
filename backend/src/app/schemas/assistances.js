@@ -24,7 +24,9 @@ const {
   firstCallInBody,
   femicideRiskInBody,
   codeInBody,
-  datetimeInBody
+  datetimeInBody,
+  fromDateAssistanceInQuery,
+  toDateAssistanceInQuery
 } = require('../errors/schema_messages');
 const { addCommonProperties, ID } = require('./common');
 const { Assistance } = require('../models');
@@ -146,3 +148,20 @@ exports.updateAssistanceSchema = addCommonProperties(
   },
   [ID]
 );
+
+exports.dateAssistanceSchema = {
+  from_date: {
+    in: ['query'],
+    isISO8601: true,
+    toDate: true,
+    errorMessage: fromDateAssistanceInQuery,
+    optional: true
+  },
+  to_date: {
+    in: ['query'],
+    isISO8601: true,
+    toDate: true,
+    errorMessage: toDateAssistanceInQuery,
+    optional: true
+  }
+};
