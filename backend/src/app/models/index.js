@@ -3,7 +3,7 @@ const path = require('path');
 const { Sequelize } = require('sequelize');
 const dbConfig = require('../../config').common.database;
 
-const connectionString = `${dbConfig.dialect}://${dbConfig.username}:${dbConfig.password}@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`;
+const connectionString = `${dbConfig.dialect}://${dbConfig.username}:${dbConfig.password}@${dbConfig.host}:${dbConfig.port}/${dbConfig.database}?ssl=true`;
 const basename = path.basename(__filename);
 const db = {};
 const sequelize = new Sequelize(connectionString, {
