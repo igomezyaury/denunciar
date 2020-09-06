@@ -22,10 +22,6 @@ exports.check = () => {
   });
   return umzug.pending().then(migrations => {
     if (migrations.length) {
-      if (!config.isProduction) {
-        return Promise.reject(new Error('Pending migrations, run: npm run migrations'));
-      }
-
       return umzug.up().catch(err => {
         logger.error(err);
         return Promise.reject(new Error('There are pending migrations that could not be executed'));

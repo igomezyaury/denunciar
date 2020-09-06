@@ -11,7 +11,10 @@ const config = {
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      dialect: 'postgres'
+      dialect: 'postgres',
+      dialectOptions: {
+        ssl: { require: true }
+      }
     },
     api: {
       bodySizeLimit: process.env.API_BODY_SIZE_LIMIT || 1024 * 1024 * 10,
