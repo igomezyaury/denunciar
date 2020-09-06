@@ -7,26 +7,26 @@ services:
     env_file:
       - backend/.env
     environment:
-      - WAIT_HOSTS=denunciar-db:5432
+      - WAIT_HOSTS=db-postgresql-nyc1-72417-do-user-7982741-0.a.db.ondigitalocean.com:25060
     ports:
       - "5858:9229"
       - "8080:8080"
     volumes:
       - ./backend/src:/usr/local/src:ro
-    networks:
-      - denunciar
-    depends_on:
-      - denunciar-db
+        #    networks:
+        #      - denunciar
+        #    depends_on:
+        # - denunciar-db
 
-  denunciar-db:
-    image: postgres:12-alpine
-    container_name: denunciar-db
-    env_file:
-      - backend/.env
-    ports:
-      - "35432:5432"
-    networks:
-      - denunciar
+        #  denunciar-db:
+        #    image: postgres:12-alpine
+        #    container_name: denunciar-db
+        #    env_file:
+        #      - backend/.env
+        #    ports:
+        #      - "35432:5432"
+        #    networks:
+        #      - denunciar
 
   denunciar-front:
     build: ./frontend/
@@ -38,5 +38,5 @@ services:
     volumes:
       - ./frontend/src:/usr/local/src
 
-networks:
-  denunciar:
+        #networks:
+        #  denunciar:
