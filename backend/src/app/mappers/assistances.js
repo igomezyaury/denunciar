@@ -7,50 +7,50 @@ exports.getAssistancesMapper = req => ({
 exports.createAssistanceMapper = req =>
   addCommonProperties(
     {
-      phoneNumber: req.body.phone_number,
-      firstCall: req.body.first_call,
-      datetime: req.body.datetime,
-      femicideRisk: req.body.femicide_risk,
-      code: req.body.code,
-      summary: req.body.summary,
-      derivationObservation: req.body.derivation_observation,
-      assistanceType: req.body.assistance_type,
-      derivationTypes: req.body.derivation_types,
+      phoneNumber: req.body.general.phone_number,
+      firstCall: req.body.general.first_call,
+      datetime: req.body.general.date_time,
+      femicideRisk: req.body.general.femicide_risk,
+      code: req.body.complaint.code,
+      summary: req.body.general.summary,
+      derivationObservation: req.body.complaint.derivation_observation,
+      assistanceType: req.body.general.assistance_type,
+      derivationTypes: req.body.complaint.derivation_types,
       userId: req.user.id,
       victim: {
-        firstName: req.body.victim.first_name,
-        lastName: req.body.victim.last_name,
-        identificationCode: req.body.victim.identification_code,
-        phoneNumber: req.body.victim.phone_number,
-        address: req.body.victim.address,
-        birthDate: req.body.victim.birth_date,
-        age: req.body.victim.age,
-        sex: req.body.victim.sex,
-        sexClarification: req.body.victim.sex_clarification,
-        identificationTypeId: req.body.victim.identification_type_id,
-        cityId: req.body.victim.city_id,
-        disabilities: req.body.victim.disabilities
+        firstName: req.body.person.first_name,
+        lastName: req.body.person.last_name,
+        identificationCode: req.body.person.identification_code,
+        phoneNumber: req.body.person.phone_number,
+        address: req.body.person.address,
+        birthDate: req.body.person.birth_date,
+        age: req.body.person.age,
+        sex: req.body.person.sex,
+        sexClarification: req.body.person.sex_clarification,
+        identificationTypeId: req.body.person.identification_type_id,
+        cityId: req.body.person.city_id,
+        disabilities: req.body.person.disabilities
       },
       call: {
-        issueAddress: req.body.call.issue_address,
+        issueAddress: req.body.complaint.issue_address,
         aggressor: {
-          firstName: req.body.call.aggressor.first_name,
-          lastName: req.body.call.aggressor.last_name,
-          occupation: req.body.call.aggressor.occupation,
-          identificationCode: req.body.call.aggressor.identification_code,
-          identificationTypeId: req.body.call.aggressor.identification_type_id,
-          cityId: req.body.call.aggressor.city_id
+          firstName: req.body.aggressor.aggressor_first_name,
+          lastName: req.body.aggressor.aggressor_last_name,
+          occupation: req.body.aggressor.aggressor_occupation,
+          identificationCode: req.body.aggressor.aggressor_identification_code,
+          identificationTypeId: req.body.aggressor.aggressor_identification_type_id,
+          cityId: req.body.aggressor.aggressor_city_id
         },
         representative: {
-          firstName: req.body.call.representative.first_name,
-          lastName: req.body.call.representative.last_name,
-          representativeTypeId: req.body.call.representative.representative_type_id,
-          relationshipTypeId: req.body.call.representative.relationship_type_id
+          firstName: req.body.person.representative_first_name,
+          lastName: req.body.person.representative_last_name,
+          representativeTypeId: req.body.person.representative_type_id,
+          relationshipTypeId: req.body.person.relationship_type_id
         },
-        vulnerablePopulationId: req.body.call.vulnerable_population_id,
-        complaintReasonId: req.body.call.complaint_reason_id,
-        violenceTypes: req.body.call.violence_types,
-        originTypeId: req.body.call.origin_type_id
+        vulnerablePopulationId: req.body.complaint.vulnerable_population_id,
+        complaintReasonId: req.body.complaint.complaint_reason_id,
+        violenceTypes: req.body.complaint.violence_types,
+        originTypeId: req.body.complaint.origin_type_id
       }
     },
     req,
