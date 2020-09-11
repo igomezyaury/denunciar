@@ -22,8 +22,8 @@ export class LoginComponent implements OnInit {
     private authenticationService: AuthenticationService,
     private router: Router,
     private route: ActivatedRoute
-  ) {    
-    if(this.authenticationService.getToken()){
+  ) {
+    if (this.authenticationService.getToken()) {
       //If already logged in
       this.router.navigate(['/']);
     }
@@ -47,35 +47,35 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls.password;
   }
 
-  login(){
+  login() {
     this.submitted = true;
     // stop here if form is invalid
     if (this.loginForm.invalid) {
-        return;
+      return;
     }
     const email: string = this.loginForm.controls.email.value;
     const password: string = this.loginForm.controls.password.value;
 
     this.authenticationService.login(email, password)
       .subscribe(
-            () => {
-                this.router.navigate([this.returnUrl]);
-            },
-            error => {
-              switch (error.status) {
-                case 401:
-                  this.loginError =
-                  'Email o contraseña incorrectos. Por favor, verifique sus credenciales.';
-                  break;
-                case 404:
-                  this.loginError =
-                  'No se encontró ningún usuario registrado con ese email.';
-                  break;
-                default:
-                  this.loginError =
-                      'Ha ocurrido un problema con el servidor. Por favor, intente de nuevo más tarde.';
-                  break;
-              }
-          });
+        () => {
+          this.router.navigate([this.returnUrl]);
+        },
+        error => {
+          switch (error.status) {
+            case 401:
+              this.loginError =
+                'Email o contraseña incorrectos. Por favor, verifique sus credenciales.';
+              break;
+            case 404:
+              this.loginError =
+                'Email o contraseña incorrectos. Por favor, verifique sus credenciales.';
+              break;
+            default:
+              this.loginError =
+                'Ha ocurrido un problema con el servidor. Por favor, intente de nuevo más tarde.';
+              break;
+          }
+        });
   }
 }

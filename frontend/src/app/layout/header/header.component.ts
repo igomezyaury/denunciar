@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { AuthenticationService } from '../../authentication/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -10,11 +12,22 @@ export class HeaderComponent implements OnInit {
 
   public sidebarOpened: boolean = false;
 
-  constructor() {
+  constructor(
+    private authenticationService: AuthenticationService,
+    private router: Router
+    ) {
     this.user = JSON.parse(localStorage.getItem('user'));
    }
 
   ngOnInit(): void {
+  }
+
+  logout(){
+    /**
+     * @todo: Show confirmation dialog before logout
+     */
+    this.authenticationService.logout();
+    this.router.navigate(['/auth/login']);
   }
 
   toggleSidebar(){
