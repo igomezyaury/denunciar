@@ -1,0 +1,25 @@
+.step-navigation-bar {
+    border-radius: 50px;
+    border-style: groove;
+    border-color: lightgrey;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    height: 50px;
+}
+
+.step-navigation-bar:hover {
+  cursor: pointer;
+}
+
+.btn-purple {
+  background-color: #8C008C !important;
+}
+
+.stepper-buttons {
+  position: absolute;
+}
+
+.visited-step {
+  
+}
