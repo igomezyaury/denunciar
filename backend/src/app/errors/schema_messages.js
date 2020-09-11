@@ -30,35 +30,35 @@ exports.identificationTypeIdInBody = `${integerMessage('identification_type_id')
 exports.authorizationInHeader = jwtMessage('Authorization');
 exports.refreshTokenInBody = `${tokenMessage('refresh_token')} ${containedMessage('body')}`;
 exports.rolInBody = `${stringMessage('rol')}, must be one of 'normal' or 'admin' ${containedMessage('body')}`;
-exports.phoneNumberInBody = `${stringMessage('phone_number')} ${containedMessage('body')}`;
+exports.phoneNumberInBody = `${stringMessage('general.phone_number')} ${containedMessage('body')}`;
 exports.assistanceTypeInBody = `${stringMessage(
-  'assistance_type'
+  'general.assistance_type'
 )}, must be one of 'emergency' or 'counseling' ${containedMessage('body')}`;
-exports.victimFirstNameInBody = `${stringMessage('victim.first_name')} ${containedMessage('body')}`;
-exports.victimLastNameInBody = `${stringMessage('victim.last_name')} ${containedMessage('body')}`;
-exports.victimIdentificationCodeInBody = `${stringMessage('victim.identification_code')} ${containedMessage(
+exports.victimFirstNameInBody = `${stringMessage('person.first_name')} ${containedMessage('body')}`;
+exports.victimLastNameInBody = `${stringMessage('person.last_name')} ${containedMessage('body')}`;
+exports.victimIdentificationCodeInBody = `${stringMessage('person.identification_code')} ${containedMessage(
   'body'
 )}`;
-exports.victimPhoneNumberInBody = `${stringMessage('victim.phone_number')} ${containedMessage('body')}`;
-exports.victimAddressInBody = `${stringMessage('victim.address')} ${containedMessage('body')}`;
-exports.victimBirthDateInBody = `${dateMessage('victim.birth_date')} ${containedMessage('body')}`;
-exports.victimAgeInBody = `${integerMessage('victim.age')} ${containedMessage('body')}`;
-exports.victimSexInBody = `${stringMessage('victim.sex')} ${containedMessage('body')}`;
+exports.victimPhoneNumberInBody = `${stringMessage('person.phone_number')} ${containedMessage('body')}`;
+exports.victimAddressInBody = `${stringMessage('person.address')} ${containedMessage('body')}`;
+exports.victimBirthDateInBody = `${dateMessage('person.birth_date')} ${containedMessage('body')}`;
+exports.victimAgeInBody = `${integerMessage('person.age')} ${containedMessage('body')}`;
+exports.victimSexInBody = `${stringMessage('person.sex')} ${containedMessage('body')}`;
 // eslint-disable-next-line id-length
 exports.victimIdentificationTypeIdInBody = `${integerMessage(
-  'victim.identification_type_id'
+  'person.identification_type_id'
 )} ${containedMessage('body')}`;
-exports.victimCityIdInBody = `${integerMessage('victim.city_id')} ${containedMessage('body')}`;
-exports.callIssueAddressInBody = `${stringMessage('call.issue_address')} ${containedMessage('body')}`;
-exports.callComplaintReasonIdInBody = `${integerMessage('call.complaint_reason_id')} ${containedMessage(
+exports.victimCityIdInBody = `${integerMessage('person.city_id')} ${containedMessage('body')}`;
+exports.callIssueAddressInBody = `${stringMessage('complaint.issue_address')} ${containedMessage('body')}`;
+exports.callComplaintReasonIdInBody = `${integerMessage('complaint.complaint_reason_id')} ${containedMessage(
   'body'
 )}`;
 exports.callOriginTypeIdInBody = `${integerMessage('call.origin_type_id')} ${containedMessage('body')}`;
-exports.callViolenceTypesInBody = `${arrayMessage('call.violence_types_ids')} ${containedMessage('body')}`;
-exports.derivationTypesIdsInBody = `${arrayMessage('derivation_types')} ${containedMessage('body')}`;
-exports.firstCallInBody = `${booleanMessage('first_call')} ${containedMessage('body')}`;
-exports.femicideRiskInBody = `${booleanMessage('femicide_risk')} ${containedMessage('body')}`;
-exports.codeInBody = `${booleanMessage('code')} ${containedMessage('body')}`;
-exports.datetimeInBody = `${dateMessage('datetime')} ${containedMessage('body')}`;
+exports.callViolenceTypesIdsInBody = `${arrayMessage('complaint.violence_types')} ${containedMessage('body')}`;
+exports.derivationTypesIdsInBody = `${arrayMessage('complaint.derivation_types')} ${containedMessage('body')}`;
+exports.firstCallInBody = `${booleanMessage('general.first_call')} ${containedMessage('body')}`;
+exports.femicideRiskInBody = `${booleanMessage('general.femicide_risk')} ${containedMessage('body')}`;
+exports.codeInBody = `${booleanMessage('complaint.code')} ${containedMessage('body')}`;
+exports.datetimeInBody = `${dateMessage('general.date_time')} ${containedMessage('body')}`;
 exports.fromDateAssistanceInQuery = `${dateMessage('from_date')} ${containedMessage('query')}`;
 exports.toDateAssistanceInQuery = `${dateMessage('to_date')} ${containedMessage('query')}`;

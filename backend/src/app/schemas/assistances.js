@@ -39,11 +39,13 @@ exports.getAssistancesSchema = {
 exports.createAssistanceSchema = addCommonProperties(
   {
     ...authorization,
-    phone_number: { in: ['body'], isString: true, trim: true, errorMessage: phoneNumberInBody },
-    datetime: { in: ['body'], isISO8601: true, toDate: true, errorMessage: datetimeInBody },
-    first_call: { in: ['body'], isBoolean: true, toBoolean: true, errorMessage: firstCallInBody },
-    femicide_risk: {in: ['body'], isBoolean: true, toBoolean: true, errorMessage: femicideRiskInBody},
-    code: {
+    'aggressor.aggressor_city_id': { in: ['body'], isNumeric: true, optional: true },
+    'aggressor.aggressor_first_name': { in: ['body'], isString: true, trim: true, optional: true },
+    'aggressor.aggressor_identification_code': { in: ['body'], isString: true, trim: true, optional: true },
+    'aggressor.aggressor_identification_type_id': { in: ['body'], isNumeric: true, optional: true },
+    'aggressor.aggressor_last_name': { in: ['body'], isString: true, trim: true, optional: true },
+    'aggressor.aggressor_occupation': { in: ['body'], isString: true, trim: true, optional: true },
+    'complaint.code': {
       in: ['body'],
       isString: true,
       errorMessage: codeInBody,
@@ -51,9 +53,35 @@ exports.createAssistanceSchema = addCommonProperties(
         options: value => value && Object.values(ASSISTANCE_CODES).includes(value.toLowerCase())
       }
     },
-    summary: {in: ['body'], isString: true, optional: true, trim: true},
-    derivation_observation: { in: ['body'], isString: true, optional: true, trim: true },
-    assistance_type: {
+    'complaint.complaint_reason_id': {
+      in: ['body'],
+      isNumeric: true,
+      errorMessage: callComplaintReasonIdInBody
+    },
+    'complaint.derivation_observation': { in: ['body'], isString: true, optional: true, trim: true },
+    'complaint.derivation_types': {
+      in: ['body'],
+      custom: {
+        options: value => value && value.length && isArray(value) && value.every(isInteger)
+      },
+      errorMessage: derivationTypesIdsInBody
+    },
+    'complaint.issue_address': {
+      in: ['body'],
+      isString: true,
+      trim: true,
+      errorMessage: callIssueAddressInBody
+    },
+    'complaint.origin_type_id': { in: ['body'], isNumeric: true, errorMessage: callOriginTypeIdInBody },
+    'complaint.violence_types': {
+      in: ['body'],
+      custom: {
+        options: value => value && value.length && isArray(value) && value.every(isInteger)
+      },
+      errorMessage: callViolenceTypesIdsInBody
+    },
+    'complaint.vulnerable_population_id': { in: ['body'], isNumeric: true, optional: true },
+    'general.assistance_type': {
       in: ['body'],
       errorMessage: assistanceTypeInBody,
       isString: true,
@@ -62,68 +90,56 @@ exports.createAssistanceSchema = addCommonProperties(
         options: value => value && Object.keys(ASSISTANCE_TYPES).includes(value.toUpperCase())
       }
     },
-    derivation_types: {
+    'general.date_time': { in: ['body'], isISO8601: true, toDate: true, errorMessage: datetimeInBody },
+    'general.femicide_risk': {
       in: ['body'],
-      custom: {
-        options: value => value && value.length && isArray(value) && value.every(isInteger)
-      },
-      errorMessage: derivationTypesIdsInBody
+      isBoolean: true,
+      toBoolean: true,
+      errorMessage: femicideRiskInBody
     },
-    'victim.first_name': { in: ['body'], isString: true, trim: true, errorMessage: victimFirstNameInBody },
-    'victim.last_name': { in: ['body'], isString: true, trim: true, errorMessage: victimLastNameInBody },
-    'victim.identification_code': {
-      in: ['body'],
-      isString: true,
-      trim: true,
-      errorMessage: victimIdentificationCodeInBody
-    },
-    'victim.phone_number': {
-      in: ['body'],
-      isString: true,
-      trim: true,
-      errorMessage: victimPhoneNumberInBody
-    },
-    'victim.address': { in: ['body'], isString: true, trim: true, errorMessage: victimAddressInBody },
-    'victim.birth_date': { in: ['body'], isISO8601: true, toDate: true, errorMessage: victimBirthDateInBody },
-    'victim.age': { in: ['body'], isNumeric: true, errorMessage: victimAgeInBody },
-    'victim.sex': { in: ['body'], isString: true, trim: true, errorMessage: victimSexInBody },
-    'victim.sex_clarification': {
-      in: ['body'],
-      isString: true,
-      trim: true,
-      optional: true
-    },
-    'victim.identification_type_id': {
-      in: ['body'],
-      isNumeric: true,
-      errorMessage: victimIdentificationTypeIdInBody
-    },
-    'victim.city_id': { in: ['body'], isNumeric: true, errorMessage: victimCityIdInBody },
-    'victim.disabilities': {
+    'general.first_call': { in: ['body'], isBoolean: true, toBoolean: true, errorMessage: firstCallInBody },
+    'general.phone_number': { in: ['body'], isString: true, trim: true, errorMessage: phoneNumberInBody },
+    'general.summary': { in: ['body'], isString: true, optional: true, trim: true },
+    'person.address': { in: ['body'], isString: true, trim: true, errorMessage: victimAddressInBody },
+    'person.age': { in: ['body'], isNumeric: true, errorMessage: victimAgeInBody },
+    'person.birth_date': { in: ['body'], isISO8601: true, toDate: true, errorMessage: victimBirthDateInBody },
+    'person.city_id': { in: ['body'], isNumeric: true, errorMessage: victimCityIdInBody },
+    'person.disabilities': {
       in: ['body'],
       custom: {
         options: value => !value || (isArray(value) && value.every(isInteger))
       }
     },
-    'call.issue_address': { in: ['body'], isString: true, trim: true, errorMessage: callIssueAddressInBody },
-    'call.aggressor.first_name': { in: ['body'], isString: true, trim: true, optional: true },
-    'call.aggressor.last_name': { in: ['body'], isString: true, trim: true, optional: true },
-    'call.aggressor.occupation': { in: ['body'], isString: true, trim: true, optional: true },
-    'call.aggressor.identification_code': { in: ['body'], isString: true, trim: true, optional: true },
-    'call.aggressor.identification_type_id': { in: ['body'], isNumeric: true, optional: true },
-    'call.aggressor.city_id': { in: ['body'], isNumeric: true, optional: true },
-    'call.representative.first_name': { in: ['body'], isString: true, trim: true, optional: true },
-    'call.representative.last_name': { in: ['body'], isString: true, trim: true, optional: true },
-    'call.vulnerable_population_id': { in: ['body'], isNumeric: true, optional: true },
-    'call.complaint_reason_id': { in: ['body'], isNumeric: true, errorMessage: callComplaintReasonIdInBody },
-    'call.violence_types': {
+    'person.first_name': { in: ['body'], isString: true, trim: true, errorMessage: victimFirstNameInBody },
+    'person.identification_code': {
       in: ['body'],
-      custom: {
-        options: value => value && value.length && isArray(value) && value.every(isInteger)
-      },
-      errorMessage: callViolenceTypesIdsInBody
+      isString: true,
+      trim: true,
+      errorMessage: victimIdentificationCodeInBody
     },
-    'call.origin_type_id': { in: ['body'], isNumeric: true, errorMessage: callOriginTypeIdInBody }
+    'person.identification_type_id': {
+      in: ['body'],
+      isNumeric: true,
+      errorMessage: victimIdentificationTypeIdInBody
+    },
+    'person.last_name': { in: ['body'], isString: true, trim: true, errorMessage: victimLastNameInBody },
+    'person.phone_number': {
+      in: ['body'],
+      isString: true,
+      trim: true,
+      errorMessage: victimPhoneNumberInBody
+    },
+    'person.relationship_type_id': { in: ['body'], isNumeric: true, trim: true, optional: true },
+    'person.representative_first_name': { in: ['body'], isString: true, trim: true, optional: true },
+    'person.representative_last_name': { in: ['body'], isString: true, trim: true, optional: true },
+    'person.representative_type_id': { in: ['body'], isNumeric: true, trim: true, optional: true },
+    'person.sex': { in: ['body'], isString: true, trim: true, errorMessage: victimSexInBody },
+    'person.sex_clarification': {
+      in: ['body'],
+      isString: true,
+      trim: true,
+      optional: true
+    }
   },
   []
 );
