@@ -13,7 +13,7 @@ exports.createAssistanceMapper = req =>
       femicideRisk: req.body.general.femicide_risk,
       code: req.body.complaint.code,
       summary: req.body.general.summary,
-      derivationObservation: req.body.complaint.derivation_observation,
+      derivationObservation: req.body.complaint.derivation_observation || '',
       assistanceType: req.body.general.assistance_type,
       derivationTypes: req.body.complaint.derivation_types,
       userId: req.user.id,
@@ -32,14 +32,14 @@ exports.createAssistanceMapper = req =>
         disabilities: req.body.person.disabilities
       },
       call: {
-        issueAddress: req.body.complaint.issue_address,
+        issueAddress: req.body.complaint.issue_address || '',
         aggressor: {
-          firstName: req.body.aggressor.aggressor_first_name,
-          lastName: req.body.aggressor.aggressor_last_name,
-          occupation: req.body.aggressor.aggressor_occupation,
-          identificationCode: req.body.aggressor.aggressor_identification_code,
-          identificationTypeId: req.body.aggressor.aggressor_identification_type_id,
-          cityId: req.body.aggressor.aggressor_city_id
+          firstName: req.body.aggressor ? req.body.aggressor.aggressor_first_name : null,
+          lastName: req.body.aggressor ? req.body.aggressor.aggressor_last_name : null,
+          occupation: req.body.aggressor ? req.body.aggressor.aggressor_occupation : null,
+          identificationCode: req.body.aggressor ? req.body.aggressor.aggressor_identification_code : null,
+          identificationTypeId: req.body.aggressor ? req.body.aggressor.aggressor_identification_type_id : null,
+          cityId: req.body.aggressor ? req.body.aggressor.aggressor_city_id : null
         },
         representative: {
           firstName: req.body.person.representative_first_name,
