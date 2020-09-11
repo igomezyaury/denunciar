@@ -148,7 +148,7 @@ export class AssistanceFormComponent implements OnInit {
         this.fb.group({
           issue_address: [null],
           vulnerable_population_id: [null, Validators.required],
-          derivation_type_id: [null, Validators.required],
+          derivation_types: [null, Validators.required],
           complaint_reason_id: [null, Validators.required],
           derivation_observation: [null, Validators.maxLength(100)],
           violence_types: [null, Validators.required],
@@ -264,7 +264,6 @@ export class AssistanceFormComponent implements OnInit {
       return;
     }
 
-    const user = JSON.parse(localStorage.getItem('user'));
 
     const firstStepFields = this.assistanceForm.controls.steps.value[0];
     const secondStepFields = this.assistanceForm.controls.steps.value[1];
@@ -277,12 +276,21 @@ export class AssistanceFormComponent implements OnInit {
       firstStepFields.assistance_type = "Emergency";
     }
 
+
+    if (!firstStepFields.femicide_risk) {
+      firstStepFields.femicide_risk = false;
+    }
+
+    if (!firstStepFields.first_call) {
+      firstStepFields.first_call = false;
+    }
+
+
     const body = {
       general: firstStepFields,
       person: secondStepFields,
       aggressor: thirdStepFields,
-      complaint: lastStepFields,
-      userId: user.id
+      complaint: lastStepFields
     }
 
     this.assistancesService.createAssistance(body).toPromise()
