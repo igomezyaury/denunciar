@@ -24,6 +24,13 @@ const routes: Routes = [
             mod => mod.UserRoutingModule
           )
       },
+      {
+        path: 'assistances',
+        loadChildren: () =>
+          import('./assistances/assistances-routing.module').then(
+            mod => mod.AssistancesRoutingModule
+          )
+      }
     ]
   },
   {
