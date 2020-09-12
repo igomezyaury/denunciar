@@ -1,5 +1,5 @@
 export const codes = [
-    { id: 1, name: 'A' },
-    { id: 2, name: 'B' },
-    { id: 3, name: 'C' }
+    { value: 'a', name: 'A' },
+    { value: 'b', name: 'B' },
+    { value: 'c', name: 'C' }
 ];

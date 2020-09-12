@@ -1,9 +1,9 @@
 <h1 class="text-center title mt-5">Nuevo registro</h1>
-<div *ngIf="showSuccessMessage" class="alert alert-success mt-3" role="alert">
-    El registro ha sido creado correctamente
+<div *ngIf="showSuccessMessage" class="alert alert-success mt-3 text-center" role="alert">
+    <b>El registro ha sido creado correctamente</b>
 </div>
-<div class="text-danger text-center" *ngIf="errorMessage">
-    {{ errorMessage }}
+<div class="alert alert-danger text-center" *ngIf="errorMessage">
+    <b> {{ errorMessage }}</b>
 </div>
 <form [formGroup]="assistanceForm">
     <app-stepper formArrayName="steps" #cdkStepper>
@@ -160,9 +160,9 @@
                         </select>
                     </div>
                     <div class="form-group col-md-2">
-                        <label for="city_id">Sexo</label>
-                        <select formControlName="disabilities" class="form-control" (change)="changeSexSelect($event)">
-                            <option *ngFor="let sex of sexTypes" [value]="sex.id">{{sex.name}}
+                        <label for="sex">Sexo</label>
+                        <select formControlName="sex" class="form-control" (change)="changeSexSelect($event)">
+                            <option *ngFor="let sex of sexTypes" [value]="sex.value">{{sex.name}}
                             </option>
                         </select>
                     </div>
@@ -353,7 +353,7 @@
                         <label for="violence_types"><b>Código</b></label>
                         <select formControlName="code" class="form-control"
                             [ngClass]="{ 'is-invalid': submitted && !isValid('3','code') }">
-                            <option *ngFor="let code of codes" [value]="code.id">
+                            <option *ngFor="let code of codes" [value]="code.value">
                                 {{code.name}}
                             </option>
                         </select>

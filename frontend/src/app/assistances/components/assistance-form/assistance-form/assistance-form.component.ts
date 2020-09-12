@@ -219,7 +219,7 @@ export class AssistanceFormComponent implements OnInit {
 
 
   changeSexSelect(event) {
-    if (event.target.value === '3') {
+    if (event.target.value === 'others') {
       //If selected sex is 'Otros'
       this.sexClarification.nativeElement.disabled = false;
     } else {
@@ -258,17 +258,35 @@ export class AssistanceFormComponent implements OnInit {
     this.formArray.get('1').get('relationship_type_id').updateValueAndValidity();
   }
 
+  private removeNullFields(stepValues) {
+    const stepKeys = Object.keys(stepValues);
+    if (stepKeys.length) {
+      for (let i = 0; i < stepKeys.length; i++) {
+        if (stepValues[stepKeys[i]] === null || stepValues[stepKeys[i]] === undefined) {
+          delete stepValues[stepKeys[i]];
+        }
+      }
+    }
+  }
+
+
   submitAssistance() {
     this.submitted = true;
     if (this.assistanceForm.invalid) {
+      this.errorMessage = 'Existen errores en algunos campos, por favor verifíquelos y vuelva a intentar.'
+      this.showSuccessMessage = false;
       return;
     }
-
 
     const firstStepFields = this.assistanceForm.controls.steps.value[0];
     const secondStepFields = this.assistanceForm.controls.steps.value[1];
     const thirdStepFields = this.assistanceForm.controls.steps.value[2];
     const lastStepFields = this.assistanceForm.controls.steps.value[3];
+
+    this.removeNullFields(firstStepFields);
+    this.removeNullFields(secondStepFields);
+    this.removeNullFields(thirdStepFields);
+    this.removeNullFields(lastStepFields);
 
     if (firstStepFields.assistance_type) {
       firstStepFields.assistance_type = "Counseling";
@@ -285,6 +303,23 @@ export class AssistanceFormComponent implements OnInit {
       firstStepFields.first_call = false;
     }
 
+    /**
+     * @todo: implement select2 in this fields to allow multiple values for each of them
+     * This is temporary to convert them to arrays
+     */
+    const derivation = lastStepFields.derivation_types;
+    lastStepFields.derivation_types = [];
+    lastStepFields.derivation_types.push(parseInt(derivation));
+
+    const violence = lastStepFields.violence_types;
+    lastStepFields.violence_types = [];
+    lastStepFields.violence_types.push(parseInt(violence));
+
+    if (secondStepFields.disabilities) {
+      const disability = secondStepFields.disabilities;
+      secondStepFields.disabilities = [];
+      secondStepFields.disabilities.push(parseInt(disability));
+    }
 
     const body = {
       general: firstStepFields,
@@ -295,12 +330,12 @@ export class AssistanceFormComponent implements OnInit {
 
     this.assistancesService.createAssistance(body).toPromise()
       .then(response => {
-        debugger;
-        console.log('Assistance created correctly');
+        this.showSuccessMessage = true;
+        this.errorMessage = '';
       })
       .catch(err => {
-        debugger;
-        console.log('Error creating assistance: ' + err.message);
+        this.showSuccessMessage = false;
+        this.errorMessage = 'Hubo un error al intentar crear el nuevo registro.'
       })
   }
 }
