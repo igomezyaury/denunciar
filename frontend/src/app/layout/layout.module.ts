@@ -11,8 +11,8 @@ import { SidebarModule } from 'ng-sidebar';
     HeaderComponent,
     LayoutComponent,
   ],
-  exports:   [HeaderComponent],
-  imports:   [CommonModule, AppRoutingModule, RouterModule, SidebarModule.forRoot()],
+  exports: [HeaderComponent],
+  imports: [CommonModule, AppRoutingModule, RouterModule, SidebarModule.forRoot()],
   providers: []
 })
-export class LayoutModule {}
+export class LayoutModule { }

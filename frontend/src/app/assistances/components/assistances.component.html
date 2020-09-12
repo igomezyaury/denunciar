@@ -1,0 +1,110 @@
+<div class="col-md-8 mx-auto mt-5">
+    <h1 class="text-center title">Llamadas</h1>
+    <div class="dropdown-divider mt-3 mb-3"></div>
+    <form [formGroup]="">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="">Tipo de violencia</label>
+                <select class="form-control">
+                    <option>Seleccione...</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="">Nombre agresor</label>
+                <input type="text" class="form-control" placeholder="Nombre agresor">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="">Nombre víctima</label>
+                <input type="text" class="form-control" placeholder="Nombre víctima">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="">Fecha desde</label>
+                <input type="date" class="form-control">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="">Teléfono entrante</label>
+                <input type="text" class="form-control" placeholder="Teléfono entrante">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="">Población vulnerable</label>
+                <select class="form-control">
+                    <option>Seleccione...</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2">
+                <label for="">DNI agresor</label>
+                <input type="text" class="form-control" placeholder="DNI agresor">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="">DNI víctima</label>
+                <input type="text" class="form-control" placeholder="DNI víctima">
+            </div>
+            <div class="form-group col-md-2">
+                <label for="">Fecha hasta</label>
+                <input type="date" class="form-control">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <div class="form-check form-check-inline">
+                    <input 
+                        type="checkbox"
+                        class="form-check-input">
+                    <label class="form-check-label">Guardia</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-check form-check-inline">
+                    <input
+                        type="checkbox"
+                        class="form-check-input">
+                    <label class="form-check-label">Refugio</label>
+                </div>
+            </div>
+        </div>
+        <button 
+            type="submit"
+            class="btn btn-primary btn-purple">Buscar</button>
+        <button 
+            class="btn btn-secondary ml-2">Limpiar</button>            
+    </form>
+    <div class="dropdown-divider mt-3 mb-3"></div>
+    <h2 class="text-center title float-left">Listado de llamadas</h2>
+    <button 
+            class="btn btn-primary btn-purple ml-2 float-right"
+            routerLink="/assistances/create">
+            <i class="fa fa-plus mr-2"></i>Nuevo registro</button>
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Tipo</th>
+                <th scope="col">Fecha y hora</th>
+                <th scope="col">Nombre víctima</th>
+                <th scope="col">Usuario</th>
+                <th scope="col">Tipo violencia</th>
+                <th scope="col">Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr 
+                *ngFor="let assistance of assistances"
+                [ngClass]="{ 
+                    'table-danger': assistance.code === 'A',
+                    'table-secondary': assistance.code === 'B'}"
+            >
+                <td>{{assistance.code}}</td>
+                <td>{{assistance.created_at}}</td>
+                <td>{{assistance.victim.first_name + ' ' + assistance.victim.last_name}}</td>
+                <td>{{assistance.user_id}}</td>
+                <td>{{assistance.formattedViolenceTypes}}</td>
+                <td>
+                    <a title="Visualizar"><i class="fa fa-eye mx-2"></i></a>
+                    <a title="Editar"><i class="fa fa-pencil mx-2"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
