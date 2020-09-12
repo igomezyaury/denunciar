@@ -69,6 +69,7 @@ exports.createAssistanceSchema = addCommonProperties(
     'complaint.issue_address': {
       in: ['body'],
       isString: true,
+      optional: true,
       trim: true,
       errorMessage: callIssueAddressInBody
     },
@@ -101,8 +102,14 @@ exports.createAssistanceSchema = addCommonProperties(
     'general.phone_number': { in: ['body'], isString: true, trim: true, errorMessage: phoneNumberInBody },
     'general.summary': { in: ['body'], isString: true, optional: true, trim: true },
     'person.address': { in: ['body'], isString: true, trim: true, errorMessage: victimAddressInBody },
-    'person.age': { in: ['body'], isNumeric: true, errorMessage: victimAgeInBody },
-    'person.birth_date': { in: ['body'], isISO8601: true, toDate: true, errorMessage: victimBirthDateInBody },
+    'person.age': { in: ['body'], isNumeric: true, optional: true, errorMessage: victimAgeInBody },
+    'person.birth_date': {
+      in: ['body'],
+      isISO8601: true,
+      toDate: true,
+      optional: true,
+      errorMessage: victimBirthDateInBody
+    },
     'person.city_id': { in: ['body'], isNumeric: true, errorMessage: victimCityIdInBody },
     'person.disabilities': {
       in: ['body'],
@@ -133,7 +140,7 @@ exports.createAssistanceSchema = addCommonProperties(
     'person.representative_first_name': { in: ['body'], isString: true, trim: true, optional: true },
     'person.representative_last_name': { in: ['body'], isString: true, trim: true, optional: true },
     'person.representative_type_id': { in: ['body'], isNumeric: true, trim: true, optional: true },
-    'person.sex': { in: ['body'], isString: true, trim: true, errorMessage: victimSexInBody },
+    'person.sex': { in: ['body'], isString: true, trim: true, optional: true, errorMessage: victimSexInBody },
     'person.sex_clarification': {
       in: ['body'],
       isString: true,

@@ -65,9 +65,11 @@ const omitForManyToManyRelations = assistance => {
 // eslint-disable-next-line id-length
 const caseFunctionForNestedProperties = assistance => {
   assistance.call.dataValues.aggressor = objectToSnakeCase(assistance.call.dataValues.aggressor.dataValues);
-  assistance.call.dataValues.representative = objectToSnakeCase(
-    assistance.call.dataValues.representative.dataValues
-  );
+  if (assistance.call.dataValues.representative) {
+    assistance.call.dataValues.representative = objectToSnakeCase(
+      assistance.call.dataValues.representative.dataValues
+    );
+  }
   assistance.call = objectToSnakeCase(assistance.call.dataValues);
   assistance.victim = objectToSnakeCase(assistance.victim.dataValues);
   return assistance;

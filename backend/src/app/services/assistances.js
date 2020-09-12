@@ -85,13 +85,15 @@ exports.createAssistance = attrs => {
           attrs.call.assistanceId = assistance.id;
           return createCall(attrs.call, transaction).then(call => {
             attrs.call.aggressor.callId = call.id;
-            attrs.call.representative.callId = call.id;
+            if (attrs.call.representative.firstName) {
+              attrs.call.representative.callId = call.id;
+            }
             return Promise.all([
               createAggressor(attrs.call.aggressor, transaction),
-              createRepresentative(attrs.call.representative, transaction)
+              attrs.call.representative.firstName ? createRepresentative(attrs.call.representative, transaction) : Promise.resolve()
             ]).then(() =>
               Promise.all([
-                victim.setDisabilities(attrs.victim.disabilities, { transaction }),
+                attrs.victim.disabilities ? victim.setDisabilities(attrs.victim.disabilities, { transaction }) : Promise.resolve(),
                 call.setViolenceTypes(attrs.call.violenceTypes, { transaction })
               ])
             );
@@ -135,9 +137,6 @@ const updateEntity = (attributes, entity, options = {}) => {
   logger.info(`Attempting to update entity: ${inspect(entity.toString())} with attributes: ${inspect(attributes)}`);
   return entity.update(attributes, options).catch(err => {
     logger.error(inspect(err));
-    logger.error(inspect('blah'));
-    logger.error(inspect(err.sql));
-    logger.error(inspect('blah'));
     throw databaseError(`There was an error updating the entity: ${err.message}`);
   });
 };
@@ -157,10 +156,10 @@ exports.updateAssistance = attributes => {
       const promises = [
         updateEntity(assistanceAttrs, assistance, { transaction }),
         updateEntity(aggressorAttrs, aggressor, { transaction }),
-        updateEntity(representativeAttrs, representative, { transaction }),
+        representativeAttrs.firstName ? updateEntity(representativeAttrs, representative, { transaction }) : Promise.resolve(),
         updateEntity(callAttrs, call, { transaction }),
         updateEntity(victimAttrs, victim, { transaction }),
-        victim.setDisabilities(attributes.victim.disabilities, { transaction }),
+        attributes.victim.disabilities ? victim.setDisabilities(attributes.victim.disabilities, { transaction }) : Promise.resolve(),
         call.setViolenceTypes(attributes.call.violenceTypes, { transaction }),
         assistance.setDerivationTypes(attributes.derivationTypes, {transaction})
       ];
