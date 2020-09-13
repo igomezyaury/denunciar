@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -13,8 +13,13 @@ export class AssistancesService {
     private http: HttpClient
   ) { }
 
-  public getAllAssistances(): Observable<any> {
-    return this.http.get(this.assistancesApiUrl);
+  public getAssistances(pageNumber: number, pageSize: number): Observable<any> {
+    return this.http.get(this.assistancesApiUrl, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
   }
 
   public createAssistance(fields) {

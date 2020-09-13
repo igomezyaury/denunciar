@@ -80,7 +80,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let assistance of assistances" [ngClass]="{ 
+            <<<<<<< HEAD <tr *ngFor="let assistance of assistances" [ngClass]="{ 
+=======
+            <tr *ngFor=" let assistance of assistancePage" [ngClass]="{ 
+>>>>>>> Paginate assistances list
                     'table-danger': assistance.code === 'A',
                     'table-secondary': assistance.code === 'B'}">
                 <td>{{assistance.code}}</td>
@@ -92,7 +95,40 @@
                     <a title="Visualizar"><i class="fa fa-eye mx-2"></i></a>
                     <a title="Editar"><i class="fa fa-pencil mx-2"></i></a>
                 </td>
-            </tr>
+                </tr>
         </tbody>
     </table>
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item" [ngClass]="{'disabled': actualPage == 1}">
+                <a class="page-link" (click)="onPageChange(1)">
+                    <i class="fa fa-fast-backward"></i>
+                </a>
+            </li>
+            <li class="page-item" [ngClass]="{'disabled': actualPage == 1}">
+                <a class="page-link" (click)="onPageChange(actualPage-1)">
+                    <i class="fa fa-step-backward"></i>
+                </a>
+            </li>
+            <li *ngIf="actualPage > 1" class="page-item">
+                <a class="page-link" (click)="onPageChange(actualPage-1)">{{actualPage-1}}</a>
+            </li>
+            <li class="page-item active">
+                <a class="page-link" (click)="onPageChange(actualPage)">{{actualPage}}</a>
+            </li>
+            <li *ngIf="actualPage < totalPages" class="page-item">
+                <a class="page-link" (click)="onPageChange(actualPage+1)">{{actualPage+1}}</a>
+            </li>
+            <li class="page-item" [ngClass]="{'disabled': actualPage == totalPages}">
+                <a class="page-link" (click)="onPageChange(actualPage+1)">
+                    <i class="fa fa-step-forward"></i>
+                </a>
+            </li>
+            <li class="page-item" [ngClass]="{'disabled': actualPage == totalPages}">
+                <a class="page-link" (click)="onPageChange(totalPages)">
+                    <i class="fa fa-fast-forward"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
