@@ -62,10 +62,17 @@ exports.getAssistances = params => {
     order: params.orderColumn ? [[params.orderColumn, params.orderSense || 'ASC']] : undefined,
     include: includeForAssistance
   };
-  return Assistance.findAndCountAll(sequelizeOptions).catch(err => {
-    logger.error(inspect(err));
-    throw databaseError(`Error getting assistances, reason: ${err.message}`);
-  });
+  return Assistance.findAll(sequelizeOptions)
+    .then(assistances =>
+      Assistance.count({ where: deleteUndefined(filters) }).then(count => ({
+        count,
+        rows: assistances
+      }))
+    )
+    .catch(err => {
+      logger.error(inspect(err));
+      throw databaseError(`Error getting assistances, reason: ${err.message}`);
+    });
 };
 
 const createVictim = (victim, transaction) => Victim.create(victim, { transaction });
