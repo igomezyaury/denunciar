@@ -28,7 +28,6 @@ const propsToOmit = [
 const omitForManyToManyRelations = assistance => {
   assistance.dataValues.derivationTypes.map(derivationType => {
     derivationType.dataValues = omit(derivationType.dataValues, [
-      'id',
       'active',
       'createdAt',
       'updatedAt',
@@ -39,7 +38,6 @@ const omitForManyToManyRelations = assistance => {
   });
   assistance.dataValues.call.dataValues.violenceTypes.map(violenceType => {
     violenceType.dataValues = omit(violenceType.dataValues, [
-      'id',
       'active',
       'createdAt',
       'updatedAt',
@@ -50,7 +48,6 @@ const omitForManyToManyRelations = assistance => {
   });
   assistance.dataValues.victim.dataValues.disabilities.map(disability => {
     disability.dataValues = omit(disability.dataValues, [
-      'id',
       'active',
       'createdAt',
       'updatedAt',
