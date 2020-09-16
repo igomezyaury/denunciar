@@ -10,7 +10,7 @@ export class UserService {
 
   constructor(
     private http: HttpClient
-  ) {}
+  ) { }
 
   public createUser(user): Observable<any> {
     return this.http.post(this.usersApiUrl, user);
@@ -21,7 +21,8 @@ export class UserService {
   }
 
   public getAllUsers(): Observable<any> {
-    return this.http.get(this.usersApiUrl);
+    //The hardcoded page_size is temporary. In the future we may not fetch every user at once
+    return this.http.get(`${this.usersApiUrl}/?page_size=99999999`);
   }
-    
+
 }

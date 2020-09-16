@@ -24,9 +24,9 @@ const config = {
     session: {
       secret: process.env.SECRET,
       hashingSalts: process.env.HASHING_SALTS,
-      expirationUnitAccessToken: process.env.EXPIRATION_UNIT_ACCESS_TOKEN || 'minutes',
+      expirationUnitAccessToken: process.env.EXPIRATION_UNIT_ACCESS_TOKEN || 'hours',
       expirationUnitRefreshToken: process.env.EXPIRATION_UNIT_REFRESH_TOKEN || 'hours',
-      expirationValueAccessToken: process.env.EXPIRATION_VALUE_ACCESS_TOKEN || 15,
+      expirationValueAccessToken: process.env.EXPIRATION_VALUE_ACCESS_TOKEN || 24,
       expirationValueRefreshToken: process.env.EXPIRATION_VALUE_REFRESH_TOKEN || 24
     }
   }

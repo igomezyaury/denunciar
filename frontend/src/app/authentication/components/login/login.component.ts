@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/assistances';
   }
 
   get email() {
@@ -62,10 +62,17 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
         },
         error => {
+          debugger;
           switch (error.status) {
             case 401:
               this.loginError =
                 'Email o contraseña incorrectos. Por favor, verifique sus credenciales.';
+              break;
+            case 403:
+              if (error.error.internal_code === 'blocked_user') {
+                this.loginError =
+                  'El usuario ha sido bloqueado por cantidad de intentos fallidos.';
+              }
               break;
             case 404:
               this.loginError =

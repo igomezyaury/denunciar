@@ -49,33 +49,24 @@
         <div class="form-row">
             <div class="form-group">
                 <div class="form-check form-check-inline">
-                    <input 
-                        type="checkbox"
-                        class="form-check-input">
+                    <input type="checkbox" class="form-check-input">
                     <label class="form-check-label">Guardia</label>
                 </div>
             </div>
             <div class="form-group">
                 <div class="form-check form-check-inline">
-                    <input
-                        type="checkbox"
-                        class="form-check-input">
+                    <input type="checkbox" class="form-check-input">
                     <label class="form-check-label">Refugio</label>
                 </div>
             </div>
         </div>
-        <button 
-            type="submit"
-            class="btn btn-primary btn-purple">Buscar</button>
-        <button 
-            class="btn btn-secondary ml-2">Limpiar</button>            
+        <button disabled type="submit" class="btn btn-primary btn-purple">Buscar</button>
+        <button disabled class="btn btn-secondary ml-2">Limpiar</button>
     </form>
     <div class="dropdown-divider mt-3 mb-3"></div>
     <h2 class="text-center title float-left">Listado de llamadas</h2>
-    <button 
-            class="btn btn-primary btn-purple ml-2 float-right"
-            routerLink="/assistances/create">
-            <i class="fa fa-plus mr-2"></i>Nuevo registro</button>
+    <button class="btn btn-primary btn-purple ml-2 float-right" routerLink="/assistances/create">
+        <i class="fa fa-plus mr-2"></i>Nuevo registro</button>
 
     <table class="table table-striped table-hover">
         <thead>
@@ -89,12 +80,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr 
-                *ngFor="let assistance of assistances"
-                [ngClass]="{ 
+            <tr *ngFor="let assistance of assistances" [ngClass]="{ 
                     'table-danger': assistance.code === 'A',
-                    'table-secondary': assistance.code === 'B'}"
-            >
+                    'table-secondary': assistance.code === 'B'}">
                 <td>{{assistance.code}}</td>
                 <td>{{assistance.created_at}}</td>
                 <td>{{assistance.victim.first_name + ' ' + assistance.victim.last_name}}</td>
