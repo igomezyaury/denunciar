@@ -53,15 +53,19 @@ export class UserFormComponent implements OnInit {
         Validators.pattern(/^\d*$/) //Numeric
       ]),
       identification_type_id: new FormControl(null, Validators.required),
-      birth_date: new FormControl(null, Validators.required),
+      birth_date: new FormControl(null, Validators.compose([
+        Validators.required,
+        this.validDate])),
       email: new FormControl(null, [
         Validators.required,
         Validators.email,
-        Validators.maxLength(50)
+        Validators.maxLength(50),
+        Validators.pattern(/@[a-zA-Z]+\.[a-zA-Z]+$/)
       ]),
       password: new FormControl(null, [
         Validators.required,
-        Validators.maxLength(50)
+        Validators.maxLength(50),
+        Validators.minLength(8)
       ]),
       repeatPassword: new FormControl(null, [
         Validators.required,
@@ -81,18 +85,47 @@ export class UserFormComponent implements OnInit {
 
   }
 
-  ngOnInit(): void {
-    if (this.mode === 'edit') {
-      this.userService.getAllUsers().subscribe(
-        users => {
-          this.users = users.data;
-        }
-      )
+  validDate(control: FormControl): { [key: string]: boolean } | null {
+    const currentDate = new Date();
+
+    if (Date.parse(control.value) > currentDate.getTime()) {
+      return { invalidDate: true };
     }
+
+    return null;
+  }
+
+  private getUsers() {
+    this.userService.getAllUsers().subscribe(
+      users => {
+        this.users = users.data;
+      });
+  }
+
+  ngOnInit(): void {
+    this.getUsers();
+  }
+
+  duplicatedUsername(username) {
+    const sameUsernames = this.users.filter(user => {
+      return user.username === username;
+    });
+    let duplicated = false;
+    if (this.mode === 'create' || (this.mode === 'edit' && this.userSelected.username !== username)) {
+      //If new user or username was edited
+      duplicated = sameUsernames.length > 0;
+    }
+    return (duplicated) ? true : false;
   }
 
   onSubmit() {
     this.submitted = true;
+
+    if (this.duplicatedUsername(this.userForm.controls.username.value)) {
+      this.userForm.controls.username.setErrors({ 'duplicated': true });
+      return;
+    }
+
     if (this.userForm.invalid) {
       return;
     }
@@ -116,6 +149,7 @@ export class UserFormComponent implements OnInit {
       this.userService.createUser(data).subscribe(
         () => {
           this.showSuccessMessage = true;
+          this.getUsers();
         },
         error => {
           //TODO: We should have specific error codes (existing user, you need to be admin, etc)
@@ -123,12 +157,12 @@ export class UserFormComponent implements OnInit {
         }
       );
     } else if (this.mode === 'edit' && this.userSelected) {
-      debugger;
       data.id = this.userSelected.id;
       this.userService.editUser(data).subscribe(
         () => {
           this.showSuccessMessage = true;
-          return console.log('User edited!');
+          this.getUsers();
+          this.userSelected = null;
         },
         error => {
         }
@@ -155,10 +189,10 @@ export class UserFormComponent implements OnInit {
       }
 
       //TODO: birth_date format should be 'dd/mm/yyyy'
-      // const birthDate = this.datePipe.transform(
-      //   new Date(user.birth_date),'dd/mm/yyyy');
+      const birthDate = this.datePipe.transform(
+        new Date(user.birth_date), 'yyyy-MM-dd');
 
-      // this.userForm.controls['birth_date'].setValue(birthDate);
+      this.userForm.controls['birth_date'].setValue(birthDate);
       this.userForm.controls['rol'].setValue(user.rol === 'admin');
       this.userForm.controls['active'].setValue(!user.active);
     } else {
