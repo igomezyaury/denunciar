@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AssistancesService } from '../assistances.service';
 
 @Component({
@@ -8,6 +11,11 @@ import { AssistancesService } from '../assistances.service';
 })
 export class AssistancesComponent implements OnInit {
 
+  public violenceTypes = [];
+  public vulnerablePopulations = [];
+  public searchForm: FormGroup;
+  public filteredAssistances = [];
+
   public assistances = [];
   public assistancePage = [];
   public actualPage: number = 1;
@@ -16,8 +24,11 @@ export class AssistancesComponent implements OnInit {
 
   private chunkSize: number = 99999999;
 
-  constructor(private assistancesService: AssistancesService) {
-
+  constructor(
+    private assistancesService: AssistancesService,
+    private fb: FormBuilder,
+    private router: Router
+  ) {
   }
 
   ngOnInit(): void {
@@ -37,6 +48,45 @@ export class AssistancesComponent implements OnInit {
         });
       }
     );
+
+    this.assistancesService.getViolenceTypes().subscribe(
+      (response: any) => {
+        this.violenceTypes = response.data;
+      }
+    );
+    this.assistancesService.getVulnerablePopulations().subscribe(
+      (response: any) => {
+        this.vulnerablePopulations = response.data;
+      }
+    );
+
+
+    this.searchForm = this.fb.group({
+      //Victim
+      first_name: [null],
+      identification_code: [null, Validators.compose([
+        Validators.required,
+        Validators.maxLength(10),
+        Validators.pattern(/^\d*$/) //Numeric
+      ])],
+      //Call
+      violence_types: [null],
+      vulnerable_population_id: [null],
+      aggressor: this.fb.group({
+        first_name: [null],
+        aggressor_identification_code: [null, Validators.compose([
+          Validators.maxLength(10),
+          Validators.pattern(/^\d*$/) //Numeric
+        ])]
+      }),
+      phone_number: [null, Validators.compose([
+        Validators.required,
+        Validators.pattern(/^\d*$/), //Numeric
+        Validators.maxLength(20)]),
+      ],
+      start_date: [null],
+      end_date: [null],
+    });
   }
 
   async onPageChange(page: number) {
@@ -54,5 +104,8 @@ export class AssistancesComponent implements OnInit {
     this.actualPage = page;
   }
 
+  editAssistance(assistanceId) {
+    this.router.navigate([`/assistances/edit/${assistanceId}`]);
+  }
 
 }

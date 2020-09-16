@@ -22,6 +22,10 @@ export class AssistancesService {
     });
   }
 
+  public getAssistanceById(id) {
+    return this.http.get(`${this.assistancesApiUrl}/${id}`);
+  }
+
   public createAssistance(fields) {
     return this.http.post(this.assistancesApiUrl, fields);
   }

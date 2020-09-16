@@ -8,6 +8,8 @@ import { sexTypes } from '../../../../models/sex-types';
 import { complaintReasons } from 'src/app/models/complaint-reasons';
 import { codes } from 'src/app/models/codes';
 import { originTypes } from 'src/app/models/origin-types';
+import { ActivatedRoute } from '@angular/router';
+import { AssistancesMapper } from '../../../utils/assistances-mapper';
 
 @Component({
   selector: 'app-assistance-form',
@@ -15,6 +17,7 @@ import { originTypes } from 'src/app/models/origin-types';
   styleUrls: ['./assistance-form.component.scss']
 })
 export class AssistanceFormComponent implements OnInit {
+  public mode: string;
 
   public submitted: boolean = false;
 
@@ -63,8 +66,25 @@ export class AssistanceFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private datePipe: DatePipe,
-    private assistancesService: AssistancesService
-  ) { }
+    private assistancesService: AssistancesService,
+    private route: ActivatedRoute
+  ) {
+    //Mode: Create or edit
+    this.route.data.subscribe(data => this.mode = data.mode);
+
+    if (this.mode === 'edit') {
+      const assistanceId = this.route.snapshot.params.id;
+
+      this.assistancesService.getAssistanceById(assistanceId).subscribe((assistance: any) => {
+        const assistanceSteps = AssistancesMapper.toAssistanceSteps(assistance);
+        this.assistanceForm.controls.steps.get('0').setValue(assistanceSteps.firstStep);
+        this.assistanceForm.controls.steps.get('1').setValue(assistanceSteps.secondStep);
+        this.assistanceForm.controls.steps.get('2').setValue(assistanceSteps.thirdStep);
+        this.assistanceForm.controls.steps.get('3').setValue(assistanceSteps.lastStep);
+      });
+    }
+  }
+
 
   ngOnInit(): void {
     //In a future maybe separate the form in different pages/components
@@ -142,7 +162,8 @@ export class AssistanceFormComponent implements OnInit {
             Validators.pattern(/^\d*$/) //Numeric
           ])],
           aggressor_identification_type_id: [null], //Preseleccionar DNI
-          aggressor_city_id: [null]
+          aggressor_city_id: [null],
+          aggressor_address: [null]
         }),
         //Paso 4: Denuncia
         this.fb.group({
@@ -271,6 +292,10 @@ export class AssistanceFormComponent implements OnInit {
 
 
   submitAssistance() {
+    if (this.mode === 'edit') {
+      //Prevent editing until it's done
+      return;
+    };
     this.submitted = true;
     if (this.assistanceForm.invalid) {
       this.errorMessage = 'Existen errores en algunos campos, por favor verifíquelos y vuelva a intentar.'
@@ -308,17 +333,23 @@ export class AssistanceFormComponent implements OnInit {
      * This is temporary to convert them to arrays
      */
     const derivation = lastStepFields.derivation_types;
-    lastStepFields.derivation_types = [];
-    lastStepFields.derivation_types.push(parseInt(derivation));
+    if (!Array.isArray(derivation)) {
+      lastStepFields.derivation_types = [];
+      lastStepFields.derivation_types.push(parseInt(derivation));
+    }
 
     const violence = lastStepFields.violence_types;
-    lastStepFields.violence_types = [];
-    lastStepFields.violence_types.push(parseInt(violence));
+    if (!Array.isArray(violence)) {
+      lastStepFields.violence_types = [];
+      lastStepFields.violence_types.push(parseInt(violence));
+    }
 
     if (secondStepFields.disabilities) {
       const disability = secondStepFields.disabilities;
-      secondStepFields.disabilities = [];
-      secondStepFields.disabilities.push(parseInt(disability));
+      if (!Array.isArray(disability)) {
+        secondStepFields.disabilities = [];
+        secondStepFields.disabilities.push(parseInt(disability));
+      }
     }
 
     const body = {
@@ -326,7 +357,7 @@ export class AssistanceFormComponent implements OnInit {
       person: secondStepFields,
       aggressor: thirdStepFields,
       complaint: lastStepFields
-    }
+    };
 
     this.assistancesService.createAssistance(body).toPromise()
       .then(response => {
