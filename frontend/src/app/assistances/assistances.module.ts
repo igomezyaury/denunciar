@@ -5,8 +5,9 @@ import { RouterModule } from '@angular/router';
 import { AssistancesService } from './assistances.service';
 import { AssistanceFormComponent } from './components/assistance-form/assistance-form/assistance-form.component';
 import { StepperModule } from '../stepper/stepper.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CdkStepperModule } from '@angular/cdk/stepper';
+import { NgSelect2Module } from 'ng-select2';
 
 
 @NgModule({
@@ -15,7 +16,9 @@ import { CdkStepperModule } from '@angular/cdk/stepper';
         RouterModule,
         StepperModule,
         ReactiveFormsModule,
-        CdkStepperModule
+        CdkStepperModule,
+        NgSelect2Module,
+        FormsModule
     ],
     declarations: [
         AssistancesComponent,
@@ -27,5 +30,5 @@ import { CdkStepperModule } from '@angular/cdk/stepper';
     providers: [
         AssistancesService
     ]
-  })
-  export class AssistancesModule {}
+})
+export class AssistancesModule { }
