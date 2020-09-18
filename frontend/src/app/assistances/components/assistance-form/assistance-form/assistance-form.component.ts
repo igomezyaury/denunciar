@@ -47,6 +47,11 @@ export class AssistanceFormComponent implements OnInit {
 
   public assistanceForm: FormGroup;
 
+  public select2Options = {
+    multiple: true,
+    width: '100%'
+  }
+
 
   /**
    * @todo: get from db when defined (or store in frontend model if they are just a few)
@@ -216,11 +221,21 @@ export class AssistanceFormComponent implements OnInit {
     this.assistancesService.getDerivationTypes().subscribe(
       (response: any) => {
         this.derivationTypes = response.data;
+
+        //Add 'text' property for ng-select2
+        this.derivationTypes.map(derivationType => {
+          derivationType.text = derivationType.name;
+        });
       }
     );
     this.assistancesService.getViolenceTypes().subscribe(
       (response: any) => {
         this.violenceTypes = response.data;
+
+        //Add 'text' property for ng-select2
+        this.violenceTypes.map(violenceType => {
+          violenceType.text = violenceType.name;
+        });
       }
     );
     this.assistancesService.getCities().subscribe(
@@ -231,6 +246,11 @@ export class AssistanceFormComponent implements OnInit {
     this.assistancesService.getDisabilities().subscribe(
       (response: any) => {
         this.disabilities = response.data;
+
+        //Add 'text' property for ng-select2
+        this.disabilities.map(disability => {
+          disability.text = disability.name;
+        });
       }
     );
 
@@ -341,29 +361,12 @@ export class AssistanceFormComponent implements OnInit {
       firstStepFields.first_call = false;
     }
 
-    /**
-     * @todo: implement select2 in this fields to allow multiple values for each of them
-     * This is temporary to convert them to arrays
-     */
-    const derivation = lastStepFields.derivation_types;
-    if (!Array.isArray(derivation)) {
-      lastStepFields.derivation_types = [];
-      lastStepFields.derivation_types.push(parseInt(derivation));
-    }
-
-    const violence = lastStepFields.violence_types;
-    if (!Array.isArray(violence)) {
-      lastStepFields.violence_types = [];
-      lastStepFields.violence_types.push(parseInt(violence));
-    }
-
+    //Transform string select2 values to integer
     if (secondStepFields.disabilities) {
-      const disability = secondStepFields.disabilities;
-      if (!Array.isArray(disability)) {
-        secondStepFields.disabilities = [];
-        secondStepFields.disabilities.push(parseInt(disability));
-      }
+      secondStepFields.disabilities = secondStepFields.disabilities.map(Number);
     }
+    lastStepFields.violence_types = lastStepFields.violence_types.map(Number);
+    lastStepFields.derivation_types = lastStepFields.derivation_types.map(Number);
 
     const body = {
       general: firstStepFields,
