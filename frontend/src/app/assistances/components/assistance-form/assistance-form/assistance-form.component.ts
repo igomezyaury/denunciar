@@ -19,6 +19,8 @@ import { AssistancesMapper } from '../../../utils/assistances-mapper';
 export class AssistanceFormComponent implements OnInit {
   public mode: string;
 
+  public title: string;
+
   public submitted: boolean = false;
 
   public showSuccessMessage: boolean = false;
@@ -77,11 +79,26 @@ export class AssistanceFormComponent implements OnInit {
 
       this.assistancesService.getAssistanceById(assistanceId).subscribe((assistance: any) => {
         const assistanceSteps = AssistancesMapper.toAssistanceSteps(assistance);
+
+        const unformattedDateTime = assistanceSteps.firstStep.date_time;
+        assistanceSteps.firstStep.date_time = this.datePipe.transform(
+          new Date(unformattedDateTime), 'yyyy-MM-dd');
+
+        if (assistanceSteps.secondStep.birth_date) {
+          const unformattedBirthDate = assistanceSteps.secondStep.birth_date;
+          assistanceSteps.secondStep.birth_date = this.datePipe.transform(
+            new Date(unformattedBirthDate), 'yyyy-MM-dd');
+        }
+
         this.assistanceForm.controls.steps.get('0').setValue(assistanceSteps.firstStep);
         this.assistanceForm.controls.steps.get('1').setValue(assistanceSteps.secondStep);
         this.assistanceForm.controls.steps.get('2').setValue(assistanceSteps.thirdStep);
         this.assistanceForm.controls.steps.get('3').setValue(assistanceSteps.lastStep);
       });
+
+      this.title = 'Editar registro';
+    } else {
+      this.title = 'Nuevo registro';
     }
   }
 
@@ -292,10 +309,6 @@ export class AssistanceFormComponent implements OnInit {
 
 
   submitAssistance() {
-    if (this.mode === 'edit') {
-      //Prevent editing until it's done
-      return;
-    };
     this.submitted = true;
     if (this.assistanceForm.invalid) {
       this.errorMessage = 'Existen errores en algunos campos, por favor verifíquelos y vuelva a intentar.'

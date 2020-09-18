@@ -1,9 +1,13 @@
 export class AssistancesMapper {
 
     public static toAssistanceSteps(assistance) {
+
+
+        const representative = assistance.call.representative;
+
         const firstStep = {
             femicide_risk: assistance.femicide_risk,
-            assistance_type: (assistance.assistance_type === 'counceling') ? true : false,
+            assistance_type: (assistance.assistance_type === 'Counseling') ? true : false,
             first_call: assistance.first_call,
             date_time: assistance.datetime,
             phone_number: assistance.phone_number,
@@ -23,10 +27,10 @@ export class AssistancesMapper {
             disabilities: assistance.victim.disabilities,
             sex: assistance.victim.sex,
             sex_clarification: assistance.victim.sex_clarification,
-            representative_type_id: assistance.call.representative.representative_type_id,
-            representative_first_name: assistance.call.representative.first_name,
-            representative_last_name: assistance.call.representative.last_name,
-            relationship_type_id: assistance.call.representative.relationship_type_id
+            representative_type_id: (representative) ? representative.representative_type_id : null,
+            representative_first_name: (representative) ? representative.first_name : null,
+            representative_last_name: (representative) ? representative.last_name : null,
+            relationship_type_id: (representative) ? representative.relationship_type_id : null
         };
 
         const thirdStep = {
