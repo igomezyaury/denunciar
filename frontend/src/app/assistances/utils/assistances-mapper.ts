@@ -24,7 +24,7 @@ export class AssistancesMapper {
             address: assistance.victim.address,
             birth_date: assistance.victim.birth_date,
             age: assistance.victim.age,
-            disabilities: assistance.victim.disabilities,
+            disabilities: assistance.victim.disabilities.map(d => d.id),
             sex: assistance.victim.sex,
             sex_clarification: assistance.victim.sex_clarification,
             representative_type_id: (representative) ? representative.representative_type_id : null,
@@ -46,10 +46,10 @@ export class AssistancesMapper {
         const lastStep = {
             issue_address: assistance.call.issue_address,
             vulnerable_population_id: assistance.call.vulnerable_population_id,
-            derivation_types: assistance.derivation_types,
+            derivation_types: assistance.derivation_types.map(dt => dt.id),
             complaint_reason_id: assistance.call.complaint_reason_id,
             derivation_observation: assistance.derivation_observation,
-            violence_types: assistance.call.violence_types,
+            violence_types: assistance.call.violence_types.map(vt => vt.id),
             code: assistance.code,
             origin_type_id: assistance.call.origin_type_id
         };

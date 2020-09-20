@@ -30,6 +30,10 @@ export class AssistancesService {
     return this.http.post(this.assistancesApiUrl, fields);
   }
 
+  public updateAssistance(id, fields) {
+    return this.http.put(`${this.assistancesApiUrl}/${id}`, fields);
+  }
+
   public getRepresentativeTypes() {
     return this.http.get(`${environment.API_URL}/representative-types`);
   }
@@ -42,8 +46,13 @@ export class AssistancesService {
     return this.http.get(`${environment.API_URL}/vulnerable-populations`);
   }
 
-  public getDerivationTypes() {
-    return this.http.get(`${environment.API_URL}/derivation-types`);
+  public getDerivationTypes(pageNumber: number, pageSize: number) {
+    return this.http.get(`${environment.API_URL}/derivation-types`, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
   }
 
   public getViolenceTypes() {

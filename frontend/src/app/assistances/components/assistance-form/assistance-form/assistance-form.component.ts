@@ -95,6 +95,8 @@ export class AssistanceFormComponent implements OnInit {
             new Date(unformattedBirthDate), 'yyyy-MM-dd');
         }
 
+        assistanceSteps.secondStep.disabilities = ["1", "2"];
+
         this.assistanceForm.controls.steps.get('0').setValue(assistanceSteps.firstStep);
         this.assistanceForm.controls.steps.get('1').setValue(assistanceSteps.secondStep);
         this.assistanceForm.controls.steps.get('2').setValue(assistanceSteps.thirdStep);
@@ -218,7 +220,7 @@ export class AssistanceFormComponent implements OnInit {
         this.vulnerablePopulations = response.data;
       }
     );
-    this.assistancesService.getDerivationTypes().subscribe(
+    this.assistancesService.getDerivationTypes(1, 999999).subscribe(
       (response: any) => {
         this.derivationTypes = response.data;
 
@@ -375,14 +377,27 @@ export class AssistanceFormComponent implements OnInit {
       complaint: lastStepFields
     };
 
-    this.assistancesService.createAssistance(body).toPromise()
-      .then(response => {
-        this.showSuccessMessage = true;
-        this.errorMessage = '';
-      })
-      .catch(err => {
-        this.showSuccessMessage = false;
-        this.errorMessage = 'Hubo un error al intentar crear el nuevo registro.'
-      })
+    if (this.mode === 'create') {
+      this.assistancesService.createAssistance(body).toPromise()
+        .then(response => {
+          this.showSuccessMessage = true;
+          this.errorMessage = '';
+        })
+        .catch(err => {
+          this.showSuccessMessage = false;
+          this.errorMessage = 'Hubo un error al intentar crear el nuevo registro.'
+        })
+    } else {
+      const assistanceId = this.route.snapshot.params.id;
+      this.assistancesService.updateAssistance(assistanceId, body).toPromise()
+        .then(response => {
+          this.showSuccessMessage = true;
+          this.errorMessage = '';
+        })
+        .catch(err => {
+          this.showSuccessMessage = false;
+          this.errorMessage = 'Hubo un error al intentar modificar el registro.'
+        })
+    }
   }
 }

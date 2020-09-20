@@ -1,7 +1,10 @@
 <h1 class="text-center title mt-5">{{title}}</h1>
 <div class="col-md-8 mx-auto">
-    <div *ngIf="showSuccessMessage" class="alert alert-success mt-3 text-center" role="alert">
+    <div *ngIf="showSuccessMessage && mode === 'create'" class="alert alert-success mt-3 text-center" role="alert">
         <b>El registro ha sido creado correctamente</b>
+    </div>
+    <div *ngIf="showSuccessMessage && mode === 'edit'" class="alert alert-success mt-3 text-center" role="alert">
+        <b>El registro ha sido modificado correctamente</b>
     </div>
     <div class="alert alert-danger text-center" *ngIf="errorMessage">
         <b> {{ errorMessage }}</b>
