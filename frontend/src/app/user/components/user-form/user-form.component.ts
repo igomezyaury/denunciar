@@ -188,7 +188,6 @@ export class UserFormComponent implements OnInit {
         this.userForm.controls[key].setValue(user[key]);
       }
 
-      //TODO: birth_date format should be 'dd/mm/yyyy'
       const birthDate = this.datePipe.transform(
         new Date(user.birth_date), 'yyyy-MM-dd');
 

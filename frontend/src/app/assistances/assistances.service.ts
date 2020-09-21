@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
@@ -13,12 +13,25 @@ export class AssistancesService {
     private http: HttpClient
   ) { }
 
-  public getAllAssistances(): Observable<any> {
-    return this.http.get(this.assistancesApiUrl);
+  public getAssistances(pageNumber: number, pageSize: number): Observable<any> {
+    return this.http.get(this.assistancesApiUrl, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
+  }
+
+  public getAssistanceById(id) {
+    return this.http.get(`${this.assistancesApiUrl}/${id}`);
   }
 
   public createAssistance(fields) {
     return this.http.post(this.assistancesApiUrl, fields);
+  }
+
+  public updateAssistance(id, fields) {
+    return this.http.put(`${this.assistancesApiUrl}/${id}`, fields);
   }
 
   public getRepresentativeTypes() {
@@ -33,8 +46,13 @@ export class AssistancesService {
     return this.http.get(`${environment.API_URL}/vulnerable-populations`);
   }
 
-  public getDerivationTypes() {
-    return this.http.get(`${environment.API_URL}/derivation-types`);
+  public getDerivationTypes(pageNumber: number, pageSize: number) {
+    return this.http.get(`${environment.API_URL}/derivation-types`, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
   }
 
   public getViolenceTypes() {

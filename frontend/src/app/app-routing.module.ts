@@ -6,16 +6,14 @@ import { LayoutComponent } from './layout/layout/layout.component';
 
 const routes: Routes = [
   {
-    path:        '',
+    path: '',
     component: LayoutComponent,
     canActivate: [AuthGuard],
     children: [
       {
         path: '',
-        loadChildren: () =>
-          import('./home/home-routing.module').then(
-            mod => mod.HomeRoutingModule
-          )
+        pathMatch: 'full',
+        redirectTo: '/assistances'
       },
       {
         path: 'users',

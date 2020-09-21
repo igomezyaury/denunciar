@@ -8,6 +8,8 @@ import { sexTypes } from '../../../../models/sex-types';
 import { complaintReasons } from 'src/app/models/complaint-reasons';
 import { codes } from 'src/app/models/codes';
 import { originTypes } from 'src/app/models/origin-types';
+import { ActivatedRoute } from '@angular/router';
+import { AssistancesMapper } from '../../../utils/assistances-mapper';
 
 @Component({
   selector: 'app-assistance-form',
@@ -15,6 +17,9 @@ import { originTypes } from 'src/app/models/origin-types';
   styleUrls: ['./assistance-form.component.scss']
 })
 export class AssistanceFormComponent implements OnInit {
+  public mode: string;
+
+  public title: string;
 
   public submitted: boolean = false;
 
@@ -42,6 +47,11 @@ export class AssistanceFormComponent implements OnInit {
 
   public assistanceForm: FormGroup;
 
+  public select2Options = {
+    multiple: true,
+    width: '100%'
+  }
+
 
   /**
    * @todo: get from db when defined (or store in frontend model if they are just a few)
@@ -63,8 +73,45 @@ export class AssistanceFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private datePipe: DatePipe,
-    private assistancesService: AssistancesService
-  ) { }
+    private assistancesService: AssistancesService,
+    private route: ActivatedRoute
+  ) {
+    //Mode: Create or edit
+    this.route.data.subscribe(data => this.mode = data.mode);
+
+    if (this.mode === 'edit' || this.mode === 'view') {
+      const assistanceId = this.route.snapshot.params.id;
+
+      this.assistancesService.getAssistanceById(assistanceId).subscribe((assistance: any) => {
+        const assistanceSteps = AssistancesMapper.toAssistanceSteps(assistance);
+
+        const unformattedDateTime = assistanceSteps.firstStep.date_time;
+        assistanceSteps.firstStep.date_time = this.datePipe.transform(
+          new Date(unformattedDateTime), 'yyyy-MM-dd');
+
+        if (assistanceSteps.secondStep.birth_date) {
+          const unformattedBirthDate = assistanceSteps.secondStep.birth_date;
+          assistanceSteps.secondStep.birth_date = this.datePipe.transform(
+            new Date(unformattedBirthDate), 'yyyy-MM-dd');
+        }
+
+        this.assistanceForm.controls.steps.get('0').setValue(assistanceSteps.firstStep);
+        this.assistanceForm.controls.steps.get('1').setValue(assistanceSteps.secondStep);
+        this.assistanceForm.controls.steps.get('2').setValue(assistanceSteps.thirdStep);
+        this.assistanceForm.controls.steps.get('3').setValue(assistanceSteps.lastStep);
+
+        if (this.mode === 'edit') {
+          this.title = 'Editar registro';
+        } else {
+          this.title = 'Visualizar registro';
+          this.assistanceForm.disable();
+        }
+      });
+    } else {
+      this.title = 'Nuevo registro';
+    }
+  }
+
 
   ngOnInit(): void {
     //In a future maybe separate the form in different pages/components
@@ -142,7 +189,8 @@ export class AssistanceFormComponent implements OnInit {
             Validators.pattern(/^\d*$/) //Numeric
           ])],
           aggressor_identification_type_id: [null], //Preseleccionar DNI
-          aggressor_city_id: [null]
+          aggressor_city_id: [null],
+          aggressor_address: [null]
         }),
         //Paso 4: Denuncia
         this.fb.group({
@@ -175,14 +223,24 @@ export class AssistanceFormComponent implements OnInit {
         this.vulnerablePopulations = response.data;
       }
     );
-    this.assistancesService.getDerivationTypes().subscribe(
+    this.assistancesService.getDerivationTypes(1, 999999).subscribe(
       (response: any) => {
         this.derivationTypes = response.data;
+
+        //Add 'text' property for ng-select2
+        this.derivationTypes.map(derivationType => {
+          derivationType.text = derivationType.name;
+        });
       }
     );
     this.assistancesService.getViolenceTypes().subscribe(
       (response: any) => {
         this.violenceTypes = response.data;
+
+        //Add 'text' property for ng-select2
+        this.violenceTypes.map(violenceType => {
+          violenceType.text = violenceType.name;
+        });
       }
     );
     this.assistancesService.getCities().subscribe(
@@ -193,6 +251,11 @@ export class AssistanceFormComponent implements OnInit {
     this.assistancesService.getDisabilities().subscribe(
       (response: any) => {
         this.disabilities = response.data;
+
+        //Add 'text' property for ng-select2
+        this.disabilities.map(disability => {
+          disability.text = disability.name;
+        });
       }
     );
 
@@ -269,12 +332,24 @@ export class AssistanceFormComponent implements OnInit {
     }
   }
 
+  //Returns the first step found with form errors
+  private getStepWithErrors(): number {
+    const steps = this.assistanceForm.controls.steps as any;
+    for (let i = 0; i < steps.length; i++) {
+      if (steps.controls[i].invalid) {
+        return i;
+      }
+    }
+  }
+
 
   submitAssistance() {
     this.submitted = true;
     if (this.assistanceForm.invalid) {
       this.errorMessage = 'Existen errores en algunos campos, por favor verifíquelos y vuelva a intentar.'
       this.showSuccessMessage = false;
+      //Move to the first step with errors
+      this.cdkStepper.selectedIndex = this.getStepWithErrors();
       return;
     }
 
@@ -303,39 +378,41 @@ export class AssistanceFormComponent implements OnInit {
       firstStepFields.first_call = false;
     }
 
-    /**
-     * @todo: implement select2 in this fields to allow multiple values for each of them
-     * This is temporary to convert them to arrays
-     */
-    const derivation = lastStepFields.derivation_types;
-    lastStepFields.derivation_types = [];
-    lastStepFields.derivation_types.push(parseInt(derivation));
-
-    const violence = lastStepFields.violence_types;
-    lastStepFields.violence_types = [];
-    lastStepFields.violence_types.push(parseInt(violence));
-
+    //Transform string select2 values to integer
     if (secondStepFields.disabilities) {
-      const disability = secondStepFields.disabilities;
-      secondStepFields.disabilities = [];
-      secondStepFields.disabilities.push(parseInt(disability));
+      secondStepFields.disabilities = secondStepFields.disabilities.map(Number);
     }
+    lastStepFields.violence_types = lastStepFields.violence_types.map(Number);
+    lastStepFields.derivation_types = lastStepFields.derivation_types.map(Number);
 
     const body = {
       general: firstStepFields,
       person: secondStepFields,
       aggressor: thirdStepFields,
       complaint: lastStepFields
-    }
+    };
 
-    this.assistancesService.createAssistance(body).toPromise()
-      .then(response => {
-        this.showSuccessMessage = true;
-        this.errorMessage = '';
-      })
-      .catch(err => {
-        this.showSuccessMessage = false;
-        this.errorMessage = 'Hubo un error al intentar crear el nuevo registro.'
-      })
+    if (this.mode === 'create') {
+      this.assistancesService.createAssistance(body).toPromise()
+        .then(response => {
+          this.showSuccessMessage = true;
+          this.errorMessage = '';
+        })
+        .catch(err => {
+          this.showSuccessMessage = false;
+          this.errorMessage = 'Hubo un error al intentar crear el nuevo registro.'
+        })
+    } else {
+      const assistanceId = this.route.snapshot.params.id;
+      this.assistancesService.updateAssistance(assistanceId, body).toPromise()
+        .then(response => {
+          this.showSuccessMessage = true;
+          this.errorMessage = '';
+        })
+        .catch(err => {
+          this.showSuccessMessage = false;
+          this.errorMessage = 'Hubo un error al intentar modificar el registro.'
+        })
+    }
   }
 }
