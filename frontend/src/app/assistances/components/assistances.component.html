@@ -93,7 +93,7 @@
                 <td>{{assistance.user_id}}</td>
                 <td>{{assistance.formattedViolenceTypes}}</td>
                 <td>
-                    <a title="Visualizar"><i class="fa fa-eye mx-2"></i></a>
+                    <a title="Visualizar" (click)="viewAssistance(assistance.id)"><i class="fa fa-eye mx-2"></i></a>
                     <a title="Editar" (click)="editAssistance(assistance.id)"><i class="fa fa-pencil mx-2"></i></a>
                 </td>
             </tr>

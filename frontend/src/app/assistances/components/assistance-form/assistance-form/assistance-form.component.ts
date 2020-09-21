@@ -79,7 +79,7 @@ export class AssistanceFormComponent implements OnInit {
     //Mode: Create or edit
     this.route.data.subscribe(data => this.mode = data.mode);
 
-    if (this.mode === 'edit') {
+    if (this.mode === 'edit' || this.mode === 'view') {
       const assistanceId = this.route.snapshot.params.id;
 
       this.assistancesService.getAssistanceById(assistanceId).subscribe((assistance: any) => {
@@ -95,15 +95,18 @@ export class AssistanceFormComponent implements OnInit {
             new Date(unformattedBirthDate), 'yyyy-MM-dd');
         }
 
-        assistanceSteps.secondStep.disabilities = ["1", "2"];
-
         this.assistanceForm.controls.steps.get('0').setValue(assistanceSteps.firstStep);
         this.assistanceForm.controls.steps.get('1').setValue(assistanceSteps.secondStep);
         this.assistanceForm.controls.steps.get('2').setValue(assistanceSteps.thirdStep);
         this.assistanceForm.controls.steps.get('3').setValue(assistanceSteps.lastStep);
-      });
 
-      this.title = 'Editar registro';
+        if (this.mode === 'edit') {
+          this.title = 'Editar registro';
+        } else {
+          this.title = 'Visualizar registro';
+          this.assistanceForm.disable();
+        }
+      });
     } else {
       this.title = 'Nuevo registro';
     }
@@ -329,12 +332,24 @@ export class AssistanceFormComponent implements OnInit {
     }
   }
 
+  //Returns the first step found with form errors
+  private getStepWithErrors(): number {
+    const steps = this.assistanceForm.controls.steps as any;
+    for (let i = 0; i < steps.length; i++) {
+      if (steps.controls[i].invalid) {
+        return i;
+      }
+    }
+  }
+
 
   submitAssistance() {
     this.submitted = true;
     if (this.assistanceForm.invalid) {
       this.errorMessage = 'Existen errores en algunos campos, por favor verifíquelos y vuelva a intentar.'
       this.showSuccessMessage = false;
+      //Move to the first step with errors
+      this.cdkStepper.selectedIndex = this.getStepWithErrors();
       return;
     }
 

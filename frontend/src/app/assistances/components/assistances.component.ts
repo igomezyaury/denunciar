@@ -108,4 +108,8 @@ export class AssistancesComponent implements OnInit {
     this.router.navigate([`/assistances/edit/${assistanceId}`]);
   }
 
+  viewAssistance(assistanceId) {
+    this.router.navigate([`/assistances/view/${assistanceId}`]);
+  }
+
 }

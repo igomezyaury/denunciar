@@ -57,11 +57,13 @@
                 <div class="dropdown-divider col-md-6 mx-auto mt-3 mb-3"></div>
                 <div class="form-row col-md-6 mx-auto">
                     <div class="form-group col-md-12">
-                        <label for="">Desarrollo</label>
+                        <label for="">Desarrollo
+                            <small> (Máximo 2000 caracteres)</small>
+                        </label>
                         <textarea class="form-control" rows="6" formControlName="summary"
                             [ngClass]="{ 'is-invalid': submitted && !isValid('0','summary') }"></textarea>
                         <div class="invalid-feedback">
-                            Desarrollo requerido
+                            El campo desarrollo es requerido y tiene un máximo de 2000 caracteres
                         </div>
                     </div>
                 </div>
@@ -75,6 +77,37 @@
                 <strong>Persona</strong>
             </ng-template>
             <div class="col-md-7 mx-auto mt-5">
+                <div class="form-row col-md-12">
+                    <div class="form-group col-md-3">
+                        <label for="first_name">Nombre</label>
+                        <input formControlName="first_name" type="text" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && !isValid('1','first_name') }">
+                        <div class="invalid-feedback">
+                            Nombre requerido
+                        </div>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="last_name">Apellido</label>
+                        <input formControlName="last_name" type="text" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && !isValid('1','last_name') }">
+                        <div class="invalid-feedback">
+                            Apellido requerido
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="sex">Sexo</label>
+                        <select formControlName="sex" class="form-control" (change)="changeSexSelect($event)">
+                            <option *ngFor="let sex of sexTypes" [value]="sex.value">{{sex.name}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="sex_clarification">Sexo Otros</label>
+                        <input disabled #sexClarification formControlName="sex_clarification" type="text"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="dropdown-divider col-md-12 mx-auto mt-3 mb-3"></div>
                 <div class="form-row col-md-12">
                     <div class="form-group col-md-2">
                         <label for="identification_type_id">Tipo</label>
@@ -93,22 +126,6 @@
                             [ngClass]="{ 'is-invalid': submitted && !isValid('1','identification_code') }">
                         <div class="invalid-feedback">
                             N° de documento válido requerido
-                        </div>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="first_name">Nombre</label>
-                        <input formControlName="first_name" type="text" class="form-control"
-                            [ngClass]="{ 'is-invalid': submitted && !isValid('1','first_name') }">
-                        <div class="invalid-feedback">
-                            Nombre requerido
-                        </div>
-                    </div>
-                    <div class="form-group col-md-2">
-                        <label for="last_name">Apellido</label>
-                        <input formControlName="last_name" type="text" class="form-control"
-                            [ngClass]="{ 'is-invalid': submitted && !isValid('1','last_name') }">
-                        <div class="invalid-feedback">
-                            Apellido requerido
                         </div>
                     </div>
                     <div class="form-group col-md-3">
@@ -130,7 +147,7 @@
                 </div>
                 <div class="dropdown-divider col-md-12 mx-auto mt-3 mb-3"></div>
                 <div class="form-row col-md-12">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-5">
                         <label for="city_id">Localidad</label>
                         <select formControlName="city_id" class="form-control"
                             [ngClass]="{ 'is-invalid': submitted && !isValid('1','city_id') }">
@@ -141,7 +158,7 @@
                             Localidad requerida
                         </div>
                     </div>
-                    <div class="form-group col-md-2">
+                    <div class="form-group col-md-4">
                         <label for="address">Domicilio</label>
                         <input formControlName="address" type="text" class="form-control"
                             [ngClass]="{ 'is-invalid': submitted && !isValid('1','address') }">
@@ -157,18 +174,6 @@
                             Teléfono válido requerido
                         </div>
                     </div>
-                    <div class="form-group col-md-2">
-                        <label for="sex">Sexo</label>
-                        <select formControlName="sex" class="form-control" (change)="changeSexSelect($event)">
-                            <option *ngFor="let sex of sexTypes" [value]="sex.value">{{sex.name}}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="sex_clarification">Sexo Otros</label>
-                        <input disabled #sexClarification formControlName="sex_clarification" type="text"
-                            class="form-control">
-                    </div>
                 </div>
                 <div class="dropdown-divider col-md-12 mx-auto mt-3 mb-3"></div>
                 <div class="form-group col-md-6">
@@ -178,7 +183,8 @@
                 </div>
                 <div class="dropdown-divider col-md-12 mx-auto mt-3 mb-3"></div>
                 <div class="form-check col-md-12 mb-4">
-                    <input type="checkbox" class="form-check-input" (change)="changeRepresentative($event)">
+                    <input type="checkbox" class="form-check-input" (change)="changeRepresentative($event)"
+                        [disabled]="mode === 'view'">
                     <label class="form-check-label">¿Representante?</label>
                 </div>
                 <div class="form-row col-md-12">
@@ -375,13 +381,20 @@
                         </div>
                     </div>
                     <div class="form-group col-md-6">
-                        <label for="">Derivación observaciones</label>
-                        <textarea class="form-control" rows="4" formControlName="derivation_observation"></textarea>
+                        <label for="derivation_observation">
+                            Derivación observaciones
+                            <small> (Máximo 100 caracteres)</small>
+                        </label>
+                        <textarea class="form-control" rows="4" formControlName="derivation_observation"
+                            [ngClass]="{ 'is-invalid': submitted && !isValid('3','derivation_observation') }"></textarea>
+                        <div class="invalid-feedback">
+                            El campo admite como máximo 100 caracteres
+                        </div>
                     </div>
                 </div>
                 <button class="btn btn-secondary col-md-1 float-left" cdkStepperPrevious>Anterior</button>
-                <button class="btn btn-primary btn-purple col-md-1 float-right"
-                    (click)="submitAssistance()">Guardar</button>
+                <button class="btn btn-primary btn-purple col-md-1 float-right" (click)="submitAssistance()"
+                    *ngIf="mode !== 'view'">Guardar</button>
             </div>
         </cdk-step>
     </app-stepper>
