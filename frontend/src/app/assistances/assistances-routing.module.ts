@@ -15,6 +15,11 @@ const routes: Routes = [
     path: 'edit/:id',
     component: AssistanceFormComponent,
     data: { mode: 'edit' }
+  },
+  {
+    path: 'view/:id',
+    component: AssistanceFormComponent,
+    data: { mode: 'view' }
   }
 ];
 
