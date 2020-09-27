@@ -86,8 +86,8 @@ export class AssistanceFormComponent implements OnInit {
         const assistanceSteps = AssistancesMapper.toAssistanceSteps(assistance);
 
         const unformattedDateTime = assistanceSteps.firstStep.date_time;
-        assistanceSteps.firstStep.date_time = this.datePipe.transform(
-          new Date(unformattedDateTime), 'yyyy-MM-dd');
+
+        assistanceSteps.firstStep.date_time = this.removeDateOffset(unformattedDateTime);
 
         if (assistanceSteps.secondStep.birth_date) {
           const unformattedBirthDate = assistanceSteps.secondStep.birth_date;
@@ -172,7 +172,7 @@ export class AssistanceFormComponent implements OnInit {
             Validators.pattern(/^\d*$/), //Numeric
           ])],
           disabilities: [null],
-          sex: [null],
+          sex: ['female'],
           sex_clarification: [null],
           representative_type_id: [null],
           representative_first_name: [null, Validators.maxLength(50)],
@@ -259,6 +259,15 @@ export class AssistanceFormComponent implements OnInit {
       }
     );
 
+  }
+
+  private removeDateOffset(date: string) {
+    const converted = new Date(date);
+    const timeZoneOffset = converted.getTimezoneOffset() * 60000;
+
+    //Add the hours that were substracted automatically by 'Date' class (because of GMT-3)
+    const unformattedDateTime = new Date(converted.getTime() + timeZoneOffset);
+    return this.datePipe.transform(unformattedDateTime, 'yyyy-MM-dd');
   }
 
   //Get the formArray which contains every step
