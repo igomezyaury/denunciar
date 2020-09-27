@@ -58,9 +58,7 @@ export class AssistanceFormComponent implements OnInit {
    */
   public idTypes = identificationTypes;
   public sexTypes = sexTypes;
-  public complaintReasons = complaintReasons;
   public codes = codes;
-  public originTypes = originTypes;
 
   public cities = [];
   public representativeTypes = [];
@@ -69,6 +67,8 @@ export class AssistanceFormComponent implements OnInit {
   public derivationTypes = [];
   public violenceTypes = [];
   public disabilities = [];
+  public originTypes = [];
+  public complaintReasons = [];
 
   constructor(
     private fb: FormBuilder,
@@ -206,19 +206,20 @@ export class AssistanceFormComponent implements OnInit {
       ])
     });
 
-    /* If some of this responses are just a few fields, create a model in frontend
-    to avoid hitting backend too many times */
-    this.assistancesService.getRepresentativeTypes().subscribe(
+    /**
+     * @todo: refactor the hardcoded (1, 999999) to get all values from db 
+     */
+    this.assistancesService.getRepresentativeTypes(1, 999999).subscribe(
       (response: any) => {
         this.representativeTypes = response.data;
       }
     );
-    this.assistancesService.getRelationshipTypes().subscribe(
+    this.assistancesService.getRelationshipTypes(1, 999999).subscribe(
       (response: any) => {
         this.relationShipTypes = response.data;
       }
     );
-    this.assistancesService.getVulnerablePopulations().subscribe(
+    this.assistancesService.getVulnerablePopulations(1, 999999).subscribe(
       (response: any) => {
         this.vulnerablePopulations = response.data;
       }
@@ -233,7 +234,7 @@ export class AssistanceFormComponent implements OnInit {
         });
       }
     );
-    this.assistancesService.getViolenceTypes().subscribe(
+    this.assistancesService.getViolenceTypes(1, 999999).subscribe(
       (response: any) => {
         this.violenceTypes = response.data;
 
@@ -243,12 +244,12 @@ export class AssistanceFormComponent implements OnInit {
         });
       }
     );
-    this.assistancesService.getCities().subscribe(
+    this.assistancesService.getCities(1, 999999).subscribe(
       (response: any) => {
         this.cities = response.data;
       }
     );
-    this.assistancesService.getDisabilities().subscribe(
+    this.assistancesService.getDisabilities(1, 999999).subscribe(
       (response: any) => {
         this.disabilities = response.data;
 
@@ -258,6 +259,17 @@ export class AssistanceFormComponent implements OnInit {
         });
       }
     );
+    this.assistancesService.getOriginTypes(1, 999999).subscribe(
+      (response: any) => {
+        this.originTypes = response.data;
+      }
+    );
+    this.assistancesService.getComplaintReasons(1, 999999).subscribe(
+      (response: any) => {
+        this.complaintReasons = response.data;
+      }
+    );
+
 
   }
 

@@ -32,7 +32,7 @@ export class AssistancesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.assistancesService.getAssistances(1, this.chunkSize).subscribe(
+    this.assistancesService.getAssistances(1, this.chunkSize, 'datetime', 'desc').subscribe(
       assistances => {
         this.assistances = assistances.data;
         this.assistancePage = this.assistances.slice(0, 10); //last index is not included
@@ -49,12 +49,12 @@ export class AssistancesComponent implements OnInit {
       }
     );
 
-    this.assistancesService.getViolenceTypes().subscribe(
+    this.assistancesService.getViolenceTypes(1, 999999).subscribe(
       (response: any) => {
         this.violenceTypes = response.data;
       }
     );
-    this.assistancesService.getVulnerablePopulations().subscribe(
+    this.assistancesService.getVulnerablePopulations(1, 999999).subscribe(
       (response: any) => {
         this.vulnerablePopulations = response.data;
       }

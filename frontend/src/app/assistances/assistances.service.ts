@@ -13,11 +13,13 @@ export class AssistancesService {
     private http: HttpClient
   ) { }
 
-  public getAssistances(pageNumber: number, pageSize: number): Observable<any> {
+  public getAssistances(pageNumber: number, pageSize: number, orderColumn: string, orderSense: string): Observable<any> {
     return this.http.get(this.assistancesApiUrl, {
       params: {
         'page_number': pageNumber.toString(),
-        'page_size': pageSize.toString()
+        'page_size': pageSize.toString(),
+        'order_column': orderColumn,
+        'order_sense': orderSense
       }
     });
   }
@@ -34,16 +36,31 @@ export class AssistancesService {
     return this.http.put(`${this.assistancesApiUrl}/${id}`, fields);
   }
 
-  public getRepresentativeTypes() {
-    return this.http.get(`${environment.API_URL}/representative-types`);
+  public getRepresentativeTypes(pageNumber: number, pageSize: number) {
+    return this.http.get(`${environment.API_URL}/representative-types`, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
   }
 
-  public getRelationshipTypes() {
-    return this.http.get(`${environment.API_URL}/relationship-types`);
+  public getRelationshipTypes(pageNumber: number, pageSize: number) {
+    return this.http.get(`${environment.API_URL}/relationship-types`, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
   }
 
-  public getVulnerablePopulations() {
-    return this.http.get(`${environment.API_URL}/vulnerable-populations`);
+  public getVulnerablePopulations(pageNumber: number, pageSize: number) {
+    return this.http.get(`${environment.API_URL}/vulnerable-populations`, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
   }
 
   public getDerivationTypes(pageNumber: number, pageSize: number) {
@@ -55,15 +72,48 @@ export class AssistancesService {
     });
   }
 
-  public getViolenceTypes() {
-    return this.http.get(`${environment.API_URL}/violence-types`);
+  public getViolenceTypes(pageNumber: number, pageSize: number) {
+    return this.http.get(`${environment.API_URL}/violence-types`, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
   }
 
-  public getCities() {
-    return this.http.get(`${environment.API_URL}/cities`);
+  public getCities(pageNumber: number, pageSize: number) {
+    return this.http.get(`${environment.API_URL}/cities`, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
   }
 
-  public getDisabilities() {
-    return this.http.get(`${environment.API_URL}/disabilities`);
+  public getDisabilities(pageNumber: number, pageSize: number) {
+    return this.http.get(`${environment.API_URL}/disabilities`, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
+  }
+
+  public getOriginTypes(pageNumber: number, pageSize: number) {
+    return this.http.get(`${environment.API_URL}/origin-types`, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
+  }
+
+  public getComplaintReasons(pageNumber: number, pageSize: number) {
+    return this.http.get(`${environment.API_URL}/complaint-reasons`, {
+      params: {
+        'page_number': pageNumber.toString(),
+        'page_size': pageSize.toString()
+      }
+    });
   }
 }
