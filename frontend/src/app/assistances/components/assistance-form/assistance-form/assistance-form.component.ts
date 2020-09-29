@@ -58,9 +58,7 @@ export class AssistanceFormComponent implements OnInit {
    */
   public idTypes = identificationTypes;
   public sexTypes = sexTypes;
-  public complaintReasons = complaintReasons;
   public codes = codes;
-  public originTypes = originTypes;
 
   public cities = [];
   public representativeTypes = [];
@@ -69,6 +67,8 @@ export class AssistanceFormComponent implements OnInit {
   public derivationTypes = [];
   public violenceTypes = [];
   public disabilities = [];
+  public originTypes = [];
+  public complaintReasons = [];
 
   constructor(
     private fb: FormBuilder,
@@ -86,8 +86,8 @@ export class AssistanceFormComponent implements OnInit {
         const assistanceSteps = AssistancesMapper.toAssistanceSteps(assistance);
 
         const unformattedDateTime = assistanceSteps.firstStep.date_time;
-        assistanceSteps.firstStep.date_time = this.datePipe.transform(
-          new Date(unformattedDateTime), 'yyyy-MM-dd');
+
+        assistanceSteps.firstStep.date_time = this.removeDateOffset(unformattedDateTime);
 
         if (assistanceSteps.secondStep.birth_date) {
           const unformattedBirthDate = assistanceSteps.secondStep.birth_date;
@@ -172,7 +172,7 @@ export class AssistanceFormComponent implements OnInit {
             Validators.pattern(/^\d*$/), //Numeric
           ])],
           disabilities: [null],
-          sex: [null],
+          sex: ['female'],
           sex_clarification: [null],
           representative_type_id: [null],
           representative_first_name: [null, Validators.maxLength(50)],
@@ -206,19 +206,20 @@ export class AssistanceFormComponent implements OnInit {
       ])
     });
 
-    /* If some of this responses are just a few fields, create a model in frontend
-    to avoid hitting backend too many times */
-    this.assistancesService.getRepresentativeTypes().subscribe(
+    /**
+     * @todo: refactor the hardcoded (1, 999999) to get all values from db 
+     */
+    this.assistancesService.getRepresentativeTypes(1, 999999).subscribe(
       (response: any) => {
         this.representativeTypes = response.data;
       }
     );
-    this.assistancesService.getRelationshipTypes().subscribe(
+    this.assistancesService.getRelationshipTypes(1, 999999).subscribe(
       (response: any) => {
         this.relationShipTypes = response.data;
       }
     );
-    this.assistancesService.getVulnerablePopulations().subscribe(
+    this.assistancesService.getVulnerablePopulations(1, 999999).subscribe(
       (response: any) => {
         this.vulnerablePopulations = response.data;
       }
@@ -233,7 +234,7 @@ export class AssistanceFormComponent implements OnInit {
         });
       }
     );
-    this.assistancesService.getViolenceTypes().subscribe(
+    this.assistancesService.getViolenceTypes(1, 999999).subscribe(
       (response: any) => {
         this.violenceTypes = response.data;
 
@@ -243,12 +244,12 @@ export class AssistanceFormComponent implements OnInit {
         });
       }
     );
-    this.assistancesService.getCities().subscribe(
+    this.assistancesService.getCities(1, 999999).subscribe(
       (response: any) => {
         this.cities = response.data;
       }
     );
-    this.assistancesService.getDisabilities().subscribe(
+    this.assistancesService.getDisabilities(1, 999999).subscribe(
       (response: any) => {
         this.disabilities = response.data;
 
@@ -258,7 +259,27 @@ export class AssistanceFormComponent implements OnInit {
         });
       }
     );
+    this.assistancesService.getOriginTypes(1, 999999).subscribe(
+      (response: any) => {
+        this.originTypes = response.data;
+      }
+    );
+    this.assistancesService.getComplaintReasons(1, 999999).subscribe(
+      (response: any) => {
+        this.complaintReasons = response.data;
+      }
+    );
 
+
+  }
+
+  private removeDateOffset(date: string) {
+    const converted = new Date(date);
+    const timeZoneOffset = converted.getTimezoneOffset() * 60000;
+
+    //Add the hours that were substracted automatically by 'Date' class (because of GMT-3)
+    const unformattedDateTime = new Date(converted.getTime() + timeZoneOffset);
+    return this.datePipe.transform(unformattedDateTime, 'yyyy-MM-dd');
   }
 
   //Get the formArray which contains every step

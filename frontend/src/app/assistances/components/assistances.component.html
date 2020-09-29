@@ -85,8 +85,8 @@
         </thead>
         <tbody>
             <tr *ngFor="let assistance of assistancePage" [ngClass]="{ 
-                    'table-danger': assistance.code === 'A',
-                    'table-secondary': assistance.code === 'B'}">
+                    'table-danger': (assistance.code === 'A') || (assistance.code === 'a'),
+                    'table-secondary': (assistance.code === 'B') || (assistance.code === 'b')}">
                 <td>{{assistance.code}}</td>
                 <td>{{assistance.created_at}}</td>
                 <td>{{assistance.victim.first_name + ' ' + assistance.victim.last_name}}</td>
