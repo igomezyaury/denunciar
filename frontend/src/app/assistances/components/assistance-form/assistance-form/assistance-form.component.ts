@@ -224,16 +224,7 @@ export class AssistanceFormComponent implements OnInit {
         this.vulnerablePopulations = response.data;
       }
     );
-    this.assistancesService.getDerivationTypes(1, 999999).subscribe(
-      (response: any) => {
-        this.derivationTypes = response.data;
-
-        //Add 'text' property for ng-select2
-        this.derivationTypes.map(derivationType => {
-          derivationType.text = derivationType.name;
-        });
-      }
-    );
+    this.loadDerivationTypes();
     this.assistancesService.getViolenceTypes(1, 999999).subscribe(
       (response: any) => {
         this.violenceTypes = response.data;
@@ -271,6 +262,21 @@ export class AssistanceFormComponent implements OnInit {
     );
 
 
+  }
+
+  private loadDerivationTypes(code) {
+    this.assistancesService.getDerivationTypes(1, 999999).subscribe(
+      (response: any) => {
+        this.derivationTypes = response.data;
+
+        //Add 'text' property for ng-select2
+        this.derivationTypes.map(derivationType => {
+          derivationType.text = derivationType.name;
+        });
+        if (!code) return;
+        this.derivationTypes = this.derivationTypes.filter(derivationType => derivationType.codes.includes(code.toUpperCase()));
+      }
+    );
   }
 
   private removeDateOffset(date: string) {
@@ -435,5 +441,38 @@ export class AssistanceFormComponent implements OnInit {
           this.errorMessage = 'Hubo un error al intentar modificar el registro.'
         })
     }
+  }
+
+  recommend() {
+    const firstStepFields = this.assistanceForm.controls.steps.value[0];
+    const lastStepFields = this.assistanceForm.controls.steps.value[3];
+    const lifeRisk = firstStepFields.femicide_risk == true;
+    const counseling = firstStepFields.assistance_type != "Emergency";
+    if (!lastStepFields.origin_type_id || !lastStepFields.complaint_reason_id || !lastStepFields.violence_types) {
+      this.errorMessage = 'Existen errores en algunos campos, por favor verifíquelos y vuelva a intentar.';
+      return;
+    }
+    const originTypeId = lastStepFields.origin_type_id;
+    const complaintReasonId = lastStepFields.origin_type_id;
+    const violenceTypesIds = lastStepFields.violence_types.map(Number);
+    this.assistancesService.predictCode(
+      lifeRisk,
+      counseling,
+      originTypeId,
+      complaintReasonId,
+      violenceTypesIds
+    ).then(code => {
+      this.assistanceForm.controls.steps.get('3').get('code').setValue(code);
+      this.loadDerivationTypes(code);
+      document.getElementById('model-message').textContent = 'El sistema recomienda un código "' + code.toUpperCase() + '" para este caso. Fueron listadas las derivaciones específicas para este código. En caso de disentir con la recomendación presione el botón "Cancelar" y todas las derivaciones serán cargadas';
+    }).catch(err => {
+      this.errorMessage = 'Existen errores en algunos campos, por favor verifíquelos y vuelva a intentar.';
+    });
+  }
+
+  cancelRecommendation() {
+    this.assistanceForm.controls.steps.get('3').get('code').reset();
+    this.loadDerivationTypes();
+    document.getElementById('model-message').textContent = '';
   }
 }
