@@ -345,15 +345,33 @@
                 </div>
                 <div class="form-row col-md-8 mx-auto">
                     <div class="form-group col-md-6">
-                        <label for="derivation_types"><b>Derivación</b></label>
-                        <ng-select2 formControlName="derivation_types" [data]="derivationTypes"
-                            [options]="select2Options"
-                            [ngClass]="{ 'is-invalid': submitted && !isValid('3','derivation_types') }">
-                        </ng-select2>
+                        <label for="origin_type_id">Origen</label>
+                        <select formControlName="origin_type_id" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && !isValid('3','origin_type_id') }">
+                            <option *ngFor="let originType of originTypes" [value]="originType.id">
+                              {{originType.name}}
+                            </option>
+                        </select>
                         <div class="invalid-feedback">
                             Requerido
                         </div>
                     </div>
+                    <div class="form-group col-md-6">
+                        <label>Clasificación</label>
+                        <div style="display: inline-flex">
+                          <div class="form-group col-md-6">
+                              <button class="btn btn-secondary" (click)="recommend()">Recomendar</button>
+                          </div>
+                          <div class="form-group col-md-6">
+                              <button class="btn btn-secondary" (click)="cancelRecommendation()">Cancelar</button>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row col-md-8 mx-auto">
+                    <label><b id="model-message"></b></label>
+                </div>
+                <div class="form-row col-md-8 mx-auto">
                     <div class="form-group col-md-6">
                         <label for="violence_types"><b>Código</b></label>
                         <select formControlName="code" class="form-control"
@@ -366,21 +384,19 @@
                             Requerido
                         </div>
                     </div>
+                    <div class="form-group col-md-6">
+                        <label for="derivation_types"><b>Derivación</b></label>
+                            <ng-select2 formControlName="derivation_types" [data]="derivationTypes"
+                                        [options]="select2Options"
+                                        [ngClass]="{ 'is-invalid': submitted && !isValid('3','derivation_types') }">
+                            </ng-select2>
+                            <div class="invalid-feedback">
+                              Requerido
+                          </div>
+                    </div>
                 </div>
                 <div class="form-row col-md-8 mx-auto">
-                    <div class="form-group col-md-6">
-                        <label for="origin_type_id">Origen</label>
-                        <select formControlName="origin_type_id" class="form-control"
-                            [ngClass]="{ 'is-invalid': submitted && !isValid('3','origin_type_id') }">
-                            <option *ngFor="let originType of originTypes" [value]="originType.id">
-                                {{originType.name}}
-                            </option>
-                        </select>
-                        <div class="invalid-feedback">
-                            Requerido
-                        </div>
-                    </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="derivation_observation">
                             Derivación observaciones
                             <small> (Máximo 100 caracteres)</small>
