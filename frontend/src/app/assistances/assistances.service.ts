@@ -142,7 +142,7 @@ export class AssistancesService {
       this.getBooleanFeature(counseling)
     ];
     const data = tf.tensor3d([featuresArray], undefined, 'bool');
-    const result = this.model.predict(data, {verbose: true, batchSize: 3});
+    const result = this.model.predict(data, { verbose: true, batchSize: 3 });
     return result.data().then(d => {
       const codeDictionary = {
         0: 'a',
@@ -313,5 +313,17 @@ export class AssistancesService {
       false,
       false
     ];
+  }
+
+  /**
+   * Reports
+   */
+  public getCountByDerivationType(fromDate, toDate) {
+    return this.http.get(`${this.assistancesApiUrl}/count-by-derivation-type`, {
+      params: {
+        'from_date': fromDate,
+        'to_date': toDate
+      }
+    });
   }
 }

@@ -32,7 +32,7 @@ export class AssistancesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.assistancesService.getAssistances(1, this.chunkSize, 'datetime', 'desc').subscribe(
+    this.assistancesService.getAssistances(1, this.chunkSize, 'created_at', 'desc').subscribe(
       assistances => {
         this.assistances = assistances.data;
         this.assistancePage = this.assistances.slice(0, 10); //last index is not included
