@@ -5,6 +5,8 @@ import { DerivationsReportComponent } from './components/derivations-report/deri
 import { ChartsModule } from 'ng2-charts';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AssistancesModule } from '../assistances/assistances.module';
+import { ViolenceReportComponent } from './components/violence-report/violence-report.component';
+import { ReportComponent } from './components/report/report.component';
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import { AssistancesModule } from '../assistances/assistances.module';
         AssistancesModule
     ],
     declarations: [
-        DerivationsReportComponent
+        DerivationsReportComponent,
+        ViolenceReportComponent,
+        ReportComponent
     ]
 })
 export class ReportsModule { }
