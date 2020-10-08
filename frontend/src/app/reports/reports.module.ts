@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AssistancesModule } from '../assistances/assistances.module';
 import { ViolenceReportComponent } from './components/violence-report/violence-report.component';
 import { ReportComponent } from './components/report/report.component';
+import { OriginReportComponent } from './components/origin-report/origin-report.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { ReportComponent } from './components/report/report.component';
     declarations: [
         DerivationsReportComponent,
         ViolenceReportComponent,
-        ReportComponent
+        ReportComponent,
+        OriginReportComponent
     ]
 })
 export class ReportsModule { }
