@@ -28,6 +28,13 @@ const routes: Routes = [
           import('./assistances/assistances-routing.module').then(
             mod => mod.AssistancesRoutingModule
           )
+      },
+      {
+        path: 'reports',
+        loadChildren: () =>
+          import('./reports/reports-routing.module').then(
+            mod => mod.ReportsRoutingModule
+          )
       }
     ]
   },

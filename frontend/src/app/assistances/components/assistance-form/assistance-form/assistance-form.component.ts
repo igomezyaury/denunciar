@@ -264,7 +264,7 @@ export class AssistanceFormComponent implements OnInit {
 
   }
 
-  private loadDerivationTypes(code) {
+  private loadDerivationTypes(code?: string) {
     this.assistancesService.getDerivationTypes(1, 999999).subscribe(
       (response: any) => {
         this.derivationTypes = response.data;
