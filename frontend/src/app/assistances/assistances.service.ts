@@ -318,8 +318,8 @@ export class AssistancesService {
   /**
    * Reports
    */
-  public getCountByDerivationType(fromDate, toDate) {
-    return this.http.get(`${this.assistancesApiUrl}/count-by-derivation-type`, {
+  public getCountByType(fromDate, toDate, type: string) {
+    return this.http.get(`${this.assistancesApiUrl}/count-by-${type}-type`, {
       params: {
         'from_date': fromDate,
         'to_date': toDate
