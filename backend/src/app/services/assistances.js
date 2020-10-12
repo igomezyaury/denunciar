@@ -15,7 +15,7 @@ const {
   VulnerablePopulation
 } = require('../models');
 const { deleteUndefined } = require('../utils/objects');
-const { omit } = require('../utils/lodash');
+const { omit, deburr } = require('../utils/lodash');
 const { databaseError, internalServerError, notFound } = require('../errors/builders');
 
 function getIncludeForVictim(filters, withDisabilities = true) {
@@ -30,12 +30,12 @@ function getIncludeForVictim(filters, withDisabilities = true) {
     }
     if (filters.firstName) {
       includeForVictim.where.firstName = {
-        [sequelizePackage.Op.iLike]: `%${filters.firstName}%`
+        [sequelizePackage.Op.iLike]: `%${deburr(filters.firstName)}%`
       };
     }
     if (filters.lastName) {
       includeForVictim.where.lastName = {
-        [sequelizePackage.Op.iLike]: `%${filters.lastName}%`
+        [sequelizePackage.Op.iLike]: `%${deburr(filters.lastName)}%`
       };
     }
   }
@@ -81,11 +81,12 @@ function getIncludeForAssistances(filters) {
 
 exports.getAssistances = params => {
   logger.info(`Attempting to get assistances with params: ${inspect(params)}`);
-  const filtersForWhere = {
-    phoneNumber: {
+  const filtersForWhere = {};
+  if (params.phoneNumber) {
+    filtersForWhere.phoneNumber = {
       [sequelizePackage.Op.iLike]: `%${params.phoneNumber}%`
-    }
-  };
+    };
+  }
   let includeForAssistances = {};
   const filtersForInclude = {
     firstName: params.firstName,
