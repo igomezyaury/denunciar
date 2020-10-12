@@ -1,7 +1,12 @@
 const { pagination, addCommonProperties, ID } = require('./common');
+const { deburr } = require('../utils/lodash');
 
 exports.getAssistancesMapper = req => ({
-  ...pagination(req)
+  ...pagination(req),
+  firstName: req.query.first_name,
+  lastName: req.query.last_name,
+  phoneNumber: req.query.phone_number,
+  identificationCode: req.query.identification_code
 });
 
 exports.createAssistanceMapper = req =>
@@ -18,8 +23,8 @@ exports.createAssistanceMapper = req =>
       derivationTypes: req.body.complaint.derivation_types,
       userId: req.user.id,
       victim: {
-        firstName: req.body.person.first_name,
-        lastName: req.body.person.last_name,
+        firstName: deburr(req.body.person.first_name),
+        lastName: deburr(req.body.person.last_name),
         identificationCode: req.body.person.identification_code,
         phoneNumber: req.body.person.phone_number,
         address: req.body.person.address,

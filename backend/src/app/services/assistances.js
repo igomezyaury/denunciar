@@ -15,60 +15,104 @@ const {
   VulnerablePopulation
 } = require('../models');
 const { deleteUndefined } = require('../utils/objects');
-const { omit } = require('../utils/lodash');
+const { omit, deburr } = require('../utils/lodash');
 const { databaseError, internalServerError, notFound } = require('../errors/builders');
 
-const includeForAssistance = [
-  {
-    model: DerivationType,
-    as: 'derivationTypes'
-  },
-  {
-    model: Call,
-    as: 'call',
-    include: [
-      {
-        model: Aggressor,
-        as: 'aggressor'
-      },
-      {
-        model: Representative,
-        as: 'representative'
-      },
-      {
-        model: ViolenceType,
-        as: 'violenceTypes'
-      }
-    ]
-  },
-  {
+function getIncludeForVictim(filters, withDisabilities = true) {
+  const includeForVictim = {
     model: Victim,
-    as: 'victim',
-    include: [
+    as: 'victim'
+  };
+  if (filters) {
+    includeForVictim.where = {};
+    if (filters.identificationCode) {
+      includeForVictim.where.identificationCode = filters.identificationCode;
+    }
+    if (filters.firstName) {
+      includeForVictim.where.firstName = {
+        [sequelizePackage.Op.iLike]: `%${deburr(filters.firstName)}%`
+      };
+    }
+    if (filters.lastName) {
+      includeForVictim.where.lastName = {
+        [sequelizePackage.Op.iLike]: `%${deburr(filters.lastName)}%`
+      };
+    }
+  }
+  if (withDisabilities) {
+    includeForVictim.include = [
       {
         model: Disability,
         as: 'disabilities'
       }
-    ]
+    ];
   }
-];
+  return includeForVictim;
+}
+
+function getIncludeForAssistances(filters) {
+  const includeForVictim = getIncludeForVictim(filters);
+  return [
+    {
+      model: DerivationType,
+      as: 'derivationTypes'
+    },
+    {
+      model: Call,
+      as: 'call',
+      include: [
+        {
+          model: Aggressor,
+          as: 'aggressor'
+        },
+        {
+          model: Representative,
+          as: 'representative'
+        },
+        {
+          model: ViolenceType,
+          as: 'violenceTypes'
+        }
+      ]
+    },
+    includeForVictim
+  ];
+}
 
 exports.getAssistances = params => {
   logger.info(`Attempting to get assistances with params: ${inspect(params)}`);
-  const filters = {};
+  const filtersForWhere = {};
+  if (params.phoneNumber) {
+    filtersForWhere.phoneNumber = {
+      [sequelizePackage.Op.iLike]: `%${params.phoneNumber}%`
+    };
+  }
+  let includeForAssistances = {};
+  const filtersForInclude = {
+    firstName: params.firstName,
+    lastName: params.lastName,
+    identificationCode: params.identificationCode
+  };
+  if (params.firstName || params.lastName || params.identificationCode) {
+    includeForAssistances = getIncludeForAssistances(deleteUndefined(filtersForInclude));
+  } else {
+    includeForAssistances = getIncludeForAssistances();
+  }
   const sequelizeOptions = {
-    where: deleteUndefined(filters),
+    where: deleteUndefined(filtersForWhere),
     offset: (params.pageNumber - 1) * params.pageSize,
     limit: params.pageSize,
     order: params.orderColumn ? [[params.orderColumn, params.orderSense || 'ASC']] : undefined,
-    include: includeForAssistance
+    include: includeForAssistances
   };
   return Assistance.findAll(sequelizeOptions)
     .then(assistances =>
-      Assistance.count({ where: deleteUndefined(filters) }).then(count => ({
-        count,
-        rows: assistances
-      }))
+      Assistance.count({ where: deleteUndefined(filtersForWhere), include: [getIncludeForVictim(deleteUndefined(filtersForInclude), false)] }).then(
+        count => ({
+          count,
+          rows: assistances
+        })
+      )
     )
     .catch(err => {
       logger.error(inspect(err));
@@ -118,7 +162,7 @@ exports.createAssistance = attrs => {
 exports.getAssistanceById = ({ id }, options = {}) => {
   logger.info(`Attempting to get assistance with id: ${inspect(id)}`);
   return Assistance.findByPk(id, {
-    include: includeForAssistance,
+    include: getIncludeForAssistances(),
     ...options
   }).catch(err => {
     logger.error(inspect(err));
