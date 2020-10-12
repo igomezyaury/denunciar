@@ -11,7 +11,8 @@ const {
   sequelizeInstance,
   DerivationType,
   sequelizePackage,
-  OriginType
+  OriginType,
+  VulnerablePopulation
 } = require('../models');
 const { deleteUndefined } = require('../utils/objects');
 const { omit } = require('../utils/lodash');
@@ -282,6 +283,47 @@ exports.countByOriginType = params => {
       ]
     },
     group: ['OriginType.id'],
+    having: sequelizePackage.where(
+      sequelizePackage.fn('COUNT', sequelizePackage.col('calls->assistance.id')),
+      '>',
+      0
+    ),
+    includeIgnoreAttributes: false,
+    distinct: true
+  });
+};
+
+exports.countByVulnerablePopulation = params => {
+  logger.info(`Attempting to count assistances by vulnerable population with params: ${inspect(params)}`);
+
+  return VulnerablePopulation.findAll({
+    where: {
+      ...((params.fromDate || params.toDate) && {
+        '$calls->assistance.datetime$': {
+          ...(params.fromDate && { [sequelizePackage.Op.gte]: params.fromDate }),
+          ...(params.toDate && { [sequelizePackage.Op.lte]: params.toDate })
+        }
+      })
+    },
+    include: [
+      {
+        model: Call,
+        as: 'calls',
+        include: [
+          {
+            model: Assistance,
+            as: 'assistance'
+          }
+        ]
+      }
+    ],
+    attributes: {
+      include: [
+        'VulnerablePopulation.id',
+        [sequelizePackage.fn('COUNT', sequelizePackage.col('calls->assistance.id')), 'AssistanceCount']
+      ]
+    },
+    group: ['VulnerablePopulation.id'],
     having: sequelizePackage.where(
       sequelizePackage.fn('COUNT', sequelizePackage.col('calls->assistance.id')),
       '>',
