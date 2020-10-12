@@ -13,13 +13,7 @@ const {
 exports.init = (app, { path, model }) => {
   const crudRouter = createRouter();
   app.use(path, crudRouter);
-  crudRouter.get(
-    '/',
-    checkTokenAndSetUser,
-    checkPermissions,
-    validateSchemaAndFail(getManySchema(model)),
-    getMany(model)
-  );
+  crudRouter.get('/', checkTokenAndSetUser, validateSchemaAndFail(getManySchema(model)), getMany(model));
   crudRouter.get(
     '/:id',
     checkTokenAndSetUser,
