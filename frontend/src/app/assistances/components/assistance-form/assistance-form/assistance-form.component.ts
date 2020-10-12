@@ -207,7 +207,7 @@ export class AssistanceFormComponent implements OnInit {
     });
 
     /**
-     * @todo: refactor the hardcoded (1, 999999) to get all values from db 
+     * @todo: refactor the hardcoded (1, 999999) to get all values from db
      */
     this.assistancesService.getRepresentativeTypes(1, 999999).subscribe(
       (response: any) => {
@@ -224,7 +224,7 @@ export class AssistanceFormComponent implements OnInit {
         this.vulnerablePopulations = response.data;
       }
     );
-    this.loadDerivationTypes();
+    this.loadDerivationTypes(undefined);
     this.assistancesService.getViolenceTypes(1, 999999).subscribe(
       (response: any) => {
         this.violenceTypes = response.data;
@@ -472,7 +472,7 @@ export class AssistanceFormComponent implements OnInit {
 
   cancelRecommendation() {
     this.assistanceForm.controls.steps.get('3').get('code').reset();
-    this.loadDerivationTypes();
+    this.loadDerivationTypes(undefined);
     document.getElementById('model-message').textContent = '';
   }
 }
