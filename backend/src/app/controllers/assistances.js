@@ -6,7 +6,8 @@ const {
   updateAssistance,
   countByDerivationType,
   countByViolenceType,
-  countByOriginType
+  countByOriginType,
+  countByVulnerablePopulation
 } = require('../services/assistances');
 const {
   getAssistancesMapper,
@@ -69,6 +70,12 @@ exports.countByViolenceType = (req, res, next) => {
 
 exports.countByOriginType = (req, res, next) => {
   countByOriginType(dateAssistanceMapper(req))
+    .then(stats => res.status(200).send(getObjectToSnakeCase(stats)))
+    .catch(next);
+};
+
+exports.countByVulnerablePopulation = (req, res, next) => {
+  countByVulnerablePopulation(dateAssistanceMapper(req))
     .then(stats => res.status(200).send(getObjectToSnakeCase(stats)))
     .catch(next);
 };

@@ -8,7 +8,8 @@ const {
   updateAssistance,
   countByDerivationType,
   countByViolenceType,
-  countByOriginType
+  countByOriginType,
+  countByVulnerablePopulation
 } = require('../controllers/assistances');
 const { validateSchemaAndFail } = require('../middlewares/params_validator');
 const {
@@ -56,6 +57,13 @@ exports.init = app => {
     checkPermissions,
     validateSchemaAndFail(dateAssistanceSchema),
     countByOriginType
+  );
+  assistancesRouter.get(
+    '/count-by-vulnerable-population',
+    checkTokenAndSetUser,
+    checkPermissions,
+    validateSchemaAndFail(dateAssistanceSchema),
+    countByVulnerablePopulation
   );
   assistancesRouter.get(
     '/:id',
