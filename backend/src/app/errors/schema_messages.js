@@ -62,3 +62,7 @@ exports.codeInBody = `${booleanMessage('complaint.code')} ${containedMessage('bo
 exports.datetimeInBody = `${dateMessage('general.date_time')} ${containedMessage('body')}`;
 exports.fromDateAssistanceInQuery = `${dateMessage('from_date')} ${containedMessage('query')}`;
 exports.toDateAssistanceInQuery = `${dateMessage('to_date')} ${containedMessage('query')}`;
+exports.firstNameInQuery = `${stringMessage('first_name')} ${containedMessage('query')}`;
+exports.lastNameInQuery = `${stringMessage('last_name')} ${containedMessage('query')}`;
+exports.phoneNumberInQuery = `${stringMessage('phone_number')} ${containedMessage('query')}`;
+exports.identificationCodeInQuery = `${stringMessage('identification_code')} ${containedMessage('query')}`;

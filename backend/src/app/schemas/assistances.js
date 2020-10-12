@@ -26,14 +26,34 @@ const {
   codeInBody,
   datetimeInBody,
   fromDateAssistanceInQuery,
-  toDateAssistanceInQuery
+  toDateAssistanceInQuery,
+  firstNameInQuery,
+  lastNameInQuery,
+  phoneNumberInQuery,
+  identificationCodeInQuery
 } = require('../errors/schema_messages');
 const { addCommonProperties, ID } = require('./common');
 const { Assistance } = require('../models');
 
 exports.getAssistancesSchema = {
   ...authorization,
-  ...pagination(Assistance)
+  ...pagination(Assistance),
+  first_name: { in: ['query'], isString: true, trim: true, optional: true, errorMessage: firstNameInQuery },
+  last_name: { in: ['query'], isString: true, trim: true, optional: true, errorMessage: lastNameInQuery },
+  phone_number: {
+    in: ['query'],
+    isString: true,
+    trim: true,
+    optional: true,
+    errorMessage: phoneNumberInQuery
+  },
+  identification_code: {
+    in: ['query'],
+    isString: true,
+    trim: true,
+    optional: true,
+    errorMessage: identificationCodeInQuery
+  }
 };
 
 exports.createAssistanceSchema = addCommonProperties(

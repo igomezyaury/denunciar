@@ -1,7 +1,11 @@
 const { pagination, addCommonProperties, ID } = require('./common');
 
 exports.getAssistancesMapper = req => ({
-  ...pagination(req)
+  ...pagination(req),
+  firstName: req.query.first_name,
+  lastName: req.query.last_name,
+  phoneNumber: req.query.phone_number,
+  identificationCode: req.query.identification_code
 });
 
 exports.createAssistanceMapper = req =>
