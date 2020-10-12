@@ -15,7 +15,7 @@ const {
   VulnerablePopulation
 } = require('../models');
 const { deleteUndefined } = require('../utils/objects');
-const { omit } = require('../utils/lodash');
+const { omit, deburr } = require('../utils/lodash');
 const { databaseError, internalServerError, notFound } = require('../errors/builders');
 
 function getIncludeForVictim(filters, withDisabilities = true) {
@@ -24,7 +24,20 @@ function getIncludeForVictim(filters, withDisabilities = true) {
     as: 'victim'
   };
   if (filters) {
-    includeForVictim.where = deleteUndefined(filters);
+    includeForVictim.where = {};
+    if (filters.identificationCode) {
+      includeForVictim.where.identificationCode = filters.identificationCode;
+    }
+    if (filters.firstName) {
+      includeForVictim.where.firstName = {
+        [sequelizePackage.Op.iLike]: `%${deburr(filters.firstName)}%`
+      };
+    }
+    if (filters.lastName) {
+      includeForVictim.where.lastName = {
+        [sequelizePackage.Op.iLike]: `%${deburr(filters.lastName)}%`
+      };
+    }
   }
   if (withDisabilities) {
     includeForVictim.include = [
@@ -68,7 +81,12 @@ function getIncludeForAssistances(filters) {
 
 exports.getAssistances = params => {
   logger.info(`Attempting to get assistances with params: ${inspect(params)}`);
-  const filtersForWhere = { phoneNumber: params.phoneNumber };
+  const filtersForWhere = {};
+  if (params.phoneNumber) {
+    filtersForWhere.phoneNumber = {
+      [sequelizePackage.Op.iLike]: `%${params.phoneNumber}%`
+    };
+  }
   let includeForAssistances = {};
   const filtersForInclude = {
     firstName: params.firstName,
@@ -89,7 +107,7 @@ exports.getAssistances = params => {
   };
   return Assistance.findAll(sequelizeOptions)
     .then(assistances =>
-      Assistance.count({ where: deleteUndefined(filtersForWhere), include: [getIncludeForVictim(filtersForInclude, false)] }).then(
+      Assistance.count({ where: deleteUndefined(filtersForWhere), include: [getIncludeForVictim(deleteUndefined(filtersForInclude), false)] }).then(
         count => ({
           count,
           rows: assistances
