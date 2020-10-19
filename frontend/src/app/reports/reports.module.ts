@@ -8,6 +8,7 @@ import { AssistancesModule } from '../assistances/assistances.module';
 import { ViolenceReportComponent } from './components/violence-report/violence-report.component';
 import { ReportComponent } from './components/report/report.component';
 import { OriginReportComponent } from './components/origin-report/origin-report.component';
+import { VulnerablePopulationReportComponent } from './components/vulnerable-population-report/vulnerable-population-report.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { OriginReportComponent } from './components/origin-report/origin-report.
         DerivationsReportComponent,
         ViolenceReportComponent,
         ReportComponent,
-        OriginReportComponent
+        OriginReportComponent,
+        VulnerablePopulationReportComponent
     ]
 })
 export class ReportsModule { }
