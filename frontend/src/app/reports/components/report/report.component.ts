@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
-import { Label } from 'ng2-charts';
+import { Label, SingleDataSet } from 'ng2-charts';
 import { AssistancesService } from 'src/app/assistances/assistances.service';
 
 @Component({
@@ -10,6 +10,9 @@ import { AssistancesService } from 'src/app/assistances/assistances.service';
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent {
+
+  @Input()
+  public reportChartType: string;
 
   public formGroup: FormGroup;
   public errorMessage: string = '';
@@ -24,10 +27,11 @@ export class ReportComponent {
   private chartLabels = {
     derivation: 'Derivaciones',
     violence: 'Tipos de violencia',
-    origin: 'Orígenes'
+    origin: 'Orígenes',
+    vulnerablePopulation: 'Poblaciones vulnerables'
   }
 
-  //Chart options
+  //Bar chart options
   public barChartOptions: ChartOptions = {
     responsive: true,
     scales: {
@@ -48,6 +52,20 @@ export class ReportComponent {
   barChartData: ChartDataSets[] = [
     { data: [] }
   ];
+
+  //Pie chart options
+  public pieChartOptions: ChartOptions = {
+    responsive: true,
+  };
+  public pieChartLabels: Label[] = [];
+  public pieChartData: SingleDataSet = [];
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = true;
+  public pieChartPlugins = [];
+  public pieChartColors: any[] = [
+    {
+      backgroundColor: ["#FF7360", "#6FC8CE", "#b4f250", "#f2ec74", "#B9E8E0", "#cd95ed", "#e09128"]
+    }];
 
 
   constructor(private fb: FormBuilder, private assistancesService: AssistancesService) {
@@ -85,7 +103,9 @@ export class ReportComponent {
       this.barChartData[0].label = this.chartLabels[this.reportType];
       for (let i = 0; i < data.length; i++) {
         this.barChartLabels.push(data[i].name);
+        this.pieChartLabels.push(data[i].name);
         this.barChartData[0].data.push(Number(data[i].assistance_count));
+        this.pieChartData.push(Number(data[i].assistance_count));
       }
     }
     )
@@ -94,6 +114,8 @@ export class ReportComponent {
   private resetChart() {
     this.barChartLabels = [];
     this.barChartData[0].data = [];
+    this.pieChartLabels = [];
+    this.pieChartData = [];
   }
 
   notFutureDate(control: FormControl): { [key: string]: boolean } | null {
