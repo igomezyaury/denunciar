@@ -1,6 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import * as tf from '@tensorflow/tfjs';
@@ -319,7 +318,17 @@ export class AssistancesService {
    * Reports
    */
   public getCountByType(fromDate, toDate, type: string) {
-    return this.http.get(`${this.assistancesApiUrl}/count-by-${type}-type`, {
+    switch (type) {
+      case 'vulnerablePopulation': {
+        type = 'vulnerable-population';
+        break;
+      }
+      default: {
+        type = `${type}-type`;
+        break;
+      }
+    }
+    return this.http.get(`${this.assistancesApiUrl}/count-by-${type}`, {
       params: {
         'from_date': fromDate,
         'to_date': toDate
