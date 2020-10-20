@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -21,6 +21,8 @@ export class AssistancesComponent implements OnInit {
   public actualPage: number = 1;
   public totalPages: number = 0;
   private pageSize: number = 10;
+
+  private assistanceToDeleteId: number = null;
 
   private chunkSize: number = 99999999;
 
@@ -110,6 +112,18 @@ export class AssistancesComponent implements OnInit {
 
   viewAssistance(assistanceId) {
     this.router.navigate([`/assistances/view/${assistanceId}`]);
+  }
+
+  setAssistanceToDelete(assistanceId) {
+    this.assistanceToDeleteId = assistanceId;
+  }
+
+  deleteAssistance() {
+    /**
+     * @todo call service: this.assistancesService.deleteAssistance(this.assistanceToDeleteId)
+     * and then this.assistanceToDeleteId = null (maybe inside subscription)
+     */
+    debugger;
   }
 
 }
