@@ -15,6 +15,7 @@
         <cdk-step formGroupName="0" [stepControl]="formArray.get([0])">
             <!-- Step label -->
             <ng-template cdkStepLabel>
+                <i class="fa fa-commenting mr-2"></i>
                 <strong>Desarrollo</strong>
             </ng-template>
             <!-- Step content -->
@@ -74,7 +75,8 @@
         <cdk-step formGroupName="1" [stepControl]="formArray.get([1])">
             <!-- Step label -->
             <ng-template cdkStepLabel>
-                <strong>Persona</strong>
+                <i class="fa fa-user mr-2"></i>
+                <strong>Personal Details</strong>
             </ng-template>
             <div class="col-md-7 mx-auto mt-5">
                 <div class="form-row col-md-12">
@@ -238,6 +240,7 @@
         </cdk-step>
         <cdk-step formGroupName="2" [stepControl]="formArray.get([2])">
             <ng-template cdkStepLabel>
+                <i class="fa fa-id-card mr-2"></i>
                 <strong>Agresor</strong>
             </ng-template>
             <div class="col-md-8 mx-auto mt-5">
@@ -299,6 +302,7 @@
         </cdk-step>
         <cdk-step formGroupName="3" [stepControl]="formArray.get([3])">
             <ng-template cdkStepLabel>
+                <i class="fa fa-file-text mr-2"></i>
                 <strong>Denuncia</strong>
             </ng-template>
             <div class="col-md-8 mx-auto mt-5">
@@ -347,9 +351,9 @@
                     <div class="form-group col-md-6">
                         <label for="origin_type_id">Origen</label>
                         <select formControlName="origin_type_id" class="form-control"
-                                [ngClass]="{ 'is-invalid': submitted && !isValid('3','origin_type_id') }">
+                            [ngClass]="{ 'is-invalid': submitted && !isValid('3','origin_type_id') }">
                             <option *ngFor="let originType of originTypes" [value]="originType.id">
-                              {{originType.name}}
+                                {{originType.name}}
                             </option>
                         </select>
                         <div class="invalid-feedback">
@@ -359,12 +363,12 @@
                     <div class="form-group col-md-6">
                         <label>Clasificación</label>
                         <div style="display: inline-flex">
-                          <div class="form-group col-md-6">
-                              <button class="btn btn-secondary" (click)="recommend()">Recomendar</button>
-                          </div>
-                          <div class="form-group col-md-6">
-                              <button class="btn btn-secondary" (click)="cancelRecommendation()">Cancelar</button>
-                          </div>
+                            <div class="form-group col-md-6">
+                                <button class="btn btn-secondary" (click)="recommend()">Recomendar</button>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <button class="btn btn-secondary" (click)="cancelRecommendation()">Cancelar</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -386,13 +390,13 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="derivation_types"><b>Derivación</b></label>
-                            <ng-select2 formControlName="derivation_types" [data]="derivationTypes"
-                                        [options]="select2Options"
-                                        [ngClass]="{ 'is-invalid': submitted && !isValid('3','derivation_types') }">
-                            </ng-select2>
-                            <div class="invalid-feedback">
-                              Requerido
-                          </div>
+                        <ng-select2 formControlName="derivation_types" [data]="derivationTypes"
+                            [options]="select2Options"
+                            [ngClass]="{ 'is-invalid': submitted && !isValid('3','derivation_types') }">
+                        </ng-select2>
+                        <div class="invalid-feedback">
+                            Requerido
+                        </div>
                     </div>
                 </div>
                 <div class="form-row col-md-8 mx-auto">

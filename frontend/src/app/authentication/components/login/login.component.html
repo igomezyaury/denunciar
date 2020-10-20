@@ -1,23 +1,25 @@
 <div class="col-md-4 mx-auto mt-5">
     <div class="card">
-        <h4 class="card-header text-center">Login</h4>
         <div class="card-body">
+            <div class="text-center mb-3">
+                <img src="../../../assets/logo.png" alt="Denunciar logo">
+            </div>
             <div class="text-danger text-center" *ngIf="loginError">
                 {{ loginError }}
             </div>
             <form [formGroup]="loginForm" (ngSubmit)="login()">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input formControlName="email" type="text" class="form-control"/>
+                    <input formControlName="email" type="text" class="form-control" />
                 </div>
                 <div *ngIf="submitted && email.errors" class="text-danger">
                     <p *ngIf="email.errors.required">Ingresar email</p>
                     <p *ngIf="email.errors.email">Email inválido</p>
-                    
+
                 </div>
                 <div class="form-group">
                     <label for="password">Contraseña</label>
-                    <input formControlName="password" type="password" class="form-control"/>
+                    <input formControlName="password" type="password" class="form-control" />
                 </div>
                 <div *ngIf="submitted && password.errors" class="text-danger">
                     <p *ngIf="password.errors.required">Ingresar contraseña</p>
