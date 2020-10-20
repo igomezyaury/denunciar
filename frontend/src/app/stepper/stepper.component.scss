@@ -1,16 +1,16 @@
-.step-navigation-bar {
-    border-radius: 50px;
-    border-style: groove;
-    border-color: lightgrey;
-    display: flex;
-    align-items: center;
-    background-color: white;
-    height: 50px;
-}
+// .step-navigation-bar {
+//     border-radius: 50px;
+//     border-style: groove;
+//     border-color: lightgrey;
+//     display: flex;
+//     align-items: center;
+//     background-color: white;
+//     height: 50px;
+// }
 
-.step-navigation-bar:hover {
-  cursor: pointer;
-}
+// .step-navigation-bar:hover {
+//   cursor: pointer;
+// }
 
 .btn-purple {
   background-color:#210949 !important;
@@ -20,6 +20,32 @@
   position: absolute;
 }
 
-.visited-step {
-  
+.actual-step {
+  background-color: #37156d;
+  color: white;
+  border-radius: 5px;
+}
+
+ol {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+}
+
+li {
+  text-align: center;
+  flex-grow: 1;
+  font-weight: bold;
+  cursor: pointer;
+
+  a {
+    display: block;
+    text-decoration: none;
+    padding: 1rem;
+
+    &:hover {
+      border-bottom: solid thin #210949;
+    }
+  }
 }
