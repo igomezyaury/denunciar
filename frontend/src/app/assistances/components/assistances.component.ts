@@ -24,6 +24,8 @@ export class AssistancesComponent implements OnInit {
 
   private assistanceToDeleteId: number = null;
 
+  public loading: boolean = true;
+
   private chunkSize: number = 99999999;
 
   constructor(
@@ -48,6 +50,7 @@ export class AssistancesComponent implements OnInit {
             assistance.formattedViolenceTypes += ', ' + violenceTypes[i].name;
           }
         });
+        this.loading = false;
       }
     );
 
@@ -66,32 +69,21 @@ export class AssistancesComponent implements OnInit {
     this.searchForm = this.fb.group({
       //Victim
       first_name: [null],
+      last_name: [null],
       identification_code: [null, Validators.compose([
-        Validators.required,
         Validators.maxLength(10),
         Validators.pattern(/^\d*$/) //Numeric
       ])],
       //Call
-      violence_types: [null],
-      vulnerable_population_id: [null],
-      aggressor: this.fb.group({
-        first_name: [null],
-        aggressor_identification_code: [null, Validators.compose([
-          Validators.maxLength(10),
-          Validators.pattern(/^\d*$/) //Numeric
-        ])]
-      }),
       phone_number: [null, Validators.compose([
-        Validators.required,
         Validators.pattern(/^\d*$/), //Numeric
         Validators.maxLength(20)]),
-      ],
-      start_date: [null],
-      end_date: [null],
+      ]
     });
   }
 
   async onPageChange(page: number) {
+    this.loading = true;
     const startIndex = this.pageSize * (page - 1);
     let endIndex = startIndex + this.pageSize;
 
@@ -104,6 +96,7 @@ export class AssistancesComponent implements OnInit {
 
     this.assistancePage = this.assistances.slice(startIndex, endIndex); //endIndex not included
     this.actualPage = page;
+    this.loading = false;
   }
 
   editAssistance(assistanceId) {
@@ -123,7 +116,38 @@ export class AssistancesComponent implements OnInit {
      * @todo call service: this.assistancesService.deleteAssistance(this.assistanceToDeleteId)
      * and then this.assistanceToDeleteId = null (maybe inside subscription)
      */
-    debugger;
+  }
+
+  filterAssistances() {
+    this.loading = true;
+    const searchParams = this.searchForm.value;
+    for (let key in searchParams) {
+      //Remove null fields
+      if (!searchParams[key]) {
+        delete searchParams[key];
+      }
+    }
+    this.assistancesService.getAssistances(1, this.chunkSize, 'created_at', 'desc', searchParams).subscribe(
+      assistances => {
+        this.assistances = assistances.data;
+        this.assistancePage = this.assistances.slice(0, 10); //last index is not included
+        this.totalPages = Math.ceil(this.assistances.length / this.pageSize);
+
+        //Separate violence types by commas
+        this.assistances.map(assistance => {
+          const violenceTypes = assistance.call.violence_types;
+          assistance.formattedViolenceTypes = violenceTypes[0].name;
+          for (let i = 1; i < violenceTypes.length; i++) {
+            assistance.formattedViolenceTypes += ', ' + violenceTypes[i].name;
+          }
+        });
+        this.loading = false;
+      }
+    );
+  }
+
+  cleanFilters() {
+    this.searchForm.reset();
   }
 
 }
