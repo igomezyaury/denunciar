@@ -3,137 +3,104 @@
     <div class="dropdown-divider mt-3 mb-3"></div>
     <form [formGroup]="searchForm">
         <div class="form-row">
-            <div class="form-group col-md-4">
-                <label for="violence_types">Tipo de violencia</label>
-                <select class="form-control" formControlName="violence_types">
-                    <option *ngFor="let violenceType of violenceTypes" [value]="violenceType.id">
-                        {{violenceType.name}}
-                    </option>
-                </select>
-            </div>
-            <div class="form-group col-md-2">
-                <label for="aggressor_first_name">Nombre agresor</label>
-                <input type="text" class="form-control" placeholder="Nombre agresor">
-            </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
                 <label for="first_name">Nombre víctima</label>
                 <input type="text" class="form-control" placeholder="Nombre víctima" formControlName="first_name">
             </div>
-            <div class="form-group col-md-2">
-                <label for="start_date">Fecha desde</label>
-                <input type="date" class="form-control" formControlName="start_date">
-            </div>
-            <div class="form-group col-md-2">
-                <label for="Teléfono">Teléfono entrante</label>
-                <input type="text" class="form-control" placeholder="Teléfono entrante" formControlName="phone_number">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                <label for="vulnerable_population_id">Población vulnerable</label>
-                <select class="form-control" formControlName="vulnerable_population_id">
-                    <option *ngFor="let vulnerablePopulation of vulnerablePopulations"
-                        [value]="vulnerablePopulation.id">{{vulnerablePopulation.name}}
-                    </option>
-                </select>
-            </div>
-            <div class="form-group col-md-2">
-                <label for="aggressor_identification_code">DNI agresor</label>
-                <input type="text" class="form-control" placeholder="DNI agresor">
+            <div class="form-group col-md-3">
+                <label for="last_name">Apellido víctima</label>
+                <input type="text" class="form-control" placeholder="Apellido víctima" formControlName="last_name">
             </div>
             <div class="form-group col-md-2">
                 <label for="identification_code">DNI víctima</label>
                 <input type="text" class="form-control" placeholder="DNI víctima" formControlName="identification_code">
             </div>
             <div class="form-group col-md-2">
-                <label for="end_date">Fecha hasta</label>
-                <input type="date" class="form-control" formControlName="end_date">
+                <label for="Teléfono">Teléfono entrante</label>
+                <input type="text" class="form-control" placeholder="Teléfono entrante" formControlName="phone_number">
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group">
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input">
-                    <label class="form-check-label">Guardia</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-check form-check-inline">
-                    <input type="checkbox" class="form-check-input">
-                    <label class="form-check-label">Refugio</label>
-                </div>
-            </div>
-        </div>
-        <button disabled type="submit" class="btn btn-primary btn-purple">Buscar</button>
-        <button disabled class="btn btn-secondary ml-2">Limpiar</button>
+        <button (click)="filterAssistances()" type="submit" class="btn btn-primary btn-purple">Buscar</button>
+        <button (click)="cleanFilters()" class="btn btn-secondary ml-2">Limpiar</button>
     </form>
     <div class="dropdown-divider mt-3 mb-3"></div>
     <h2 class="text-center title float-left">Listado de llamadas</h2>
-    <button class="btn btn-primary btn-purple ml-2 float-right" routerLink="/assistances/create">
-        <i class="fa fa-plus mr-2"></i>Nuevo registro</button>
-
-    <table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th class="text-center" scope="col">Tipo</th>
-                <th scope="col">Fecha y hora</th>
-                <th scope="col">Nombre víctima</th>
-                <th scope="col">Usuario</th>
-                <th scope="col">Tipo violencia</th>
-                <th class="text-center" scope="col">Acción</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let assistance of assistancePage" [ngClass]="{ 
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary btn-purple ml-2 float-right" routerLink="/assistances/create">
+                <i class="fa fa-plus mr-2"></i>Nuevo registro</button>
+        </div>
+    </div>
+    <div *ngIf="!loading && assistancePage.length < 1" class="alert alert-danger text-center mt-3" role="alert">
+        <b>No se encontraron llamadas</b>
+    </div>
+    <div *ngIf="loading" class="spinner-border spinner-purple" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div *ngIf="!loading && assistancePage.length > 0">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">Tipo</th>
+                    <th scope="col">Fecha y hora</th>
+                    <th scope="col">Nombre víctima</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Tipo violencia</th>
+                    <th class="text-center" scope="col">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let assistance of assistancePage" [ngClass]="{ 
                     'table-danger': (assistance.code === 'A') || (assistance.code === 'a'),
                     'table-secondary': (assistance.code === 'B') || (assistance.code === 'b')}">
-                <td class="text-center">{{assistance.code.toUpperCase()}}</td>
-                <td>{{assistance.created_at}}</td>
-                <td>{{assistance.victim.first_name + ' ' + assistance.victim.last_name}}</td>
-                <td>{{assistance.user_id}}</td>
-                <td>{{assistance.formattedViolenceTypes}}</td>
-                <td class="text-center">
-                    <a title="Visualizar" (click)="viewAssistance(assistance.id)"><i class="fa fa-eye mx-2"></i></a>
-                    <a title="Editar" (click)="editAssistance(assistance.id)"><i class="fa fa-pencil mx-2"></i></a>
-                    <a title="Eliminar" (click)="setAssistanceToDelete(assistance.id)"><i class="fa fa-trash mx-2"
-                            data-toggle="modal" data-target="#deleteConfirmationModal"></i></a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <nav>
-        <ul class="pagination justify-content-center">
-            <li class="page-item" [ngClass]="{'disabled': actualPage == 1}">
-                <a class="page-link" (click)="onPageChange(1)">
-                    <i class="fa fa-fast-backward"></i>
-                </a>
-            </li>
-            <li class="page-item" [ngClass]="{'disabled': actualPage == 1}">
-                <a class="page-link" (click)="onPageChange(actualPage-1)">
-                    <i class="fa fa-step-backward"></i>
-                </a>
-            </li>
-            <li *ngIf="actualPage > 1" class="page-item">
-                <a class="page-link" (click)="onPageChange(actualPage-1)">{{actualPage-1}}</a>
-            </li>
-            <li class="page-item active">
-                <a class="page-link" (click)="onPageChange(actualPage)">{{actualPage}}</a>
-            </li>
-            <li *ngIf="actualPage < totalPages" class="page-item">
-                <a class="page-link" (click)="onPageChange(actualPage+1)">{{actualPage+1}}</a>
-            </li>
-            <li class="page-item" [ngClass]="{'disabled': actualPage == totalPages}">
-                <a class="page-link" (click)="onPageChange(actualPage+1)">
-                    <i class="fa fa-step-forward"></i>
-                </a>
-            </li>
-            <li class="page-item" [ngClass]="{'disabled': actualPage == totalPages}">
-                <a class="page-link" (click)="onPageChange(totalPages)">
-                    <i class="fa fa-fast-forward"></i>
-                </a>
-            </li>
-        </ul>
-    </nav>
+                    <td class="text-center">{{assistance.code.toUpperCase()}}</td>
+                    <td>{{assistance.created_at}}</td>
+                    <td>{{assistance.victim.first_name + ' ' + assistance.victim.last_name}}</td>
+                    <td>{{assistance.user_id}}</td>
+                    <td>{{assistance.formattedViolenceTypes}}</td>
+                    <td class="text-center">
+                        <a title="Visualizar" (click)="viewAssistance(assistance.id)"><i class="fa fa-eye mx-2"></i></a>
+                        <a title="Editar" (click)="editAssistance(assistance.id)"><i class="fa fa-pencil mx-2"></i></a>
+                        <a title="Eliminar" (click)="setAssistanceToDelete(assistance.id)"><i class="fa fa-trash mx-2"
+                                data-toggle="modal" data-target="#deleteConfirmationModal"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" [ngClass]="{'disabled': actualPage == 1}">
+                    <a class="page-link" (click)="onPageChange(1)">
+                        <i class="fa fa-fast-backward"></i>
+                    </a>
+                </li>
+                <li class="page-item" [ngClass]="{'disabled': actualPage == 1}">
+                    <a class="page-link" (click)="onPageChange(actualPage-1)">
+                        <i class="fa fa-step-backward"></i>
+                    </a>
+                </li>
+                <li *ngIf="actualPage > 1" class="page-item">
+                    <a class="page-link" (click)="onPageChange(actualPage-1)">{{actualPage-1}}</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link" (click)="onPageChange(actualPage)">{{actualPage}}</a>
+                </li>
+                <li *ngIf="actualPage < totalPages" class="page-item">
+                    <a class="page-link" (click)="onPageChange(actualPage+1)">{{actualPage+1}}</a>
+                </li>
+                <li class="page-item" [ngClass]="{'disabled': actualPage == totalPages}">
+                    <a class="page-link" (click)="onPageChange(actualPage+1)">
+                        <i class="fa fa-step-forward"></i>
+                    </a>
+                </li>
+                <li class="page-item" [ngClass]="{'disabled': actualPage == totalPages}">
+                    <a class="page-link" (click)="onPageChange(totalPages)">
+                        <i class="fa fa-fast-forward"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
 
 <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog">

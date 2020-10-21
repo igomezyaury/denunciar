@@ -22,14 +22,20 @@ export class AssistancesService {
     ).then(model => this.model = model);
   }
 
-  public getAssistances(pageNumber: number, pageSize: number, orderColumn: string, orderSense: string): Observable<any> {
-    return this.http.get(this.assistancesApiUrl, {
-      params: {
-        'page_number': pageNumber.toString(),
-        'page_size': pageSize.toString(),
-        'order_column': orderColumn,
-        'order_sense': orderSense
+  public getAssistances(pageNumber: number, pageSize: number, orderColumn: string, orderSense: string, searchParams?: string[]): Observable<any> {
+    const params = {
+      'page_number': pageNumber.toString(),
+      'page_size': pageSize.toString(),
+      'order_column': orderColumn,
+      'order_sense': orderSense
+    };
+    if (searchParams) {
+      for (let key in searchParams) {
+        params[key] = searchParams[key];
       }
+    }
+    return this.http.get(this.assistancesApiUrl, {
+      params
     });
   }
 
