@@ -97,14 +97,14 @@
                         </div>
                     </div>
                     <div class="form-group col-md-2">
-                        <label for="sex">Sexo</label>
+                        <label for="sex">Género</label>
                         <select formControlName="sex" class="form-control" (change)="changeSexSelect($event)">
                             <option *ngFor="let sex of sexTypes" [value]="sex.value">{{sex.name}}
                             </option>
                         </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="sex_clarification">Sexo Otros</label>
+                        <label for="sex_clarification">Género Otros</label>
                         <input disabled #sexClarification formControlName="sex_clarification" type="text"
                             class="form-control">
                     </div>
@@ -390,7 +390,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label for="derivation_types"><b>Derivación</b></label>
-                        <ng-select2 formControlName="derivation_types" [data]="derivationTypes"
+                        <ng-select2 #derivationSelect formControlName="derivation_types" [data]="derivationTypes"
                             [options]="select2Options"
                             [ngClass]="{ 'is-invalid': submitted && !isValid('3','derivation_types') }">
                         </ng-select2>

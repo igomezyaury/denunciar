@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ɵɵresolveBody } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CdkStepper } from '@angular/cdk/stepper';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -10,6 +10,7 @@ import { codes } from 'src/app/models/codes';
 import { originTypes } from 'src/app/models/origin-types';
 import { ActivatedRoute } from '@angular/router';
 import { AssistancesMapper } from '../../../utils/assistances-mapper';
+import { NgSelect2Component } from 'ng-select2';
 
 @Component({
   selector: 'app-assistance-form',
@@ -44,6 +45,10 @@ export class AssistanceFormComponent implements OnInit {
 
   @ViewChild('relationshipType')
   public relationshipType: ElementRef;
+
+  @ViewChild('derivationSelect')
+  public derivationSelect: NgSelect2Component;
+
 
   public assistanceForm: FormGroup;
 
@@ -93,6 +98,18 @@ export class AssistanceFormComponent implements OnInit {
           const unformattedBirthDate = assistanceSteps.secondStep.birth_date;
           assistanceSteps.secondStep.birth_date = this.datePipe.transform(
             new Date(unformattedBirthDate), 'yyyy-MM-dd');
+        }
+
+        //Transform derivation type ids to string (to preselect the select2)
+        for (let i = 0; i < assistanceSteps.lastStep.derivation_types.length; i++) {
+          const derivationId = assistanceSteps.lastStep.derivation_types[i];
+          assistanceSteps.lastStep.derivation_types[i] = derivationId.toString();
+        }
+
+        //Transform violence type ids to string (to preselect the select2)
+        for (let i = 0; i < assistanceSteps.lastStep.violence_types.length; i++) {
+          const violenceTypeId = assistanceSteps.lastStep.violence_types[i];
+          assistanceSteps.lastStep.violence_types[i] = violenceTypeId.toString();
         }
 
         this.assistanceForm.controls.steps.get('0').setValue(assistanceSteps.firstStep);
