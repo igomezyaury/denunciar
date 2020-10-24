@@ -20,8 +20,8 @@ exports.login = (req, res, next) =>
             }
           );
         }
-        return generateTokens({ user, req }).then(([accessToken, refreshToken]) =>
-          res.status(200).send(login({ accessToken, refreshToken, user: { firstName: user.firstName, lastName: user.lastName, rol: user.rol } }))
+        return generateTokens({ user, req }).then(([accessToken, refreshToken, accessExpirationDate]) =>
+          res.status(200).send(login({ accessToken, refreshToken, accessExpirationDate, user: { firstName: user.firstName, lastName: user.lastName, rol: user.rol } }))
         );
       });
     })
