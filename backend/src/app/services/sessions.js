@@ -37,7 +37,10 @@ exports.generateTokens = ({ req, user }) => {
   logger.info(`Attempting to generate tokens for the user with id: ${user.id}`);
   const iss = getIss(req);
   logger.info('Iss was generated successfully');
-  const accessPromise = this.generateAccessToken(user, req);
+  const accessExpirationDate = moment()
+    .clone()
+    .add(parseInt(expirationValueAccessToken), expirationUnitAccessToken);
+  const accessPromise = this.generateAccessToken(user, req, accessExpirationDate);
   const refreshPromise = signAsync(
     {
       token_use: 'refresh',
@@ -54,22 +57,19 @@ exports.generateTokens = ({ req, user }) => {
       subject: `${user.id}`
     }
   );
-  return Promise.all([accessPromise, refreshPromise]).catch(err => {
+  return Promise.all([accessPromise, refreshPromise, Promise.resolve(accessExpirationDate)]).catch(err => {
     logger.error(inspect(err));
     throw databaseError(`There was an error generating the tokens: ${err.message}`);
   });
 };
 
-exports.generateAccessToken = (user, req) =>
+exports.generateAccessToken = (user, req, accessExpirationDate) =>
   signAsync(
     {
       token_use: 'access',
       user_type: user.type,
       nbf: moment().unix(),
-      exp: moment()
-        .clone()
-        .add(parseInt(expirationValueAccessToken), expirationUnitAccessToken)
-        .unix()
+      exp: accessExpirationDate.unix()
     },
     secret,
     {
