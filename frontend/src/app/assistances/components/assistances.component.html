@@ -1,5 +1,11 @@
 <div class="col-md-8 mx-auto mt-5">
     <h1 class="text-center title">Llamadas</h1>
+    <div *ngIf="successMessage && !errorMessage" class="alert alert-success mt-3 text-center" role="alert">
+        <b>{{successMessage}}</b>
+    </div>
+    <div class="alert alert-danger text-center" *ngIf="errorMessage && !successMessage">
+        <b> {{ errorMessage }}</b>
+    </div>
     <div class="dropdown-divider mt-3 mb-3"></div>
     <form [formGroup]="searchForm">
         <div class="form-row">
@@ -119,7 +125,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" (click)="deleteAssistance()">Sí, continuar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteAssistance()">Sí,
+                    continuar</button>
             </div>
         </div>
     </div>

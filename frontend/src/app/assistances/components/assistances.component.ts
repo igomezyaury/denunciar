@@ -28,6 +28,9 @@ export class AssistancesComponent implements OnInit {
 
   private chunkSize: number = 99999999;
 
+  public successMessage: string = '';
+  public errorMessage: string = '';
+
   constructor(
     private assistancesService: AssistancesService,
     private fb: FormBuilder,
@@ -112,10 +115,18 @@ export class AssistancesComponent implements OnInit {
   }
 
   deleteAssistance() {
-    /**
-     * @todo call service: this.assistancesService.deleteAssistance(this.assistanceToDeleteId)
-     * and then this.assistanceToDeleteId = null (maybe inside subscription)
-     */
+    this.assistancesService.delete(this.assistanceToDeleteId).toPromise()
+      .then(_ => {
+        this.successMessage = 'Se ha eliminado el registro correctamente';
+        this.errorMessage = '';
+        this.assistanceToDeleteId = null;
+        this.filterAssistances();
+      })
+      .catch(err => {
+        this.successMessage = '';
+        this.errorMessage = 'Hubo un error al intentar eliminar el registro';
+        this.assistanceToDeleteId = null;
+      });
   }
 
   filterAssistances() {

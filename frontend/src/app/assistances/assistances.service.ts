@@ -43,6 +43,10 @@ export class AssistancesService {
     return this.http.get(`${this.assistancesApiUrl}/${id}`);
   }
 
+  public delete(id) {
+    return this.http.delete(`${this.assistancesApiUrl}/${id}`);
+  }
+
   public createAssistance(fields) {
     return this.http.post(this.assistancesApiUrl, fields);
   }
