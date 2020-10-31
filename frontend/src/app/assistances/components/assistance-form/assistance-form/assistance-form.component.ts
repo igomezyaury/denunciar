@@ -226,12 +226,14 @@ export class AssistanceFormComponent implements OnInit {
       ])
     });
 
-    //Wait 3 secs of inactivity after a form value changes to save in localStorage 
-    this.assistanceForm.valueChanges
-      .pipe(debounceTime(3000))
-      .subscribe(formValues => {
-        localStorage.setItem('formData', JSON.stringify(formValues));
-      });
+    if (this.mode === 'create') {
+      //Wait 3 secs of inactivity after a form value changes to save in localStorage 
+      this.assistanceForm.valueChanges
+        .pipe(debounceTime(3000))
+        .subscribe(formValues => {
+          localStorage.setItem('formData', JSON.stringify(formValues));
+        });
+    }
 
     /**
      * @todo: refactor the hardcoded (1, 999999) to get all values from db 
