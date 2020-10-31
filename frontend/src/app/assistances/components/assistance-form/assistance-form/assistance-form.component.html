@@ -419,3 +419,20 @@
         </cdk-step>
     </app-stepper>
 </form>
+<ng-template #fillFormConfirmationModal let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title title">
+                <i class="fa fa-exclamation-triangle"></i>
+                Datos de formulario sin guardar</h3>
+        </div>
+        <div class="modal-body">
+            <span class="font-weight-bold">Se encontraron datos que no fueron guardados anteriormente. ¿Desea
+                continuar este formulario utilizando esos datos?</span>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">No</button>
+            <button type="button" class="btn btn-primary btn-purple" (click)="fillFormWithUnsavedData()">Sí</button>
+        </div>
+    </div>
+</ng-template>

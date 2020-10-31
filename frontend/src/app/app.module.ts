@@ -12,6 +12,7 @@ import { UserModule } from './user/user.module';
 import { UserService } from './user/user.service';
 import { LayoutModule } from './layout/layout.module';
 import { DatePipe } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -25,16 +26,17 @@ import { DatePipe } from '@angular/common';
     LayoutModule,
     UserModule,
     HomeModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgbModule
   ],
   providers: [
     AuthenticationService,
     UserService,
     DatePipe,
-    { 
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
-      multi: true 
+      multi: true
     }
   ],
   bootstrap: [AppComponent]

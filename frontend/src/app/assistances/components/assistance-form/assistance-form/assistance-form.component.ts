@@ -5,12 +5,12 @@ import { DatePipe } from '@angular/common';
 import { identificationTypes } from '../../../../models/identification-types';
 import { AssistancesService } from 'src/app/assistances/assistances.service';
 import { sexTypes } from '../../../../models/sex-types';
-import { complaintReasons } from 'src/app/models/complaint-reasons';
 import { codes } from 'src/app/models/codes';
-import { originTypes } from 'src/app/models/origin-types';
 import { ActivatedRoute } from '@angular/router';
 import { AssistancesMapper } from '../../../utils/assistances-mapper';
 import { NgSelect2Component } from 'ng-select2';
+import { debounceTime } from "rxjs/operators";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-assistance-form',
@@ -49,6 +49,8 @@ export class AssistanceFormComponent implements OnInit {
   @ViewChild('derivationSelect')
   public derivationSelect: NgSelect2Component;
 
+  @ViewChild('fillFormConfirmationModal')
+  public fillFormConfirmationModal: ElementRef;
 
   public assistanceForm: FormGroup;
 
@@ -79,7 +81,8 @@ export class AssistanceFormComponent implements OnInit {
     private fb: FormBuilder,
     private datePipe: DatePipe,
     private assistancesService: AssistancesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modalService: NgbModal
   ) {
     //Mode: Create or edit
     this.route.data.subscribe(data => this.mode = data.mode);
@@ -223,6 +226,13 @@ export class AssistanceFormComponent implements OnInit {
       ])
     });
 
+    //Wait 3 secs of inactivity after a form value changes to save in localStorage 
+    this.assistanceForm.valueChanges
+      .pipe(debounceTime(3000))
+      .subscribe(formValues => {
+        localStorage.setItem('formData', JSON.stringify(formValues));
+      });
+
     /**
      * @todo: refactor the hardcoded (1, 999999) to get all values from db 
      */
@@ -277,8 +287,19 @@ export class AssistanceFormComponent implements OnInit {
         this.complaintReasons = response.data;
       }
     );
+  }
 
+  ngAfterViewInit() {
+    const formData = JSON.parse(localStorage.getItem('formData'));
+    if (this.mode === 'create' && formData) {
+      this.modalService.open(this.fillFormConfirmationModal);
+    }
+  }
 
+  fillFormWithUnsavedData() {
+    const formData = JSON.parse(localStorage.getItem('formData'));
+    this.assistanceForm.setValue(formData);
+    this.modalService.dismissAll();
   }
 
   private loadDerivationTypes(code?: string) {
@@ -441,6 +462,7 @@ export class AssistanceFormComponent implements OnInit {
         .then(response => {
           this.showSuccessMessage = true;
           this.errorMessage = '';
+          localStorage.removeItem('formData');
         })
         .catch(err => {
           this.showSuccessMessage = false;
