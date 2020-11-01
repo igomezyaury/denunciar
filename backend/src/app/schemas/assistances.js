@@ -65,6 +65,18 @@ exports.createAssistanceSchema = addCommonProperties(
     'aggressor.aggressor_identification_type_id': { in: ['body'], isNumeric: true, optional: true },
     'aggressor.aggressor_last_name': { in: ['body'], isString: true, trim: true, optional: true },
     'aggressor.aggressor_occupation': { in: ['body'], isString: true, trim: true, optional: true },
+    'aggressor.aggressor_weapons_handling': {
+      in: ['body'],
+      isBoolean: true,
+      toBoolean: true,
+      optional: true
+    },
+    'aggressor.aggressor_substances_use': {
+      in: ['body'],
+      isBoolean: true,
+      toBoolean: true,
+      optional: true
+    },
     'complaint.code': {
       in: ['body'],
       isString: true,
