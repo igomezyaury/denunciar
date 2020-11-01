@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const { STRING, DATE, INTEGER } = DataTypes;
+  const { STRING, DATE, INTEGER, BOOLEAN } = DataTypes;
   const Aggressor = sequelize.define(
     'Aggressor',
     {
@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       occupation: { type: STRING, allowNull: true },
       identificationCode: { type: STRING, allowNull: true },
       address: { type: STRING, allowNull: true },
+      weaponsHandling: { type: BOOLEAN, allowNull: true },
+      substancesUse: { type: BOOLEAN, allowNull: true },
       createdAt: { type: DATE, allowNull: false },
       updatedAt: { type: DATE, allowNull: false },
       deletedAt: DATE

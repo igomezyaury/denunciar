@@ -44,7 +44,9 @@ exports.createAssistanceMapper = req =>
           occupation: req.body.aggressor ? req.body.aggressor.aggressor_occupation : null,
           identificationCode: req.body.aggressor ? req.body.aggressor.aggressor_identification_code : null,
           identificationTypeId: req.body.aggressor ? req.body.aggressor.aggressor_identification_type_id : null,
-          cityId: req.body.aggressor ? req.body.aggressor.aggressor_city_id : null
+          cityId: req.body.aggressor ? req.body.aggressor.aggressor_city_id : null,
+          weaponsHandling: req.body.aggressor ? req.body.aggressor.aggressor_weapons_handling : null,
+          substancesUse: req.body.aggressor ? req.body.aggressor.aggressor_substances_use : null
         },
         representative: {
           firstName: req.body.person.representative_first_name,
