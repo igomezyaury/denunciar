@@ -140,7 +140,6 @@ exports.createAssistance = attrs => {
             if (attrs.call.representative.firstName) {
               attrs.call.representative.callId = call.id;
             }
-            console.log(attrs.call.aggressor);
             return Promise.all([
               createAggressor(attrs.call.aggressor, transaction),
               attrs.call.representative.firstName ? createRepresentative(attrs.call.representative, transaction) : Promise.resolve()
