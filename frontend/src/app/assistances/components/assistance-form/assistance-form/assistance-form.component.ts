@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChild, ElementRef, ɵɵresolveBody } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CdkStepper } from '@angular/cdk/stepper';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { identificationTypes } from '../../../../models/identification-types';
 import { AssistancesService } from 'src/app/assistances/assistances.service';
 import { sexTypes } from '../../../../models/sex-types';
-import { complaintReasons } from 'src/app/models/complaint-reasons';
 import { codes } from 'src/app/models/codes';
-import { originTypes } from 'src/app/models/origin-types';
 import { ActivatedRoute } from '@angular/router';
 import { AssistancesMapper } from '../../../utils/assistances-mapper';
+import { NgSelect2Component } from 'ng-select2';
+import { debounceTime } from "rxjs/operators";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-assistance-form',
@@ -45,6 +46,12 @@ export class AssistanceFormComponent implements OnInit {
   @ViewChild('relationshipType')
   public relationshipType: ElementRef;
 
+  @ViewChild('derivationSelect')
+  public derivationSelect: NgSelect2Component;
+
+  @ViewChild('fillFormConfirmationModal')
+  public fillFormConfirmationModal: ElementRef;
+
   public assistanceForm: FormGroup;
 
   public select2Options = {
@@ -74,7 +81,8 @@ export class AssistanceFormComponent implements OnInit {
     private fb: FormBuilder,
     private datePipe: DatePipe,
     private assistancesService: AssistancesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modalService: NgbModal
   ) {
     //Mode: Create or edit
     this.route.data.subscribe(data => this.mode = data.mode);
@@ -93,6 +101,18 @@ export class AssistanceFormComponent implements OnInit {
           const unformattedBirthDate = assistanceSteps.secondStep.birth_date;
           assistanceSteps.secondStep.birth_date = this.datePipe.transform(
             new Date(unformattedBirthDate), 'yyyy-MM-dd');
+        }
+
+        //Transform derivation type ids to string (to preselect the select2)
+        for (let i = 0; i < assistanceSteps.lastStep.derivation_types.length; i++) {
+          const derivationId = assistanceSteps.lastStep.derivation_types[i];
+          assistanceSteps.lastStep.derivation_types[i] = derivationId.toString();
+        }
+
+        //Transform violence type ids to string (to preselect the select2)
+        for (let i = 0; i < assistanceSteps.lastStep.violence_types.length; i++) {
+          const violenceTypeId = assistanceSteps.lastStep.violence_types[i];
+          assistanceSteps.lastStep.violence_types[i] = violenceTypeId.toString();
         }
 
         this.assistanceForm.controls.steps.get('0').setValue(assistanceSteps.firstStep);
@@ -206,6 +226,15 @@ export class AssistanceFormComponent implements OnInit {
       ])
     });
 
+    if (this.mode === 'create') {
+      //Wait 3 secs of inactivity after a form value changes to save in localStorage 
+      this.assistanceForm.valueChanges
+        .pipe(debounceTime(3000))
+        .subscribe(formValues => {
+          localStorage.setItem('formData', JSON.stringify(formValues));
+        });
+    }
+
     /**
      * @todo: refactor the hardcoded (1, 999999) to get all values from db 
      */
@@ -260,8 +289,19 @@ export class AssistanceFormComponent implements OnInit {
         this.complaintReasons = response.data;
       }
     );
+  }
 
+  ngAfterViewInit() {
+    const formData = JSON.parse(localStorage.getItem('formData'));
+    if (this.mode === 'create' && formData) {
+      this.modalService.open(this.fillFormConfirmationModal);
+    }
+  }
 
+  fillFormWithUnsavedData() {
+    const formData = JSON.parse(localStorage.getItem('formData'));
+    this.assistanceForm.setValue(formData);
+    this.modalService.dismissAll();
   }
 
   private loadDerivationTypes(code?: string) {
@@ -424,6 +464,7 @@ export class AssistanceFormComponent implements OnInit {
         .then(response => {
           this.showSuccessMessage = true;
           this.errorMessage = '';
+          localStorage.removeItem('formData');
         })
         .catch(err => {
           this.showSuccessMessage = false;
