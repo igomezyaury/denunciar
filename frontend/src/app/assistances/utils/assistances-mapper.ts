@@ -40,7 +40,9 @@ export class AssistancesMapper {
             aggressor_identification_code: assistance.call.aggressor.identification_code,
             aggressor_identification_type_id: assistance.call.aggressor.identification_type_id,
             aggressor_city_id: assistance.call.aggressor.city_id,
-            aggressor_address: assistance.call.aggressor.address
+            aggressor_address: assistance.call.aggressor.address,
+            aggressor_weapons_handling: assistance.call.aggressor.weapons_handling,
+            aggressor_substances_use: assistance.call.aggressor.substances_use
         };
 
         const lastStep = {

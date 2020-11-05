@@ -210,7 +210,9 @@ export class AssistanceFormComponent implements OnInit {
           ])],
           aggressor_identification_type_id: [null], //Preseleccionar DNI
           aggressor_city_id: [null],
-          aggressor_address: [null]
+          aggressor_address: [null],
+          aggressor_weapons_handling: [null],
+          aggressor_substances_use: [null]
         }),
         //Paso 4: Denuncia
         this.fb.group({
