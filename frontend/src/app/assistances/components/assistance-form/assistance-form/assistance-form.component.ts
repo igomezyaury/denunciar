@@ -57,8 +57,7 @@ export class AssistanceFormComponent implements OnInit {
   public select2Options = {
     multiple: true,
     width: '100%'
-  }
-
+  };
 
   /**
    * @todo: get from db when defined (or store in frontend model if they are just a few)
@@ -93,9 +92,8 @@ export class AssistanceFormComponent implements OnInit {
       this.assistancesService.getAssistanceById(assistanceId).subscribe((assistance: any) => {
         const assistanceSteps = AssistancesMapper.toAssistanceSteps(assistance);
 
-        const unformattedDateTime = assistanceSteps.firstStep.date_time;
-
-        assistanceSteps.firstStep.date_time = this.removeDateOffset(unformattedDateTime);
+        //Remove 'Z' timezone from datetime string
+        assistanceSteps.firstStep.date_time = assistanceSteps.firstStep.date_time.slice(0, -1);
 
         if (assistanceSteps.secondStep.birth_date) {
           const unformattedBirthDate = assistanceSteps.secondStep.birth_date;
@@ -135,7 +133,6 @@ export class AssistanceFormComponent implements OnInit {
 
   ngOnInit(): void {
     //In a future maybe separate the form in different pages/components
-    const currentDate = new Date();
     this.assistanceForm = this.fb.group({
       steps: this.fb.array([
         //Paso 1: Desarrollo
@@ -143,8 +140,7 @@ export class AssistanceFormComponent implements OnInit {
           femicide_risk: [null],
           assistance_type: [null],
           first_call: [null],
-          date_time: [
-            this.datePipe.transform(currentDate, 'yyyy-MM-dd'),
+          date_time: [null,
             Validators.compose([
               Validators.required,
               this.validDate
@@ -210,7 +206,9 @@ export class AssistanceFormComponent implements OnInit {
           ])],
           aggressor_identification_type_id: [null], //Preseleccionar DNI
           aggressor_city_id: [null],
-          aggressor_address: [null]
+          aggressor_address: [null],
+          aggressor_weapons_handling: [null],
+          aggressor_substances_use: [null]
         }),
         //Paso 4: Denuncia
         this.fb.group({
@@ -319,15 +317,6 @@ export class AssistanceFormComponent implements OnInit {
     );
   }
 
-  private removeDateOffset(date: string) {
-    const converted = new Date(date);
-    const timeZoneOffset = converted.getTimezoneOffset() * 60000;
-
-    //Add the hours that were substracted automatically by 'Date' class (because of GMT-3)
-    const unformattedDateTime = new Date(converted.getTime() + timeZoneOffset);
-    return this.datePipe.transform(unformattedDateTime, 'yyyy-MM-dd');
-  }
-
   //Get the formArray which contains every step
   get formArray(): AbstractControl {
     return this.assistanceForm.get('steps');
@@ -429,6 +418,9 @@ export class AssistanceFormComponent implements OnInit {
     this.removeNullFields(secondStepFields);
     this.removeNullFields(thirdStepFields);
     this.removeNullFields(lastStepFields);
+
+    //Format date-time picker selected value
+    firstStepFields.date_time = this.datePipe.transform(firstStepFields.date_time, 'yyyy-MM-dd hh:mm:ss');
 
     if (firstStepFields.assistance_type) {
       firstStepFields.assistance_type = "Counseling";

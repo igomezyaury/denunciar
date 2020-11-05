@@ -39,10 +39,17 @@
                 <div class="dropdown-divider col-md-6 mx-auto mt-3 mb-3"></div>
                 <div class="form-row col-md-6 mx-auto">
                     <div class="form-group col-md-6">
-                        <label for="date_time">Fecha y hora</label>
-                        <input type="date" class="form-control" formControlName="date_time"
-                            [ngClass]="{ 'is-invalid': submitted && !isValid('0','date_time') }">
-                        <div class="invalid-feedback">
+                        <label for="timePicker">Fecha y hora</label>
+                        <mat-form-field>
+                            <input #dateTimePicker matInput [ngxMatDatetimePicker]="picker" formControlName="date_time"
+                                [ngClass]="{ 'is-invalid': submitted && !isValid('0','date_time') }">
+                            <mat-datepicker-toggle matSuffix [for]="picker">
+                            </mat-datepicker-toggle>
+
+                            <ngx-mat-datetime-picker #picker>
+                            </ngx-mat-datetime-picker>
+                        </mat-form-field>
+                        <div class="invalid-feedback" *ngIf="submitted && !isValid('0','date_time')">
                             Fecha válida requerida
                         </div>
                     </div>
@@ -244,6 +251,20 @@
                 <strong>Agresor</strong>
             </ng-template>
             <div class="col-md-8 mx-auto mt-5">
+                <div class="form-group">
+                    <div class="form-row col-md-8 mx-auto">
+                        <div class="form-check form-check-inline col-md-3">
+                            <input formControlName="aggressor_weapons_handling" type="checkbox"
+                                class="form-check-input">
+                            <label class="form-check-label">Manejo de armas</label>
+                        </div>
+                        <div class="form-check form-check-inline col-md-4">
+                            <input formControlName="aggressor_substances_use" type="checkbox" class="form-check-input">
+                            <label class="form-check-label">Uso de sustancias</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown-divider col-md-8 mx-auto mt-3 mb-3"></div>
                 <div class="form-row col-md-8 mx-auto">
                     <div class="form-group col-md-6">
                         <label for="aggressor_first_name">Nombre agresor</label>
