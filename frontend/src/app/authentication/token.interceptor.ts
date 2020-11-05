@@ -6,24 +6,35 @@ import {
   HttpEvent
 } from '@angular/common/http';
 import { AuthenticationService } from './authentication.service';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(public authenticationService: AuthenticationService) {}
+  constructor(public authenticationService: AuthenticationService, private router: Router) { }
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-      
-    if (request.headers.get('Authorization')) return next.handle(request);
+
+    if (request.headers.get('Authorization')) {
+      next.handle(request);
+    }
 
     request = request.clone({
       setHeaders: {
         Authorization: `${this.authenticationService.getToken()}`
       }
     });
-    return next.handle(request);
+    return next.handle(request).pipe(
+      catchError(err => {
+        if (err.status === 401) {
+          this.authenticationService.logout();
+          this.router.navigate(['/auth/login']);
+        }
+        return throwError(err);
+      }));
   }
 }
