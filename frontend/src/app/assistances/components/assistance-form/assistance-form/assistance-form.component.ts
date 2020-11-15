@@ -58,6 +58,9 @@ export class AssistanceFormComponent implements OnInit {
     width: '100%'
   };
 
+  //When this flag is true, the form is dirty because of Angular, not the user. 
+  public firstValueChanges: boolean = true;
+
   /**
    * @todo: get from db when defined (or store in frontend model if they are just a few)
    */
@@ -226,15 +229,6 @@ export class AssistanceFormComponent implements OnInit {
       ])
     });
 
-    if (this.mode === 'create') {
-      //Wait 3 secs of inactivity after a form value changes to save in localStorage 
-      this.assistanceForm.valueChanges
-        .pipe(debounceTime(3000))
-        .subscribe(formValues => {
-          localStorage.setItem('formData', JSON.stringify(formValues));
-        });
-    }
-
     /**
      * @todo: refactor the hardcoded (1, 999999) to get all values from db 
      */
@@ -296,11 +290,29 @@ export class AssistanceFormComponent implements OnInit {
     if (this.mode === 'create' && formData) {
       this.modalService.open(this.fillFormConfirmationModal);
     }
+
+    if (this.mode === 'create') {
+      //Wait 3 secs of inactivity after a form value changes to save in localStorage 
+      this.assistanceForm.valueChanges
+        .pipe(debounceTime(3000))
+        .subscribe(formValues => {
+          if (!this.firstValueChanges) {
+            localStorage.setItem('formData', JSON.stringify(formValues));
+          } else {
+            this.firstValueChanges = false;
+          }
+        });
+    }
   }
 
   fillFormWithUnsavedData() {
     const formData = JSON.parse(localStorage.getItem('formData'));
     this.assistanceForm.setValue(formData);
+    this.modalService.dismissAll();
+  }
+
+  closeModal() {
+    localStorage.removeItem('formData');
     this.modalService.dismissAll();
   }
 
