@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Label, SingleDataSet } from 'ng2-charts';
 import { AssistancesService } from 'src/app/assistances/assistances.service';
+import { colors } from './report-colors';
 
 @Component({
   selector: 'app-report',
@@ -64,8 +65,9 @@ export class ReportComponent {
   public pieChartPlugins = [];
   public pieChartColors: any[] = [
     {
-      backgroundColor: ["#FF7360", "#6FC8CE", "#b4f250", "#f2ec74", "#B9E8E0", "#cd95ed", "#e09128"]
-    }];
+      backgroundColor: colors
+    }
+  ];
 
 
   constructor(private fb: FormBuilder, private assistancesService: AssistancesService) {
