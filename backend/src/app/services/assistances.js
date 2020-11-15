@@ -12,7 +12,8 @@ const {
   DerivationType,
   sequelizePackage,
   OriginType,
-  VulnerablePopulation
+  VulnerablePopulation,
+  User
 } = require('../models');
 const { deleteUndefined } = require('../utils/objects');
 const { omit, deburr } = require('../utils/lodash');
@@ -74,6 +75,10 @@ function getIncludeForAssistances(filters) {
           as: 'violenceTypes'
         }
       ]
+    },
+    {
+      model: User,
+      as: 'user'
     },
     includeForVictim
   ];
