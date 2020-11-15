@@ -6,11 +6,12 @@ import { identificationTypes } from '../../../../models/identification-types';
 import { AssistancesService } from 'src/app/assistances/assistances.service';
 import { sexTypes } from '../../../../models/sex-types';
 import { codes } from 'src/app/models/codes';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AssistancesMapper } from '../../../utils/assistances-mapper';
 import { NgSelect2Component } from 'ng-select2';
 import { debounceTime } from "rxjs/operators";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MessagesService } from '../../../../messages/messages.service';
 
 @Component({
   selector: 'app-assistance-form',
@@ -23,8 +24,6 @@ export class AssistanceFormComponent implements OnInit {
   public title: string;
 
   public submitted: boolean = false;
-
-  public showSuccessMessage: boolean = false;
 
   public errorMessage: string;
 
@@ -59,6 +58,9 @@ export class AssistanceFormComponent implements OnInit {
     width: '100%'
   };
 
+  //When this flag is true, the form is dirty because of Angular, not the user. 
+  public firstValueChanges: boolean = true;
+
   /**
    * @todo: get from db when defined (or store in frontend model if they are just a few)
    */
@@ -81,7 +83,9 @@ export class AssistanceFormComponent implements OnInit {
     private datePipe: DatePipe,
     private assistancesService: AssistancesService,
     private route: ActivatedRoute,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private router: Router,
+    private messagesService: MessagesService
   ) {
     //Mode: Create or edit
     this.route.data.subscribe(data => this.mode = data.mode);
@@ -140,7 +144,8 @@ export class AssistanceFormComponent implements OnInit {
           femicide_risk: [null],
           assistance_type: [null],
           first_call: [null],
-          date_time: [null,
+          date_time: [
+            this.datePipe.transform(Date(), 'yyyy-MM-ddThh:mm:ss'),
             Validators.compose([
               Validators.required,
               this.validDate
@@ -224,15 +229,6 @@ export class AssistanceFormComponent implements OnInit {
       ])
     });
 
-    if (this.mode === 'create') {
-      //Wait 3 secs of inactivity after a form value changes to save in localStorage 
-      this.assistanceForm.valueChanges
-        .pipe(debounceTime(3000))
-        .subscribe(formValues => {
-          localStorage.setItem('formData', JSON.stringify(formValues));
-        });
-    }
-
     /**
      * @todo: refactor the hardcoded (1, 999999) to get all values from db 
      */
@@ -294,11 +290,29 @@ export class AssistanceFormComponent implements OnInit {
     if (this.mode === 'create' && formData) {
       this.modalService.open(this.fillFormConfirmationModal);
     }
+
+    if (this.mode === 'create') {
+      //Wait 3 secs of inactivity after a form value changes to save in localStorage 
+      this.assistanceForm.valueChanges
+        .pipe(debounceTime(3000))
+        .subscribe(formValues => {
+          if (!this.firstValueChanges) {
+            localStorage.setItem('formData', JSON.stringify(formValues));
+          } else {
+            this.firstValueChanges = false;
+          }
+        });
+    }
   }
 
   fillFormWithUnsavedData() {
     const formData = JSON.parse(localStorage.getItem('formData'));
     this.assistanceForm.setValue(formData);
+    this.modalService.dismissAll();
+  }
+
+  closeModal() {
+    localStorage.removeItem('formData');
     this.modalService.dismissAll();
   }
 
@@ -403,7 +417,6 @@ export class AssistanceFormComponent implements OnInit {
     this.submitted = true;
     if (this.assistanceForm.invalid) {
       this.errorMessage = 'Existen errores en algunos campos, por favor verifíquelos y vuelva a intentar.'
-      this.showSuccessMessage = false;
       //Move to the first step with errors
       this.cdkStepper.selectedIndex = this.getStepWithErrors();
       return;
@@ -454,23 +467,23 @@ export class AssistanceFormComponent implements OnInit {
     if (this.mode === 'create') {
       this.assistancesService.createAssistance(body).toPromise()
         .then(response => {
-          this.showSuccessMessage = true;
           this.errorMessage = '';
           localStorage.removeItem('formData');
+          this.messagesService.sendMessage('El registro ha sido creado correctamente');
+          this.router.navigate(['assistances']);
         })
         .catch(err => {
-          this.showSuccessMessage = false;
           this.errorMessage = 'Hubo un error al intentar crear el nuevo registro.'
         })
     } else {
       const assistanceId = this.route.snapshot.params.id;
       this.assistancesService.updateAssistance(assistanceId, body).toPromise()
         .then(response => {
-          this.showSuccessMessage = true;
+          this.messagesService.sendMessage('El registro ha sido modificado correctamente');
+          this.router.navigate(['assistances']);
           this.errorMessage = '';
         })
         .catch(err => {
-          this.showSuccessMessage = false;
           this.errorMessage = 'Hubo un error al intentar modificar el registro.'
         })
     }

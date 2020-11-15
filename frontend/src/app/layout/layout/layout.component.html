@@ -19,7 +19,7 @@
                     Llamadas
                 </a></li>
             <li>
-                <a class="nav-link mt-3" href="#reportsCollapse" data-toggle="collapse">
+                <a *ngIf="user.rol === 'admin'" class="nav-link mt-3" href="#reportsCollapse" data-toggle="collapse">
                     <i class="fa fa-print mr-2"></i>
                     Reportes
                     <i class="fa fa-caret-down"></i>

@@ -1,4 +1,4 @@
-<div class="col-md-8 mx-auto mt-5">
+<div class="pushable col-md-8 mx-auto mt-5">
     <h1 class="text-center title">Llamadas</h1>
     <div *ngIf="successMessage && !errorMessage" class="alert alert-success mt-3 text-center" role="alert">
         <b>{{successMessage}}</b>
@@ -44,7 +44,7 @@
         <span class="sr-only">Loading...</span>
     </div>
     <div *ngIf="!loading && assistancePage.length > 0">
-        <table class="table table-striped table-hover">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th class="text-center" scope="col">Tipo</th>
@@ -60,9 +60,9 @@
                     'table-danger': (assistance.code === 'A') || (assistance.code === 'a'),
                     'table-secondary': (assistance.code === 'B') || (assistance.code === 'b')}">
                     <td class="text-center">{{assistance.code.toUpperCase()}}</td>
-                    <td>{{assistance.created_at}}</td>
+                    <td>{{assistance.datetime}}</td>
                     <td>{{assistance.victim.first_name + ' ' + assistance.victim.last_name}}</td>
-                    <td>{{assistance.user_id}}</td>
+                    <td>{{assistance.user.username}}</td>
                     <td>{{assistance.formattedViolenceTypes}}</td>
                     <td class="text-center">
                         <a title="Visualizar" (click)="viewAssistance(assistance.id)"><i class="fa fa-eye mx-2"></i></a>

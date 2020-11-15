@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { DatePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MessagesService } from 'src/app/messages/messages.service';
 import { AssistancesService } from '../assistances.service';
 
 @Component({
@@ -34,19 +35,27 @@ export class AssistancesComponent implements OnInit {
   constructor(
     private assistancesService: AssistancesService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private datePipe: DatePipe,
+    messagesService: MessagesService
   ) {
+    const message = messagesService.getMessage();
+    if (message) {
+      this.successMessage = message;
+      messagesService.clearMessage();
+    }
   }
 
   ngOnInit(): void {
-    this.assistancesService.getAssistances(1, this.chunkSize, 'created_at', 'desc').subscribe(
+    this.assistancesService.getAssistances(1, this.chunkSize, 'datetime', 'desc').subscribe(
       assistances => {
         this.assistances = assistances.data;
         this.assistancePage = this.assistances.slice(0, 10); //last index is not included
         this.totalPages = Math.ceil(this.assistances.length / this.pageSize);
 
-        //Separate violence types by commas
+        //Format datetime and separate violence types by commas
         this.assistances.map(assistance => {
+          assistance.datetime = this.datePipe.transform(assistance.datetime, 'yyy-MM-dd, hh:mm:ss');
           const violenceTypes = assistance.call.violence_types;
           assistance.formattedViolenceTypes = violenceTypes[0].name;
           for (let i = 1; i < violenceTypes.length; i++) {
@@ -138,7 +147,7 @@ export class AssistancesComponent implements OnInit {
         delete searchParams[key];
       }
     }
-    this.assistancesService.getAssistances(1, this.chunkSize, 'created_at', 'desc', searchParams).subscribe(
+    this.assistancesService.getAssistances(1, this.chunkSize, 'datetime', 'desc', searchParams).subscribe(
       assistances => {
         this.assistances = assistances.data;
         this.assistancePage = this.assistances.slice(0, 10); //last index is not included

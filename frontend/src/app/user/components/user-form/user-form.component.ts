@@ -163,6 +163,10 @@ export class UserFormComponent implements OnInit {
           this.showSuccessMessage = true;
           this.getUsers();
           this.userSelected = null;
+          for (let key in this.userForm.controls) {
+            this.userForm.controls[key].setValue(null);
+          }
+          this.submitted = false;
         },
         error => {
         }
@@ -196,6 +200,10 @@ export class UserFormComponent implements OnInit {
       this.userForm.controls['active'].setValue(!user.active);
     } else {
       this.userSelected = null;
+
+      for (let key in this.userForm.controls) {
+        this.userForm.controls[key].setValue(null);
+      }
     }
   }
 
