@@ -62,7 +62,7 @@
                     <td class="text-center">{{assistance.code.toUpperCase()}}</td>
                     <td>{{assistance.datetime}}</td>
                     <td>{{assistance.victim.first_name + ' ' + assistance.victim.last_name}}</td>
-                    <td>{{assistance.user_id}}</td>
+                    <td>{{assistance.user.username}}</td>
                     <td>{{assistance.formattedViolenceTypes}}</td>
                     <td class="text-center">
                         <a title="Visualizar" (click)="viewAssistance(assistance.id)"><i class="fa fa-eye mx-2"></i></a>
