@@ -55,7 +55,7 @@ export class AssistancesComponent implements OnInit {
 
         //Format datetime and separate violence types by commas
         this.assistances.map(assistance => {
-          assistance.datetime = this.datePipe.transform(assistance.datetime, 'yyy-MM-dd, hh:mm:ss');
+          assistance.datetime = this.datePipe.transform(assistance.datetime, 'yyyy-MM-dd, hh:mm:ss', 'GMT');
           const violenceTypes = assistance.call.violence_types;
           assistance.formattedViolenceTypes = violenceTypes[0].name;
           for (let i = 1; i < violenceTypes.length; i++) {
@@ -155,6 +155,7 @@ export class AssistancesComponent implements OnInit {
 
         //Separate violence types by commas
         this.assistances.map(assistance => {
+          assistance.datetime = this.datePipe.transform(assistance.datetime, 'yyyy-MM-dd, hh:mm:ss', 'GMT');
           const violenceTypes = assistance.call.violence_types;
           assistance.formattedViolenceTypes = violenceTypes[0].name;
           for (let i = 1; i < violenceTypes.length; i++) {
